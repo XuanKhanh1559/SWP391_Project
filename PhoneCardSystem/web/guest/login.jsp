@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -26,7 +27,7 @@
                         <input type="password" id="loginPassword" required>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
-                    <p class="auth-link">Chưa có tài khoản? <a href="register.html">Đăng ký ngay</a></p>
+                    <p class="auth-link">Chưa có tài khoản? <a href="register.jsp">Đăng ký ngay</a></p>
                 </form>
             </div>
         </div>
@@ -57,7 +58,7 @@
                     balance: 10000000
                 };
                 localStorage.setItem('currentUser', JSON.stringify(user));
-                window.location.href = '../admin/dashboard.html';
+                window.location.href = '../admin/dashboard.jsp';
             } else {
                 // Regular user login
                 user = {
@@ -68,9 +69,10 @@
                     balance: 500000
                 };
                 localStorage.setItem('currentUser', JSON.stringify(user));
-                window.location.href = '../user/dashboard.html';
+                window.location.href = '../user/dashboard.jsp';
             }
         });
     </script>
 </body>
 </html>
+

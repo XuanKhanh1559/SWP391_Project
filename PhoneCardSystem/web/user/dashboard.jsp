@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -38,9 +39,9 @@
                 </div>
             </div>
             <div class="dashboard-actions">
-                <a href="../guest/products.html" class="btn btn-primary">Mua sản phẩm</a>
-                <a href="deposit.html" class="btn btn-outline">Nạp tiền</a>
-                <a href="orders.html" class="btn btn-outline">Xem đơn hàng</a>
+                <a href="../guest/products.jsp" class="btn btn-primary">Mua sản phẩm</a>
+                <a href="deposit.jsp" class="btn btn-outline">Nạp tiền</a>
+                <a href="orders.jsp" class="btn btn-outline">Xem đơn hàng</a>
             </div>
         </div>
     </main>
@@ -53,10 +54,11 @@
     <script>
         const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
         if (!user.id) {
-            window.location.href = '../guest/login.html';
+            window.location.href = '../guest/login.jsp';
         }
         
         document.getElementById('userBalance').textContent = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(user.balance || 0);
     </script>
 </body>
 </html>
+

@@ -17,7 +17,7 @@ function getStatusText(status) {
 function loadOrderDetail() {
     const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
     if (!user.id) {
-        window.location.href = '../guest/login.html';
+        window.location.href = '../guest/login.jsp';
         return;
     }
     

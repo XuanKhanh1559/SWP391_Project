@@ -6,7 +6,7 @@ function formatCurrency(amount) {
 function loadCart() {
     const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
     if (!user.id) {
-        window.location.href = '../guest/login.html';
+        window.location.href = '../guest/login.jsp';
         return;
     }
     
@@ -88,7 +88,7 @@ document.addEventListener('DOMContentLoaded', function() {
             alert('Giỏ hàng trống!');
             return;
         }
-        window.location.href = 'checkout.html';
+        window.location.href = 'checkout.jsp';
     });
     
     document.getElementById('applyCouponBtn')?.addEventListener('click', function() {

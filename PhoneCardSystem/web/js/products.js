@@ -55,7 +55,7 @@ function addToCart(productId) {
     const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
     if (!user.id) {
         alert('Vui lòng đăng nhập để mua hàng!');
-        window.location.href = 'login.html';
+        window.location.href = 'login.jsp';
         return;
     }
     

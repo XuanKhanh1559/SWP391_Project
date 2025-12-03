@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -38,10 +39,10 @@
                 </div>
             </div>
             <div class="admin-actions">
-                <a href="products-management.html" class="btn btn-primary">Quản lý sản phẩm</a>
-                <a href="orders-management.html" class="btn btn-primary">Quản lý đơn hàng</a>
-                <a href="users-management.html" class="btn btn-primary">Quản lý người dùng</a>
-                <a href="coupons-management.html" class="btn btn-primary">Quản lý coupon</a>
+                <a href="products-management.jsp" class="btn btn-primary">Quản lý sản phẩm</a>
+                <a href="orders-management.jsp" class="btn btn-primary">Quản lý đơn hàng</a>
+                <a href="users-management.jsp" class="btn btn-primary">Quản lý người dùng</a>
+                <a href="coupons-management.jsp" class="btn btn-primary">Quản lý coupon</a>
             </div>
         </div>
     </main>
@@ -54,8 +55,9 @@
     <script>
         const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
         if (!user.id || user.role !== 'admin') {
-            window.location.href = '../guest/login.html';
+            window.location.href = '../guest/login.jsp';
         }
     </script>
 </body>
 </html>
+

@@ -6,14 +6,14 @@ function formatCurrency(amount) {
 function loadCheckout() {
     const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
     if (!user.id) {
-        window.location.href = '../guest/login.html';
+        window.location.href = '../guest/login.jsp';
         return;
     }
     
     const cart = JSON.parse(localStorage.getItem('cart') || '[]');
     if (cart.length === 0) {
         alert('Giỏ hàng trống!');
-        window.location.href = 'cart.html';
+        window.location.href = 'cart.jsp';
         return;
     }
     
@@ -74,7 +74,7 @@ function placeOrder() {
     
     localStorage.removeItem('cart');
     alert('Đặt hàng thành công!');
-    window.location.href = 'orders.html';
+    window.location.href = 'orders.jsp';
 }
 
 document.addEventListener('DOMContentLoaded', loadCheckout);

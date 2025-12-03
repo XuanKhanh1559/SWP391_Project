@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -38,7 +39,7 @@
                         <input type="password" id="registerConfirmPassword" required>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Đăng ký</button>
-                    <p class="auth-link">Đã có tài khoản? <a href="login.html">Đăng nhập</a></p>
+                    <p class="auth-link">Đã có tài khoản? <a href="login.jsp">Đăng nhập</a></p>
                 </form>
             </div>
         </div>
@@ -70,8 +71,9 @@
             };
             
             localStorage.setItem('currentUser', JSON.stringify(user));
-            window.location.href = '../user/dashboard.html';
+            window.location.href = '../user/dashboard.jsp';
         });
     </script>
 </body>
 </html>
+

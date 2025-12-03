@@ -10,7 +10,7 @@ const providerMap = { 1: 'Viettel', 2: 'Vinaphone', 3: 'Mobifone' };
 function loadProducts() {
     const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
     if (!user.id || user.role !== 'admin') {
-        window.location.href = '../guest/login.html';
+        window.location.href = '../guest/login.jsp';
         return;
     }
     

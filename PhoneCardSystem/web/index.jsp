@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -18,7 +19,7 @@
             <div class="hero-content">
                 <h1>Nạp Thẻ Điện Thoại Nhanh Chóng</h1>
                 <p>Nạp tiền, mua gói data cho tất cả nhà mạng Việt Nam</p>
-                <a href="guest/products.html" class="btn btn-primary btn-large">Mua ngay</a>
+                <a href="guest/products.jsp" class="btn btn-primary btn-large">Mua ngay</a>
             </div>
         </section>
 
@@ -68,3 +69,4 @@
     <script src="js/app.js"></script>
 </body>
 </html>
+

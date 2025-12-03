@@ -1,3 +1,4 @@
+<%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -52,7 +53,7 @@
     <script>
         const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
         if (!user.id) {
-            window.location.href = '../guest/login.html';
+            window.location.href = '../guest/login.jsp';
         }
         
         document.getElementById('depositForm').addEventListener('submit', function(e) {
@@ -70,3 +71,4 @@
     </script>
 </body>
 </html>
+

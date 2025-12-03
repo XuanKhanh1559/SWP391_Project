@@ -17,7 +17,7 @@ function getStatusText(status) {
 function loadOrders() {
     const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
     if (!user.id) {
-        window.location.href = '../guest/login.html';
+        window.location.href = '../guest/login.jsp';
         return;
     }
     
@@ -35,7 +35,7 @@ function renderOrders(orders) {
     }
     
     container.innerHTML = orders.map(order => `
-        <div class="order-card" onclick="window.location.href='order-detail.html?id=${order.id}'">
+        <div class="order-card" onclick="window.location.href='order-detail.jsp?id=${order.id}'">
             <div class="order-header">
                 <div>
                     <h3>${order.order_code}</h3>

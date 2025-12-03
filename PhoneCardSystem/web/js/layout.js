@@ -12,7 +12,7 @@ function loadLayout() {
     }
     
     // Load header
-    fetch(`${basePath}layouts/header.html`)
+    fetch(`${basePath}layouts/header.jsp`)
         .then(response => response.text())
         .then(data => {
             const headerPlaceholder = document.getElementById('header-placeholder');
@@ -24,7 +24,7 @@ function loadLayout() {
         .catch(error => console.error('Error loading header:', error));
     
     // Load footer
-    fetch(`${basePath}layouts/footer.html`)
+    fetch(`${basePath}layouts/footer.jsp`)
         .then(response => response.text())
         .then(data => {
             const footerPlaceholder = document.getElementById('footer-placeholder');
@@ -87,12 +87,12 @@ function initHeader() {
         logoutBtn.addEventListener('click', function(e) {
             e.preventDefault();
             localStorage.removeItem('currentUser');
-            window.location.href = '../index.html';
+            window.location.href = '../index.jsp';
         });
     }
     
     // Set active nav link based on current page
-    const currentPage = window.location.pathname.split('/').pop().replace('.html', '');
+    const currentPage = window.location.pathname.split('/').pop().replace('.jsp', '').replace('.html', '');
     document.querySelectorAll('.nav-link').forEach(link => {
         link.classList.remove('active');
         if (link.getAttribute('data-page') === currentPage || 
