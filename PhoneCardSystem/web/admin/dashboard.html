@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin Dashboard - Hệ Thống Bán Thẻ Điện Thoại</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <!-- Header Placeholder -->
+    <div id="header-placeholder"></div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="admin-dashboard">
+            <h2>Admin Dashboard</h2>
+            <div class="dashboard-stats">
+                <div class="stat-card">
+                    <i class="fas fa-users"></i>
+                    <h3>Tổng người dùng</h3>
+                    <p class="stat-value" id="totalUsers">0</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-shopping-bag"></i>
+                    <h3>Tổng đơn hàng</h3>
+                    <p class="stat-value" id="totalOrders">0</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-dollar-sign"></i>
+                    <h3>Doanh thu</h3>
+                    <p class="stat-value" id="totalRevenue">0 đ</p>
+                </div>
+                <div class="stat-card">
+                    <i class="fas fa-box"></i>
+                    <h3>Sản phẩm</h3>
+                    <p class="stat-value" id="totalProducts">0</p>
+                </div>
+            </div>
+            <div class="admin-actions">
+                <a href="products-management.html" class="btn btn-primary">Quản lý sản phẩm</a>
+                <a href="orders-management.html" class="btn btn-primary">Quản lý đơn hàng</a>
+                <a href="users-management.html" class="btn btn-primary">Quản lý người dùng</a>
+                <a href="coupons-management.html" class="btn btn-primary">Quản lý coupon</a>
+            </div>
+        </div>
+    </main>
+
+    <!-- Footer Placeholder -->
+    <div id="footer-placeholder"></div>
+
+    <script src="../js/layout.js"></script>
+    <script src="../js/app.js"></script>
+    <script>
+        const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+        if (!user.id || user.role !== 'admin') {
+            window.location.href = '../guest/login.html';
+        }
+    </script>
+</body>
+</html>
