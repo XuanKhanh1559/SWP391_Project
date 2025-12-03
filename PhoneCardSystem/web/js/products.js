@@ -37,9 +37,12 @@ function renderProducts(products) {
 }
 
 function filterProducts() {
-    const providerFilter = document.getElementById('filterProvider')?.value || '';
-    const typeFilter = document.getElementById('filterType')?.value || '';
-    const searchTerm = (document.getElementById('searchProduct')?.value || '').toLowerCase();
+    var filterProviderEl = document.getElementById('filterProvider');
+    var filterTypeEl = document.getElementById('filterType');
+    var searchProductEl = document.getElementById('searchProduct');
+    const providerFilter = (filterProviderEl && filterProviderEl.value) || '';
+    const typeFilter = (filterTypeEl && filterTypeEl.value) || '';
+    const searchTerm = (searchProductEl && searchProductEl.value || '').toLowerCase();
     
     let filtered = mockProducts.filter(product => {
         const matchProvider = !providerFilter || product.provider_id == providerFilter;
@@ -83,9 +86,16 @@ function addToCart(productId) {
 document.addEventListener('DOMContentLoaded', function() {
     renderProducts(mockProducts);
     
-    document.getElementById('filterProvider')?.addEventListener('change', filterProducts);
-    document.getElementById('filterType')?.addEventListener('change', filterProducts);
-    document.getElementById('searchProduct')?.addEventListener('input', filterProducts);
+    var filterProviderEl = document.getElementById('filterProvider');
+    if (filterProviderEl) {
+        filterProviderEl.addEventListener('change', filterProducts);
+    }
+    var filterTypeEl = document.getElementById('filterType');
+    if (filterTypeEl) {
+        filterTypeEl.addEventListener('change', filterProducts);
+    }
+    var searchProductEl = document.getElementById('searchProduct');
+    if (searchProductEl) {
+        searchProductEl.addEventListener('input', filterProducts);
+    }
 });
-
-

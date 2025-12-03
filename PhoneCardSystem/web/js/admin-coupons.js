@@ -17,9 +17,12 @@ function loadCoupons() {
     
     renderCoupons();
     
-    document.getElementById('addCouponBtn')?.addEventListener('click', function() {
-        alert('Tính năng thêm coupon đang được phát triển');
-    });
+    var addCouponBtn = document.getElementById('addCouponBtn');
+    if (addCouponBtn) {
+        addCouponBtn.addEventListener('click', function() {
+            alert('Tính năng thêm coupon đang được phát triển');
+        });
+    }
 }
 
 function renderCoupons() {
@@ -43,5 +46,3 @@ function renderCoupons() {
 }
 
 document.addEventListener('DOMContentLoaded', loadCoupons);
-
-

@@ -49,5 +49,3 @@ function renderOrderDetail(order) {
 }
 
 document.addEventListener('DOMContentLoaded', loadOrderDetail);
-
-

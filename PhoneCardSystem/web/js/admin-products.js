@@ -16,9 +16,12 @@ function loadProducts() {
     
     renderProducts();
     
-    document.getElementById('addProductBtn')?.addEventListener('click', function() {
-        alert('Tính năng thêm sản phẩm đang được phát triển');
-    });
+    var addProductBtn = document.getElementById('addProductBtn');
+    if (addProductBtn) {
+        addProductBtn.addEventListener('click', function() {
+            alert('Tính năng thêm sản phẩm đang được phát triển');
+        });
+    }
 }
 
 function renderProducts() {
@@ -42,5 +45,3 @@ function renderProducts() {
 }
 
 document.addEventListener('DOMContentLoaded', loadProducts);
-
-

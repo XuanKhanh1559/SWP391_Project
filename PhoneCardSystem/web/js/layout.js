@@ -95,8 +95,9 @@ function initHeader() {
     const currentPage = window.location.pathname.split('/').pop().replace('.jsp', '').replace('.html', '');
     document.querySelectorAll('.nav-link').forEach(link => {
         link.classList.remove('active');
+        const href = link.getAttribute('href');
         if (link.getAttribute('data-page') === currentPage || 
-            link.getAttribute('href')?.includes(currentPage)) {
+            (href && href.includes(currentPage))) {
             link.classList.add('active');
         }
     });
@@ -121,4 +122,3 @@ if (document.readyState === 'loading') {
 } else {
     loadLayout();
 }
-

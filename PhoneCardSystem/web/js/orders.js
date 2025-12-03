@@ -51,5 +51,3 @@ function renderOrders(orders) {
 }
 
 document.addEventListener('DOMContentLoaded', loadOrders);
-
-

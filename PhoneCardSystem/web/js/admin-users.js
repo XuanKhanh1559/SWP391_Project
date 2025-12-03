@@ -17,14 +17,17 @@ function loadUsers() {
     
     renderUsers(mockUsers);
     
-    document.getElementById('searchUser')?.addEventListener('input', function() {
-        const searchTerm = this.value.toLowerCase();
-        const filtered = mockUsers.filter(u => 
-            u.username.toLowerCase().includes(searchTerm) || 
-            u.email.toLowerCase().includes(searchTerm)
-        );
-        renderUsers(filtered);
-    });
+    var searchUserEl = document.getElementById('searchUser');
+    if (searchUserEl) {
+        searchUserEl.addEventListener('input', function() {
+            const searchTerm = this.value.toLowerCase();
+            const filtered = mockUsers.filter(u => 
+                u.username.toLowerCase().includes(searchTerm) || 
+                u.email.toLowerCase().includes(searchTerm)
+            );
+            renderUsers(filtered);
+        });
+    }
 }
 
 function renderUsers(users) {
@@ -48,5 +51,3 @@ function renderUsers(users) {
 }
 
 document.addEventListener('DOMContentLoaded', loadUsers);
-
-

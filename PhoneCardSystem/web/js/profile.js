@@ -25,7 +25,10 @@ function loadProfile() {
         });
     });
     
-    document.getElementById('profileForm')?.addEventListener('submit', updateProfile);
+    var profileForm = document.getElementById('profileForm');
+    if (profileForm) {
+        profileForm.addEventListener('submit', updateProfile);
+    }
 }
 
 function showProfileSection(section) {
@@ -84,5 +87,3 @@ function getTransactionTypeText(type) {
 }
 
 document.addEventListener('DOMContentLoaded', loadProfile);
-
-

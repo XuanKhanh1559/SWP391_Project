@@ -13,7 +13,10 @@ function loadNotifications() {
     
     renderNotifications();
     
-    document.getElementById('markAllReadBtn')?.addEventListener('click', markAllRead);
+    var markAllReadBtn = document.getElementById('markAllReadBtn');
+    if (markAllReadBtn) {
+        markAllReadBtn.addEventListener('click', markAllRead);
+    }
 }
 
 function renderNotifications() {
@@ -49,5 +52,3 @@ function markAllRead() {
 }
 
 document.addEventListener('DOMContentLoaded', loadNotifications);
-
-

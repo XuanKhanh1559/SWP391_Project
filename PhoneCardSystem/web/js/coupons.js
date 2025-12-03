@@ -38,5 +38,3 @@ function renderCoupons() {
 }
 
 document.addEventListener('DOMContentLoaded', loadCoupons);
-
-

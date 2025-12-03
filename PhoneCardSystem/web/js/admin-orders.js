@@ -22,12 +22,15 @@ function loadOrders() {
     const orders = JSON.parse(localStorage.getItem('orders') || '[]');
     renderOrders(orders);
     
-    document.getElementById('filterStatus')?.addEventListener('change', function() {
-        const status = this.value;
-        const allOrders = JSON.parse(localStorage.getItem('orders') || '[]');
-        const filtered = status ? allOrders.filter(o => o.status === status) : allOrders;
-        renderOrders(filtered);
-    });
+    var filterStatusEl = document.getElementById('filterStatus');
+    if (filterStatusEl) {
+        filterStatusEl.addEventListener('change', function() {
+            const status = this.value;
+            const allOrders = JSON.parse(localStorage.getItem('orders') || '[]');
+            const filtered = status ? allOrders.filter(o => o.status === status) : allOrders;
+            renderOrders(filtered);
+        });
+    }
 }
 
 function renderOrders(orders) {
@@ -55,5 +58,3 @@ function renderOrders(orders) {
 }
 
 document.addEventListener('DOMContentLoaded', loadOrders);
-
-

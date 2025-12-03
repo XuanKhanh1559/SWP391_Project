@@ -19,7 +19,10 @@ function loadCheckout() {
     
     renderCheckout(cart);
     
-    document.getElementById('placeOrderBtn')?.addEventListener('click', placeOrder);
+    var placeOrderBtn = document.getElementById('placeOrderBtn');
+    if (placeOrderBtn) {
+        placeOrderBtn.addEventListener('click', placeOrder);
+    }
 }
 
 function renderCheckout(cart) {
@@ -78,5 +81,3 @@ function placeOrder() {
 }
 
 document.addEventListener('DOMContentLoaded', loadCheckout);
-
-

@@ -19,12 +19,13 @@ function loadStatistics() {
     document.getElementById('newUsers').textContent = '5';
     document.getElementById('topProduct').textContent = 'Thẻ nạp Viettel 50.000đ';
     
-    document.getElementById('filterPeriod')?.addEventListener('change', function() {
-        // Filter statistics by period
-        alert('Lọc theo kỳ: ' + this.value);
-    });
+    var filterPeriodEl = document.getElementById('filterPeriod');
+    if (filterPeriodEl) {
+        filterPeriodEl.addEventListener('change', function() {
+            // Filter statistics by period
+            alert('Lọc theo kỳ: ' + this.value);
+        });
+    }
 }
 
 document.addEventListener('DOMContentLoaded', loadStatistics);
-
-

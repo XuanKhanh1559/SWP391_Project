@@ -82,18 +82,22 @@ function updateCartCount(cart) {
 document.addEventListener('DOMContentLoaded', function() {
     loadCart();
     
-    document.getElementById('checkoutBtn')?.addEventListener('click', function() {
-        const cart = JSON.parse(localStorage.getItem('cart') || '[]');
-        if (cart.length === 0) {
-            alert('Giỏ hàng trống!');
-            return;
-        }
-        window.location.href = 'checkout.jsp';
-    });
+    var checkoutBtn = document.getElementById('checkoutBtn');
+    if (checkoutBtn) {
+        checkoutBtn.addEventListener('click', function() {
+            const cart = JSON.parse(localStorage.getItem('cart') || '[]');
+            if (cart.length === 0) {
+                alert('Giỏ hàng trống!');
+                return;
+            }
+            window.location.href = 'checkout.jsp';
+        });
+    }
     
-    document.getElementById('applyCouponBtn')?.addEventListener('click', function() {
-        alert('Tính năng áp dụng coupon đang được phát triển');
-    });
+    var applyCouponBtn = document.getElementById('applyCouponBtn');
+    if (applyCouponBtn) {
+        applyCouponBtn.addEventListener('click', function() {
+            alert('Tính năng áp dụng coupon đang được phát triển');
+        });
+    }
 });
-
-
