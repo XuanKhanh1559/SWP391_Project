@@ -55,6 +55,8 @@ desktop.ini
 *.war
 *.ear
 *.jar
+# Allow JAR files in WEB-INF/lib (dependencies)
+!**/WEB-INF/lib/*.jar
 
 # Maven
 target/
