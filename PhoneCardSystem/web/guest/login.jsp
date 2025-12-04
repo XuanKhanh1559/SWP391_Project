@@ -22,6 +22,11 @@
                         <%= request.getAttribute("error") %>
                     </div>
                 <% } %>
+                <% if ("success".equals(request.getParameter("reset"))) { %>
+                    <div class="alert alert-success" style="color: green; margin-bottom: 1rem; padding: 0.75rem; background-color: #efe; border: 1px solid #cfc; border-radius: 4px;">
+                        Đặt lại mật khẩu thành công. Vui lòng đăng nhập với mật khẩu mới.
+                    </div>
+                <% } %>
                 <form id="loginForm" action="${pageContext.request.contextPath}/login" method="POST">
                     <div class="form-group">
                         <label>Email hoặc Username</label>
@@ -35,6 +40,9 @@
                         </div>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
+                    <p class="auth-link">
+                        <a href="${pageContext.request.contextPath}/forgot-password">Quên mật khẩu?</a>
+                    </p>
                     <p class="auth-link">Chưa có tài khoản? <a href="${pageContext.request.contextPath}/register">Đăng ký ngay</a></p>
                 </form>
             </div>
