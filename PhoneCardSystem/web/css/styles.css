@@ -83,9 +83,9 @@ body {
     font-weight: 500;
     transition: color 0.3s;
     position: relative;
+    cursor: pointer;
 }
 
-.nav-link:hover,
 .nav-link.active {
     color: var(--primary-color);
 }
@@ -104,6 +104,11 @@ body {
     position: relative;
 }
 
+#userMenuToggle {
+    cursor: pointer;
+    user-select: none;
+}
+
 .user-dropdown {
     position: absolute;
     top: 100%;
@@ -115,9 +120,10 @@ body {
     display: none;
     margin-top: 0.5rem;
     overflow: hidden;
+    z-index: 1001;
 }
 
-.nav-user:hover .user-dropdown {
+.nav-user.active .user-dropdown {
     display: block;
 }
 
@@ -127,6 +133,7 @@ body {
     text-decoration: none;
     color: var(--text-color);
     transition: background 0.3s;
+    cursor: pointer;
 }
 
 .user-dropdown a:hover {

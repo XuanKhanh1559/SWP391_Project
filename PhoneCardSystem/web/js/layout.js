@@ -80,7 +80,8 @@ function initHeader() {
         });
     }
     
-    // Logout handler - link already points to LogoutServlet, no need for event handler
+    // User dropdown toggle - CLICK ONLY, NO HOVER
+    setupUserDropdown();
     
     // Set active nav link based on current page
     const currentPage = window.location.pathname.split('/').pop().replace('.jsp', '').replace('.html', '');
@@ -104,6 +105,50 @@ function updateCartCount() {
     const cartCountEl = document.getElementById('cartCount');
     if (cartCountEl) {
         cartCountEl.textContent = count;
+    }
+}
+
+function setupUserDropdown() {
+    const userMenuToggle = document.getElementById('userMenuToggle');
+    const navUser = document.getElementById('navUser');
+    
+    if (!userMenuToggle || !navUser) {
+        return;
+    }
+    
+    // Remove any existing listeners
+    const newToggle = userMenuToggle.cloneNode(true);
+    userMenuToggle.parentNode.replaceChild(newToggle, userMenuToggle);
+    
+    // Add click event to toggle dropdown
+    newToggle.addEventListener('click', function(e) {
+        e.preventDefault();
+        e.stopPropagation();
+        
+        const isActive = navUser.classList.contains('active');
+        // Close all other dropdowns first
+        document.querySelectorAll('.nav-user.active').forEach(el => {
+            if (el !== navUser) el.classList.remove('active');
+        });
+        // Toggle current dropdown
+        if (isActive) {
+            navUser.classList.remove('active');
+        } else {
+            navUser.classList.add('active');
+        }
+    });
+    
+    // Close dropdown when clicking outside (only add once globally)
+    if (!window.userDropdownClickHandlerAdded) {
+        window.userDropdownClickHandlerAdded = true;
+        document.addEventListener('click', function(e) {
+            const allNavUsers = document.querySelectorAll('.nav-user');
+            allNavUsers.forEach(navUserEl => {
+                if (navUserEl && !navUserEl.contains(e.target)) {
+                    navUserEl.classList.remove('active');
+                }
+            });
+        });
     }
 }
 
