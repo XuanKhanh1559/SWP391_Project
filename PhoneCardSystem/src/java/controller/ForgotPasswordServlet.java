@@ -8,15 +8,18 @@ import jakarta.servlet.http.HttpServletResponse;
 import dal.UserDao;
 
 public class ForgotPasswordServlet extends HttpServlet {
-   
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
-        if ("GET".equalsIgnoreCase(request.getMethod())) {
-            request.getRequestDispatcher("/guest/forgot-password.jsp").forward(request, response);
-            return;
-        }
+        request.getRequestDispatcher("/guest/forgot-password.jsp").forward(request, response);
+    } 
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         
         String email = request.getParameter("email");
         if (email == null || email.trim().isEmpty()) {
@@ -37,18 +40,6 @@ public class ForgotPasswordServlet extends HttpServlet {
             request.setAttribute("email", email);
             request.getRequestDispatcher("/guest/forgot-password.jsp").forward(request, response);
         }
-    } 
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
-    } 
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
     }
 
     @Override

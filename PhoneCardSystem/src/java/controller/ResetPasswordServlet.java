@@ -8,20 +8,23 @@ import jakarta.servlet.http.HttpServletResponse;
 import dal.UserDao;
 
 public class ResetPasswordServlet extends HttpServlet {
-   
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
-        if ("GET".equalsIgnoreCase(request.getMethod())) {
-            String email = request.getParameter("email");
-            String token = request.getParameter("token");
-            request.setAttribute("email", email);
-            request.setAttribute("token", token);
-            request.setAttribute("sent", request.getParameter("sent"));
-            request.getRequestDispatcher("/guest/reset-password.jsp").forward(request, response);
-            return;
-        }
+        String email = request.getParameter("email");
+        String token = request.getParameter("token");
+        request.setAttribute("email", email);
+        request.setAttribute("token", token);
+        request.setAttribute("sent", request.getParameter("sent"));
+        request.getRequestDispatcher("/guest/reset-password.jsp").forward(request, response);
+    } 
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         
         String email = request.getParameter("email");
         String token = request.getParameter("resetToken");
@@ -66,18 +69,6 @@ public class ResetPasswordServlet extends HttpServlet {
             request.setAttribute("token", token);
             request.getRequestDispatcher("/guest/reset-password.jsp").forward(request, response);
         }
-    } 
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
-    } 
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
     }
 
     @Override

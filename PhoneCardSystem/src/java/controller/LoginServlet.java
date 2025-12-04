@@ -10,15 +10,18 @@ import dal.UserDao;
 import model.User;
 
 public class LoginServlet extends HttpServlet {
-   
-    protected void processRequest(HttpServletRequest request, HttpServletResponse response)
+
+    @Override
+    protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
         response.setContentType("text/html;charset=UTF-8");
-        
-        if ("GET".equalsIgnoreCase(request.getMethod())) {
-            request.getRequestDispatcher("/guest/login.jsp").forward(request, response);
-            return;
-        }
+        request.getRequestDispatcher("/guest/login.jsp").forward(request, response);
+    } 
+
+    @Override
+    protected void doPost(HttpServletRequest request, HttpServletResponse response)
+    throws ServletException, IOException {
+        response.setContentType("text/html;charset=UTF-8");
         
         String emailOrUsername = request.getParameter("emailOrUsername");
         String password = request.getParameter("password");
@@ -59,18 +62,6 @@ public class LoginServlet extends HttpServlet {
             request.setAttribute("error", error);
             request.getRequestDispatcher("/guest/login.jsp").forward(request, response);
         }
-    } 
-
-    @Override
-    protected void doGet(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
-    } 
-
-    @Override
-    protected void doPost(HttpServletRequest request, HttpServletResponse response)
-    throws ServletException, IOException {
-        processRequest(request, response);
     }
 
     @Override
