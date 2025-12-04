@@ -39,7 +39,7 @@
                         <input type="password" id="registerConfirmPassword" required>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Đăng ký</button>
-                    <p class="auth-link">Đã có tài khoản? <a href="login.jsp">Đăng nhập</a></p>
+                    <p class="auth-link">Đã có tài khoản? <a href="${pageContext.request.contextPath}/login">Đăng nhập</a></p>
                 </form>
             </div>
         </div>

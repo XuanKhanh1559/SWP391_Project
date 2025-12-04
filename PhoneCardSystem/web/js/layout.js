@@ -1,18 +1,13 @@
 // Layout loader - Load header and footer dynamically
 function loadLayout() {
-    // Determine base path based on current location
+    // Determine context path from current location
     const currentPath = window.location.pathname;
-    const currentDir = window.location.pathname.split('/').slice(-2, -1)[0];
-    let basePath = '';
-    
-    if (currentDir === 'guest' || currentDir === 'user' || currentDir === 'admin') {
-        basePath = '../';
-    } else {
-        basePath = '';
-    }
+    // Extract context path (e.g., /phone_card_system from /phone_card_system/login)
+    const pathParts = currentPath.split('/').filter(p => p);
+    const contextPath = pathParts.length > 0 ? '/' + pathParts[0] : '';
     
     // Load header
-    fetch(`${basePath}layouts/header.jsp`)
+    fetch(`${contextPath}/layouts/header.jsp`)
         .then(response => response.text())
         .then(data => {
             const headerPlaceholder = document.getElementById('header-placeholder');
@@ -24,7 +19,7 @@ function loadLayout() {
         .catch(error => console.error('Error loading header:', error));
     
     // Load footer
-    fetch(`${basePath}layouts/footer.jsp`)
+    fetch(`${contextPath}/layouts/footer.jsp`)
         .then(response => response.text())
         .then(data => {
             const footerPlaceholder = document.getElementById('footer-placeholder');
@@ -37,22 +32,26 @@ function loadLayout() {
 }
 
 function initHeader() {
-    // Update navigation based on user role
-    const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
+    // Check if user is logged in via session (will be set by JSP)
+    // For now, we'll check if there's a user element in the page
     const navAuth = document.getElementById('navAuth');
     const navUser = document.getElementById('navUser');
     const userMenu = document.getElementById('userMenu');
     const adminMenu = document.getElementById('adminMenu');
     const userName = document.getElementById('userName');
     
-    if (user.id) {
+    // Check if user data is available from JSP (set via script tag)
+    const userLoggedIn = typeof window.userData !== 'undefined' && window.userData !== null;
+    
+    if (userLoggedIn && window.userData.id) {
         if (navAuth) navAuth.style.display = 'none';
         if (navUser) {
             navUser.style.display = 'block';
-            if (userName) userName.textContent = user.username || 'Tài khoản';
+            if (userName) userName.textContent = window.userData.username || 'Tài khoản';
         }
         
-        if (user.role === 'admin') {
+        const isAdmin = window.userData.username === 'admin' || window.userData.email === 'admin@admin.com';
+        if (isAdmin) {
             if (adminMenu) adminMenu.style.display = 'block';
             if (userMenu) userMenu.style.display = 'none';
             const logoText = document.getElementById('navLogoText');
@@ -81,15 +80,7 @@ function initHeader() {
         });
     }
     
-    // Logout handler
-    const logoutBtn = document.getElementById('logoutBtn');
-    if (logoutBtn) {
-        logoutBtn.addEventListener('click', function(e) {
-            e.preventDefault();
-            localStorage.removeItem('currentUser');
-            window.location.href = '../index.jsp';
-        });
-    }
+    // Logout handler - link already points to LogoutServlet, no need for event handler
     
     // Set active nav link based on current page
     const currentPage = window.location.pathname.split('/').pop().replace('.jsp', '').replace('.html', '');

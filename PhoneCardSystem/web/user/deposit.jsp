@@ -48,14 +48,26 @@
     <!-- Footer Placeholder -->
     <div id="footer-placeholder"></div>
 
+    <%@ page import="model.User" %>
+    <%
+        User user = (User) session.getAttribute("user");
+        if (user == null) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+    %>
+    <script>
+        // Set user data for JavaScript
+        window.userData = {
+            id: <%= user.getId() %>,
+            username: '<%= user.getUsername() %>',
+            email: '<%= user.getEmail() %>',
+            balance: <%= user.getBalance() %>
+        };
+    </script>
     <script src="../js/layout.js"></script>
     <script src="../js/app.js"></script>
     <script>
-        const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
-        if (!user.id) {
-            window.location.href = '../guest/login.jsp';
-        }
-        
         document.getElementById('depositForm').addEventListener('submit', function(e) {
             e.preventDefault();
             const amount = parseFloat(document.getElementById('depositAmount').value);

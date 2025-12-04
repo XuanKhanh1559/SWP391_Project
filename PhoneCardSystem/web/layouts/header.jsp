@@ -21,7 +21,7 @@
             </li>
         </ul>
         <div class="nav-auth" id="navAuth">
-            <a href="../guest/login.jsp" class="btn btn-outline">Đăng nhập</a>
+            <a href="${pageContext.request.contextPath}/login" class="btn btn-outline">Đăng nhập</a>
             <a href="../guest/register.jsp" class="btn btn-primary">Đăng ký</a>
         </div>
         <div class="nav-user" id="navUser" style="display: none;">
@@ -29,7 +29,7 @@
             <div class="user-dropdown" id="userDropdown">
                 <a href="../user/profile.jsp">Hồ sơ</a>
                 <a href="../user/deposit.jsp">Nạp tiền</a>
-                <a href="#" id="logoutBtn">Đăng xuất</a>
+                <a href="${pageContext.request.contextPath}/LogoutServlet" id="logoutBtn">Đăng xuất</a>
             </div>
         </div>
         <div class="nav-toggle" id="navToggle">

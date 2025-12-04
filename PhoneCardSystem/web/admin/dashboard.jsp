@@ -50,14 +50,25 @@
     <!-- Footer Placeholder -->
     <div id="footer-placeholder"></div>
 
+    <%@ page import="model.User" %>
+    <%
+        User user = (User) session.getAttribute("user");
+        if (user == null || (!"admin".equalsIgnoreCase(user.getUsername()) && !"admin@admin.com".equalsIgnoreCase(user.getEmail()))) {
+            response.sendRedirect(request.getContextPath() + "/login");
+            return;
+        }
+    %>
+    <script>
+        // Set user data for JavaScript
+        window.userData = {
+            id: <%= user.getId() %>,
+            username: '<%= user.getUsername() %>',
+            email: '<%= user.getEmail() %>',
+            balance: <%= user.getBalance() %>
+        };
+    </script>
     <script src="../js/layout.js"></script>
     <script src="../js/app.js"></script>
-    <script>
-        const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
-        if (!user.id || user.role !== 'admin') {
-            window.location.href = '../guest/login.jsp';
-        }
-    </script>
 </body>
 </html>
 

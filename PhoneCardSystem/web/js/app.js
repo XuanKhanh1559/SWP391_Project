@@ -21,23 +21,6 @@ function initApp() {
     // Update cart count on all pages
     updateCartCount();
     
-    // Check user authentication
-    const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
-    const navAuth = document.getElementById('navAuth');
-    const navUser = document.getElementById('navUser');
-    const userName = document.getElementById('userName');
-    
-    if (user.id) {
-        if (navAuth) navAuth.style.display = 'none';
-        if (navUser) {
-            navUser.style.display = 'block';
-            if (userName) userName.textContent = user.username || 'Tài khoản';
-        }
-    } else {
-        if (navAuth) navAuth.style.display = 'flex';
-        if (navUser) navUser.style.display = 'none';
-    }
-    
     // Mobile menu toggle
     const navToggle = document.getElementById('navToggle');
     const navMenu = document.getElementById('navMenu');
