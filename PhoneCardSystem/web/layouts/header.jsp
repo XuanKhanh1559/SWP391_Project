@@ -27,8 +27,8 @@
         <div class="nav-user" id="navUser" style="display: none;">
             <a href="#" class="nav-link" id="userMenuToggle"><i class="fas fa-user"></i> <span id="userName">Tài khoản</span></a>
             <div class="user-dropdown" id="userDropdown">
-                <a href="../user/profile.jsp">Hồ sơ</a>
-                <a href="../user/deposit.jsp">Nạp tiền</a>
+                <a href="${pageContext.request.contextPath}/profile">Hồ sơ</a>
+                <a href="${pageContext.request.contextPath}/user/deposit.jsp">Nạp tiền</a>
                 <a href="${pageContext.request.contextPath}/logout" id="logoutBtn">Đăng xuất</a>
             </div>
         </div>

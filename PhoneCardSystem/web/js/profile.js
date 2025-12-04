@@ -1,33 +1,21 @@
-// Profile page functionality
 function formatCurrency(amount) {
     return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
 }
 
 function loadProfile() {
-    const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
-    if (!user.id) {
-        window.location.href = '../guest/login.jsp';
+    if (!window.userData) {
         return;
     }
     
-    document.getElementById('profileUserName').textContent = user.username || 'User';
-    document.getElementById('profileBalance').textContent = formatCurrency(user.balance || 0);
-    document.getElementById('profileUsername').value = user.username || '';
-    document.getElementById('profileEmail').value = user.email || '';
-    document.getElementById('profilePhone').value = user.phone || '';
-    
-    // Profile navigation
-    document.querySelectorAll('.profile-nav a').forEach(link => {
-        link.addEventListener('click', (e) => {
-            e.preventDefault();
-            const section = link.getAttribute('href').substring(1);
-            showProfileSection(section);
+    const profileNav = document.querySelectorAll('.profile-nav a');
+    if (profileNav.length > 0) {
+        profileNav.forEach(link => {
+            link.addEventListener('click', (e) => {
+                e.preventDefault();
+                const section = link.getAttribute('href').substring(1);
+                showProfileSection(section);
+            });
         });
-    });
-    
-    var profileForm = document.getElementById('profileForm');
-    if (profileForm) {
-        profileForm.addEventListener('submit', updateProfile);
     }
 }
 
@@ -47,14 +35,6 @@ function showProfileSection(section) {
     }
 }
 
-function updateProfile(e) {
-    e.preventDefault();
-    const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
-    user.email = document.getElementById('profileEmail').value;
-    user.phone = document.getElementById('profilePhone').value;
-    localStorage.setItem('currentUser', JSON.stringify(user));
-    alert('Cập nhật thông tin thành công!');
-}
 
 function loadTransactions() {
     const container = document.getElementById('transactionsList');

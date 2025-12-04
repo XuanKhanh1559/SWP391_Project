@@ -154,6 +154,25 @@ public class UserDao extends DBContext {
         return -1;
     }
 
+    public User getUserById(int userId) {
+        if (connection == null) {
+            return null;
+        }
+        String sql = "SELECT id, username, email, password, phone, balance, status, created_at, updated_at, deleted "
+                   + "FROM users WHERE id = ? AND deleted = 0";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapResultSetToUser(rs);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
     public User getUserByEmail(String email) {
         if (connection == null) {
             return null;
@@ -171,6 +190,44 @@ public class UserDao extends DBContext {
             ex.printStackTrace();
         }
         return null;
+    }
+
+    public boolean updateProfile(int userId, String email, String phone) {
+        if (connection == null) {
+            lastErrorMessage = "Lỗi kết nối database. Vui lòng kiểm tra cấu hình database.";
+            return false;
+        }
+        String sql = "UPDATE users SET email = ?, phone = ?, updated_at = NOW() WHERE id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, email);
+            ps.setString(2, phone);
+            ps.setInt(3, userId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            lastErrorMessage = "Lỗi khi cập nhật thông tin: " + ex.getMessage();
+        }
+        return false;
+    }
+
+    public boolean verifyCurrentPassword(int userId, String password) {
+        if (connection == null) {
+            return false;
+        }
+        String sql = "SELECT password FROM users WHERE id = ? AND deleted = 0";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                String hashedPassword = rs.getString("password");
+                return PasswordUtil.verifyPassword(password, hashedPassword);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
     }
 
     public boolean updatePasswordByUserId(int userId, String newPassword) {
