@@ -22,7 +22,7 @@
         </ul>
         <div class="nav-auth" id="navAuth">
             <a href="${pageContext.request.contextPath}/login" class="btn btn-outline">Đăng nhập</a>
-            <a href="../guest/register.jsp" class="btn btn-primary">Đăng ký</a>
+            <a href="${pageContext.request.contextPath}/register" class="btn btn-primary">Đăng ký</a>
         </div>
         <div class="nav-user" id="navUser" style="display: none;">
             <a href="../user/profile.jsp" class="nav-link"><i class="fas fa-user"></i> <span id="userName">Tài khoản</span></a>

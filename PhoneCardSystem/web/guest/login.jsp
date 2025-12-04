@@ -29,10 +29,13 @@
                     </div>
                     <div class="form-group">
                         <label>Mật khẩu</label>
-                        <input type="password" id="loginPassword" name="password" required>
+                        <div style="position: relative;">
+                            <input type="password" id="loginPassword" name="password" required style="padding-right: 40px;">
+                            <i class="fas fa-eye" id="toggleLoginPassword" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #666;"></i>
+                        </div>
                     </div>
                     <button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
-                    <p class="auth-link">Chưa có tài khoản? <a href="${pageContext.request.contextPath}/guest/register.jsp">Đăng ký ngay</a></p>
+                    <p class="auth-link">Chưa có tài khoản? <a href="${pageContext.request.contextPath}/register">Đăng ký ngay</a></p>
                 </form>
             </div>
         </div>
@@ -43,6 +46,17 @@
 
     <script src="${pageContext.request.contextPath}/js/layout.js"></script>
     <script src="${pageContext.request.contextPath}/js/app.js"></script>
+    <script>
+        const toggleLoginPassword = document.getElementById('toggleLoginPassword');
+        const loginPassword = document.getElementById('loginPassword');
+        
+        toggleLoginPassword.addEventListener('click', function() {
+            const type = loginPassword.getAttribute('type') === 'password' ? 'text' : 'password';
+            loginPassword.setAttribute('type', type);
+            toggleLoginPassword.classList.toggle('fa-eye');
+            toggleLoginPassword.classList.toggle('fa-eye-slash');
+        });
+    </script>
 </body>
 </html>
 
