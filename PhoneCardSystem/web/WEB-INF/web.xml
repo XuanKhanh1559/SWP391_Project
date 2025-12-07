@@ -64,6 +64,14 @@
         <servlet-name>ProductServlet</servlet-name>
         <url-pattern>/products</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>ProductDetailServlet</servlet-name>
+        <servlet-class>controller.ProductDetailServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ProductDetailServlet</servlet-name>
+        <url-pattern>/product-detail</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
