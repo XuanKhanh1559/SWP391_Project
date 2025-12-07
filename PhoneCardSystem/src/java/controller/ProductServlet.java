@@ -19,16 +19,11 @@ public class ProductServlet extends HttpServlet {
         response.setContentType("text/html;charset=UTF-8");
         
         HttpSession session = request.getSession(false);
-        User user = null;
         boolean isAdmin = false;
         
         if (session != null) {
-            user = (User) session.getAttribute("user");
-            if (user != null) {
-                String username = user.getUsername();
-                String email = user.getEmail();
-                isAdmin = "admin".equalsIgnoreCase(username) || "admin@admin.com".equalsIgnoreCase(email);
-            }
+            String role = (String) session.getAttribute("role");
+            isAdmin = "admin".equalsIgnoreCase(role);
         }
         
         String providerParam = request.getParameter("provider");
