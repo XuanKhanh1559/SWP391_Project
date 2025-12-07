@@ -59,11 +59,11 @@
         }
     %>
     <script>
-        // Set user data for JavaScript
         window.userData = {
             id: <%= user.getId() %>,
-            username: '<%= user.getUsername() %>',
-            email: '<%= user.getEmail() %>',
+            username: '<%= user.getUsername().replace("'", "\\'") %>',
+            email: '<%= user.getEmail().replace("'", "\\'") %>',
+            role: '<%= user.getRole() != null ? user.getRole().replace("'", "\\'") : "user" %>',
             balance: <%= user.getBalance() %>
         };
     </script>

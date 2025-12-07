@@ -65,6 +65,29 @@
     <!-- Footer Placeholder -->
     <div id="footer-placeholder"></div>
 
+    <%@ page import="model.User" %>
+    <%
+        User user = null;
+        HttpSession userSession = request.getSession(false);
+        if (userSession != null && userSession.getAttribute("user") != null) {
+            user = (User) userSession.getAttribute("user");
+        }
+    %>
+    <script>
+        window.userData = <%
+            if (user != null) {
+                out.print("{");
+                out.print("id: " + user.getId() + ",");
+                out.print("username: \"" + user.getUsername().replace("\"", "\\\"") + "\",");
+                out.print("email: \"" + user.getEmail().replace("\"", "\\\"") + "\",");
+                out.print("role: \"" + (user.getRole() != null ? user.getRole().replace("\"", "\\\"") : "user") + "\",");
+                out.print("balance: " + user.getBalance());
+                out.print("}");
+            } else {
+                out.print("null");
+            }
+        %>;
+    </script>
     <script src="js/layout.js"></script>
     <script src="js/app.js"></script>
 </body>

@@ -12,7 +12,9 @@ function loadLayout() {
         .then(data => {
             const headerPlaceholder = document.getElementById('header-placeholder');
             if (headerPlaceholder) {
-                headerPlaceholder.innerHTML = data;
+                // Replace ${pageContext.request.contextPath} with actual context path
+                const processedData = data.replace(/\$\{pageContext\.request\.contextPath\}/g, contextPath);
+                headerPlaceholder.innerHTML = processedData;
                 initHeader();
             }
         })
@@ -50,7 +52,7 @@ function initHeader() {
             if (userName) userName.textContent = window.userData.username || 'Tài khoản';
         }
         
-        const isAdmin = window.userData.username === 'admin' || window.userData.email === 'admin@admin.com';
+        const isAdmin = window.userData.role === 'admin';
         if (isAdmin) {
             if (adminMenu) adminMenu.style.display = 'block';
             if (userMenu) userMenu.style.display = 'none';

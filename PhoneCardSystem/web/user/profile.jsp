@@ -141,9 +141,10 @@
         <% if (user != null) { %>
             window.userData = {
                 id: <%= user.getId() %>,
-                username: '<%= user.getUsername() %>',
-                email: '<%= user.getEmail() %>',
-                phone: '<%= user.getPhone() != null ? user.getPhone() : "" %>',
+                username: '<%= user.getUsername().replace("'", "\\'") %>',
+                email: '<%= user.getEmail().replace("'", "\\'") %>',
+                role: '<%= user.getRole() != null ? user.getRole().replace("'", "\\'") : "user" %>',
+                phone: '<%= user.getPhone() != null ? user.getPhone().replace("'", "\\'") : "" %>',
                 balance: <%= user.getBalance() %>
             };
         <% } %>
