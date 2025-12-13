@@ -129,29 +129,50 @@
     </script>
     <script src="${pageContext.request.contextPath}/js/layout.js"></script>
     <script src="${pageContext.request.contextPath}/js/app.js"></script>
+    <script src="${pageContext.request.contextPath}/js/toast.js"></script>
     <script>
         function addToCartFromDetail(productId) {
             const quantity = parseInt(document.getElementById('quantity').value) || 1;
             if (quantity < 1) {
-                alert('Số lượng phải lớn hơn 0');
+                showToast('Số lượng phải lớn hơn 0', 'warning');
                 return;
             }
             
-            let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-            const existingItem = cart.find(item => item.productId === productId);
+            const contextPath = '${pageContext.request.contextPath}';
             
-            if (existingItem) {
-                existingItem.quantity += quantity;
-            } else {
-                cart.push({
-                    productId: productId,
-                    product: window.productData,
-                    quantity: quantity
-                });
-            }
-            
-            localStorage.setItem('cart', JSON.stringify(cart));
-            alert('Đã thêm vào giỏ hàng!');
+            fetch(contextPath + '/add-to-cart', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'productId=' + productId + '&quantity=' + quantity
+            })
+            .then(response => {
+                if (!response.ok) {
+                    return response.text().then(text => {
+                        try {
+                            return JSON.parse(text);
+                        } catch (e) {
+                            throw new Error('Invalid response');
+                        }
+                    });
+                }
+                return response.json();
+            })
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    if (window.updateCartCount) {
+                        window.updateCartCount();
+                    }
+                } else {
+                    showToast(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Có lỗi xảy ra. Vui lòng thử lại.', 'error');
+            });
         }
     </script>
 </body>

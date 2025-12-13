@@ -156,6 +156,14 @@
             </c:forEach>
         ];
     </script>
+    <script src="${pageContext.request.contextPath}/js/toast.js"></script>
+    <script>
+        if (typeof showToast === 'undefined') {
+            console.error('toast.js failed to load - showToast is undefined');
+        } else {
+            console.log('toast.js loaded successfully - showToast is:', typeof showToast);
+        }
+    </script>
     <script src="${pageContext.request.contextPath}/js/layout.js"></script>
     <script src="${pageContext.request.contextPath}/js/app.js"></script>
     <script src="${pageContext.request.contextPath}/js/products.js"></script>

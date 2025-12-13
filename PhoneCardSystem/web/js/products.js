@@ -1,26 +1,57 @@
 function addToCart(productId) {
-    const products = window.productsData || [];
-    const product = products.find(p => p.id === productId);
-    if (!product) {
-        alert('Không tìm thấy sản phẩm!');
-        return;
-    }
     
-    let cart = JSON.parse(localStorage.getItem('cart') || '[]');
-    const existingItem = cart.find(item => item.productId === productId);
+    const contextPath = window.location.pathname.split('/')[1] ? '/' + window.location.pathname.split('/')[1] : '';
     
-    if (existingItem) {
-        existingItem.quantity += 1;
-    } else {
-        cart.push({
-            productId: productId,
-            product: product,
-            quantity: 1
-        });
-    }
-    
-    localStorage.setItem('cart', JSON.stringify(cart));
-    alert('Đã thêm vào giỏ hàng!');
+    fetch(contextPath + '/add-to-cart', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/x-www-form-urlencoded',
+        },
+        body: 'productId=' + productId + '&quantity=1'
+    })
+    .then(response => {
+        if (!response.ok) {
+            return response.text().then(text => {
+                try {
+                    return JSON.parse(text);
+                } catch (e) {
+                    throw new Error('Invalid response');
+                }
+            });
+        }
+        return response.json();
+    })
+    .then(data => {
+        console.log('Add to cart response:', data);
+        if (data.success) {
+            console.log('Calling showToast with:', data.message, 'success');
+            if (typeof showToast === 'function') {
+                showToast(data.message, 'success');
+            } else {
+                console.error('showToast is not a function. Type:', typeof showToast, 'Available:', Object.keys(window).filter(k => k.includes('toast')));
+                alert(data.message);
+            }
+            if (window.updateCartCount) {
+                window.updateCartCount();
+            }
+        } else {
+            console.log('Calling showToast with error:', data.message);
+            if (typeof showToast === 'function') {
+                showToast(data.message, 'error');
+            } else {
+                console.error('showToast is not a function for error');
+                alert(data.message);
+            }
+        }
+    })
+    .catch(error => {
+        console.error('Error:', error);
+        if (typeof showToast === 'function') {
+            showToast('Có lỗi xảy ra. Vui lòng thử lại.', 'error');
+        } else {
+            alert('Có lỗi xảy ra. Vui lòng thử lại.');
+        }
+    });
 }
 
 document.addEventListener('DOMContentLoaded', function() {
