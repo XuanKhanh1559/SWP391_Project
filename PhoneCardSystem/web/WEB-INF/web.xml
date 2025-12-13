@@ -216,6 +216,22 @@
         <servlet-name>AdminDashboardServlet</servlet-name>
         <url-pattern>/admin/dashboard</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>AdminCouponServlet</servlet-name>
+        <servlet-class>controller.AdminCouponServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminCouponServlet</servlet-name>
+        <url-pattern>/admin/coupons</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>DeleteCouponServlet</servlet-name>
+        <servlet-class>controller.DeleteCouponServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteCouponServlet</servlet-name>
+        <url-pattern>/admin/delete-coupon</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

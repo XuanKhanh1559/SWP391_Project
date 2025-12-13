@@ -1613,6 +1613,106 @@ body {
     overflow-x: auto;
 }
 
+.table-responsive {
+    overflow-x: auto;
+    -webkit-overflow-scrolling: touch;
+}
+
+.coupon-table {
+    min-width: 1800px;
+}
+
+.coupon-table th {
+    white-space: nowrap;
+    position: sticky;
+    top: 0;
+    background: var(--light-color);
+    z-index: 10;
+}
+
+.coupon-code {
+    color: var(--primary-color);
+    font-family: 'Courier New', monospace;
+    font-size: 0.95rem;
+}
+
+.coupon-name {
+    min-width: 150px;
+    max-width: 200px;
+}
+
+.coupon-desc {
+    min-width: 200px;
+    max-width: 250px;
+    white-space: normal;
+    line-height: 1.4;
+}
+
+.coupon-value {
+    font-weight: 600;
+    color: var(--secondary-color);
+}
+
+.coupon-min, .coupon-max {
+    white-space: nowrap;
+}
+
+.coupon-date {
+    white-space: nowrap;
+}
+
+.action-buttons {
+    white-space: nowrap;
+}
+
+.text-center {
+    text-align: center;
+}
+
+.text-muted {
+    color: #6c757d;
+    font-style: italic;
+}
+
+.text-success {
+    color: var(--secondary-color);
+    font-size: 1.2rem;
+    font-weight: bold;
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.25rem 0.6rem;
+    font-size: 0.75rem;
+    font-weight: 600;
+    line-height: 1;
+    color: var(--white);
+    text-align: center;
+    white-space: nowrap;
+    vertical-align: baseline;
+    border-radius: 4px;
+}
+
+.badge-success {
+    background-color: var(--secondary-color);
+}
+
+.badge-secondary {
+    background-color: #6c757d;
+}
+
+.badge-warning {
+    background-color: var(--warning-color);
+}
+
+.badge-danger {
+    background-color: var(--danger-color);
+}
+
+.badge-info {
+    background-color: #17a2b8;
+}
+
 .admin-table {
     width: 100%;
     border-collapse: collapse;
