@@ -104,7 +104,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const addProductBtn = document.getElementById('addProductBtn');
     if (addProductBtn) {
         addProductBtn.addEventListener('click', function() {
-            showToast('Tính năng thêm sản phẩm đang được phát triển', 'info');
+            window.location.href = contextPath + '/admin/create-product';
         });
     }
 });
