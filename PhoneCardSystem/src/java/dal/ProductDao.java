@@ -88,6 +88,28 @@ public class ProductDao extends DBContext {
         return whereClause.toString();
     }
 
+    public List<Product> getAllActiveProducts() {
+        List<Product> products = new ArrayList<>();
+        if (connection == null) {
+            return products;
+        }
+        String sql = "SELECT id, name, denomination FROM products WHERE status = 'active' AND deleted = 0 ORDER BY name";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                Product product = new Product();
+                product.setId(rs.getInt("id"));
+                product.setName(rs.getString("name"));
+                product.setDenomination(rs.getDouble("denomination"));
+                products.add(product);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return products;
+    }
+
     public List<Product> getAllProducts(Integer providerId, Integer type, String search, boolean isAdmin, int page, int pageSize) {
         List<Product> products = new ArrayList<>();
         if (connection == null) {

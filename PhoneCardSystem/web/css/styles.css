@@ -1776,6 +1776,60 @@ body {
     color: var(--white);
 }
 
+/* ============================================
+   Filter Section Inline
+   ============================================ */
+.filter-section {
+    background: var(--white);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+    margin-bottom: 2rem;
+}
+
+.filter-form-inline {
+    display: flex;
+    gap: 1rem;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.filter-input-inline {
+    flex: 1;
+    min-width: 250px;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+}
+
+.filter-select-inline {
+    min-width: 200px;
+    padding: 0.75rem 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 6px;
+    font-size: 1rem;
+    background: var(--white);
+    cursor: pointer;
+}
+
+.filter-form-inline .btn {
+    white-space: nowrap;
+}
+
+@media (max-width: 768px) {
+    .filter-form-inline {
+        flex-direction: column;
+        align-items: stretch;
+    }
+    
+    .filter-input-inline,
+    .filter-select-inline,
+    .filter-form-inline .btn {
+        width: 100%;
+    }
+}
+
 .deposit-container {
     max-width: 600px;
     margin: 0 auto;
@@ -2137,6 +2191,30 @@ body {
 
 .usage-count {
     color: var(--warning-color);
+}
+
+.usage-count {
+    color: var(--warning-color);
+}
+
+.applicable-list {
+    list-style: none;
+    padding: 0;
+    margin: 0.5rem 0;
+}
+
+.applicable-list li {
+    padding: 0.5rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.applicable-list li:last-child {
+    border-bottom: none;
+}
+
+.applicable-list li i {
+    color: var(--secondary-color);
+    margin-right: 0.5rem;
 }
 
 @media (max-width: 768px) {

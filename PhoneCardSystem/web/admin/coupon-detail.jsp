@@ -195,8 +195,12 @@
                             <label class="detail-label">Sản phẩm áp dụng:</label>
                             <span class="detail-value">
                                 <c:choose>
-                                    <c:when test="${coupon.applicable_product_ids != null && !coupon.applicable_product_ids.trim().isEmpty()}">
-                                        ${coupon.applicable_product_ids}
+                                    <c:when test="${not empty applicableProductNames}">
+                                        <ul class="applicable-list">
+                                            <c:forEach var="productName" items="${applicableProductNames}">
+                                                <li><i class="fas fa-check-circle"></i> ${productName}</li>
+                                            </c:forEach>
+                                        </ul>
                                     </c:when>
                                     <c:otherwise>
                                         <span class="text-muted">Áp dụng cho tất cả sản phẩm</span>
@@ -208,8 +212,12 @@
                             <label class="detail-label">Nhà cung cấp áp dụng:</label>
                             <span class="detail-value">
                                 <c:choose>
-                                    <c:when test="${coupon.applicable_provider_ids != null && !coupon.applicable_provider_ids.trim().isEmpty()}">
-                                        ${coupon.applicable_provider_ids}
+                                    <c:when test="${not empty applicableProviderNames}">
+                                        <ul class="applicable-list">
+                                            <c:forEach var="providerName" items="${applicableProviderNames}">
+                                                <li><i class="fas fa-check-circle"></i> ${providerName}</li>
+                                            </c:forEach>
+                                        </ul>
                                     </c:when>
                                     <c:otherwise>
                                         <span class="text-muted">Áp dụng cho tất cả nhà cung cấp</span>
