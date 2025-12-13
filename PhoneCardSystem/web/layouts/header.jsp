@@ -17,7 +17,7 @@
                 <a href="${pageContext.request.contextPath}/user/notifications.jsp" class="nav-link" data-page="notifications">Thông báo</a>
             </li>
             <li id="adminMenu" style="display: none;">
-                <a href="${pageContext.request.contextPath}/admin/dashboard.jsp" class="nav-link" data-page="admin-dashboard">Quản trị</a>
+                <a href="${pageContext.request.contextPath}/admin/dashboard" class="nav-link" data-page="admin-dashboard">Quản trị</a>
             </li>
         </ul>
         <div class="nav-auth" id="navAuth">
