@@ -8,7 +8,28 @@ function banUser(userId) {
     showConfirm(
         'Bạn có chắc chắn muốn khóa người dùng này?',
         function() {
-            showToast('Tính năng khóa người dùng đang được phát triển', 'info');
+            fetch(contextPath + '/admin/ban-user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'id=' + userId
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                } else {
+                    showToast(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Có lỗi xảy ra. Vui lòng thử lại.', 'error');
+            });
         }
     );
 }
@@ -17,7 +38,28 @@ function unbanUser(userId) {
     showConfirm(
         'Bạn có chắc chắn muốn mở khóa người dùng này?',
         function() {
-            showToast('Tính năng mở khóa người dùng đang được phát triển', 'info');
+            fetch(contextPath + '/admin/ban-user', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'id=' + userId + '&action=unban'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                } else {
+                    showToast(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Có lỗi xảy ra. Vui lòng thử lại.', 'error');
+            });
         }
     );
 }
