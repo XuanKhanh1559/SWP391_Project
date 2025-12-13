@@ -240,6 +240,14 @@
         <servlet-name>CouponDetailServlet</servlet-name>
         <url-pattern>/admin/coupon-detail</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>EditCouponServlet</servlet-name>
+        <servlet-class>controller.EditCouponServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EditCouponServlet</servlet-name>
+        <url-pattern>/admin/edit-coupon</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

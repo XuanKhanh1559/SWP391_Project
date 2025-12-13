@@ -23,20 +23,16 @@
             </div>
 
             <div class="filter-section">
-                <form action="${pageContext.request.contextPath}/admin/coupons" method="GET" class="filter-form">
-                    <div class="filter-group">
-                        <input type="text" name="search" placeholder="Tìm kiếm theo mã, tên..." 
-                               value="${param.search}" class="filter-input">
-                    </div>
-                    <div class="filter-group">
-                        <select name="status" class="filter-select">
-                            <option value="">Tất cả trạng thái</option>
-                            <option value="1" ${param.status == '1' ? 'selected' : ''}>Đang hoạt động</option>
-                            <option value="2" ${param.status == '2' ? 'selected' : ''}>Không hoạt động</option>
-                            <option value="3" ${param.status == '3' ? 'selected' : ''}>Hết hạn</option>
-                            <option value="4" ${param.status == '4' ? 'selected' : ''}>Đã hết lượt</option>
-                        </select>
-                    </div>
+                <form action="${pageContext.request.contextPath}/admin/coupons" method="GET" class="filter-form-inline">
+                    <input type="text" name="search" placeholder="Tìm kiếm theo mã, tên..." 
+                           value="${param.search}" class="filter-input-inline">
+                    <select name="status" class="filter-select-inline">
+                        <option value="">Tất cả trạng thái</option>
+                        <option value="1" ${param.status == '1' ? 'selected' : ''}>Đang hoạt động</option>
+                        <option value="2" ${param.status == '2' ? 'selected' : ''}>Không hoạt động</option>
+                        <option value="3" ${param.status == '3' ? 'selected' : ''}>Hết hạn</option>
+                        <option value="4" ${param.status == '4' ? 'selected' : ''}>Đã hết lượt</option>
+                    </select>
                     <button type="submit" class="btn btn-secondary">
                         <i class="fas fa-search"></i> Tìm kiếm
                     </button>
