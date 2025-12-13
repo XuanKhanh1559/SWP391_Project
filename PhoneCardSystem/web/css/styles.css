@@ -2027,6 +2027,140 @@ body {
 /* ============================================
    User Detail Page
    ============================================ */
+/* ============================================
+   Detail Pages
+   ============================================ */
+.detail-container {
+    max-width: 1000px;
+    margin: 2rem auto;
+    padding: 2rem;
+}
+
+.detail-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 2rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--border-color);
+}
+
+.detail-header h2 {
+    font-size: 1.8rem;
+    color: var(--dark-color);
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.detail-header h2 i {
+    color: var(--primary-color);
+}
+
+.detail-actions {
+    display: flex;
+    gap: 1rem;
+}
+
+.detail-content {
+    display: flex;
+    flex-direction: column;
+    gap: 2rem;
+}
+
+.detail-section {
+    background: var(--white);
+    padding: 1.5rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+}
+
+.section-title {
+    font-size: 1.3rem;
+    color: var(--dark-color);
+    margin-bottom: 1.5rem;
+    font-weight: 600;
+    border-left: 4px solid var(--primary-color);
+    padding-left: 1rem;
+}
+
+.detail-grid {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.detail-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.detail-item.full-width {
+    grid-column: 1 / -1;
+}
+
+.detail-label {
+    font-weight: 600;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+.detail-value {
+    color: var(--dark-color);
+    font-size: 1rem;
+    line-height: 1.5;
+}
+
+.coupon-code-display {
+    font-family: 'Courier New', monospace;
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+    background: var(--light-color);
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    display: inline-block;
+}
+
+.highlight-value {
+    font-size: 1.3rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+}
+
+.highlight-number {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--primary-color);
+}
+
+.usage-count {
+    color: var(--warning-color);
+}
+
+@media (max-width: 768px) {
+    .detail-header {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: 1rem;
+    }
+    
+    .detail-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .detail-actions {
+        width: 100%;
+        flex-direction: column;
+    }
+    
+    .detail-actions .btn {
+        width: 100%;
+        justify-content: center;
+    }
+}
+
 .user-detail-container {
     display: grid;
     gap: 2rem;
