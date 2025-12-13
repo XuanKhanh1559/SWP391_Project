@@ -232,6 +232,14 @@
         <servlet-name>DeleteCouponServlet</servlet-name>
         <url-pattern>/admin/delete-coupon</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>CouponDetailServlet</servlet-name>
+        <servlet-class>controller.CouponDetailServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CouponDetailServlet</servlet-name>
+        <url-pattern>/admin/coupon-detail</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
