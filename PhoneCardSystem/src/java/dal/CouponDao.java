@@ -236,6 +236,86 @@ public class CouponDao extends DBContext {
         return false;
     }
 
+    public boolean checkCouponCodeExists(String code) {
+        if (connection == null) {
+            return false;
+        }
+        String sql = "SELECT COUNT(*) FROM coupons WHERE code = ? AND deleted = 0";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, code);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
+    public boolean createCoupon(Coupon coupon) {
+        if (connection == null) {
+            return false;
+        }
+        
+        StringBuilder sql = new StringBuilder(
+            "INSERT INTO coupons (code, name, description, discount_type, discount_value, "
+            + "min_order_amount, max_discount_amount, start_date, end_date, "
+            + "usage_limit_per_user, total_usage_limit, current_usage_count, status, "
+            + "applicable_product_ids, applicable_provider_ids, created_at, updated_at, deleted) "
+            + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, 0, ?, ?, ?, NOW(), NOW(), 0)"
+        );
+        
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql.toString());
+            ps.setString(1, coupon.getCode());
+            ps.setString(2, coupon.getName());
+            ps.setString(3, coupon.getDescription());
+            
+            DiscountType discountType = DiscountType.fromValue(coupon.getDiscount_type());
+            if (discountType != null) {
+                ps.setString(4, discountType.getLabel());
+            } else {
+                ps.setString(4, DiscountType.PERCENTAGE.getLabel());
+            }
+            
+            ps.setDouble(5, coupon.getDiscount_value());
+            ps.setDouble(6, coupon.getMin_order_amount());
+            
+            if (coupon.getMax_discount_amount() != null) {
+                ps.setDouble(7, coupon.getMax_discount_amount());
+            } else {
+                ps.setNull(7, java.sql.Types.DOUBLE);
+            }
+            
+            ps.setTimestamp(8, new java.sql.Timestamp(coupon.getStart_date().getTime()));
+            ps.setTimestamp(9, new java.sql.Timestamp(coupon.getEnd_date().getTime()));
+            ps.setInt(10, coupon.getUsage_limit_per_user());
+            
+            if (coupon.getTotal_usage_limit() != null) {
+                ps.setInt(11, coupon.getTotal_usage_limit());
+            } else {
+                ps.setNull(11, java.sql.Types.INTEGER);
+            }
+            
+            CouponStatus status = CouponStatus.fromValue(coupon.getStatus());
+            if (status != null) {
+                ps.setString(12, status.getLabel());
+            } else {
+                ps.setString(12, CouponStatus.ACTIVE.getLabel());
+            }
+            
+            ps.setString(13, coupon.getApplicable_product_ids());
+            ps.setString(14, coupon.getApplicable_provider_ids());
+            
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
     public boolean updateCoupon(Coupon coupon) {
         if (connection == null) {
             return false;
