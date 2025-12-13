@@ -1,4 +1,167 @@
 /* ============================================
+   Toast Notification
+   ============================================ */
+.toast-container {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: 10000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    pointer-events: none;
+}
+
+.toast-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: rgba(0, 0, 0, 0.5);
+    z-index: 10001;
+    animation: fadeIn 0.3s ease-out;
+}
+
+.toast {
+    background: var(--white);
+    border-radius: 12px;
+    box-shadow: var(--shadow-lg);
+    padding: 2rem 2.5rem;
+    min-width: 350px;
+    max-width: 500px;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    animation: slideInCenter 0.3s ease-out;
+    border-left: 4px solid;
+    position: fixed;
+    z-index: 10002;
+    pointer-events: auto;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+}
+
+.toast.success {
+    border-left-color: var(--secondary-color);
+}
+
+.toast.error {
+    border-left-color: var(--danger-color);
+}
+
+.toast.warning {
+    border-left-color: var(--warning-color);
+}
+
+.toast.info {
+    border-left-color: var(--primary-color);
+}
+
+.toast-icon {
+    font-size: 1.5rem;
+    flex-shrink: 0;
+}
+
+.toast.success .toast-icon {
+    color: var(--secondary-color);
+}
+
+.toast.error .toast-icon {
+    color: var(--danger-color);
+}
+
+.toast.warning .toast-icon {
+    color: var(--warning-color);
+}
+
+.toast.info .toast-icon {
+    color: var(--primary-color);
+}
+
+.toast-content {
+    flex: 1;
+}
+
+.toast-title {
+    font-weight: 600;
+    margin-bottom: 0.25rem;
+    color: var(--dark-color);
+}
+
+.toast-message {
+    font-size: 0.9rem;
+    color: var(--text-color);
+}
+
+.toast-close {
+    background: none;
+    border: none;
+    font-size: 1.2rem;
+    cursor: pointer;
+    color: var(--text-color);
+    opacity: 0.5;
+    transition: opacity 0.2s;
+    padding: 0;
+    width: 24px;
+    height: 24px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.toast-close:hover {
+    opacity: 1;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+@keyframes slideInCenter {
+    from {
+        transform: translate(-50%, calc(-50% - 50px)) scale(0.9);
+        opacity: 0;
+    }
+    to {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+}
+
+.toast.fade-out {
+    animation: slideOutCenter 0.3s ease-out forwards !important;
+}
+
+@keyframes slideOutCenter {
+    from {
+        transform: translate(-50%, -50%) scale(1);
+        opacity: 1;
+    }
+    to {
+        transform: translate(-50%, calc(-50% - 50px)) scale(0.9);
+        opacity: 0;
+    }
+}
+
+@keyframes fadeOut {
+    from {
+        opacity: 1;
+    }
+    to {
+        opacity: 0;
+    }
+}
+
+/* ============================================
    Reset & Base Styles
    ============================================ */
 * {
@@ -515,6 +678,62 @@ body {
     align-items: center;
     gap: 1rem;
     margin: 2rem 0;
+}
+
+.quantity-selector label {
+    font-weight: 500;
+    color: var(--dark-color);
+}
+
+.quantity-input {
+    width: 80px;
+    padding: 0.5rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    text-align: center;
+    font-size: 1rem;
+}
+
+.product-description {
+    color: var(--text-color);
+    margin: 1rem 0;
+    line-height: 1.6;
+}
+
+.product-detail-meta {
+    margin: 2rem 0;
+    padding: 1.5rem;
+    background: var(--light-color);
+    border-radius: 8px;
+}
+
+.meta-item {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.75rem 0;
+    border-bottom: 1px solid var(--border-color);
+}
+
+.meta-item:last-child {
+    border-bottom: none;
+}
+
+.meta-item strong {
+    color: var(--dark-color);
+}
+
+.meta-item span {
+    color: var(--text-color);
+}
+
+.product-detail-actions {
+    margin-top: 2rem;
+}
+
+.product-detail-footer {
+    margin-top: 2rem;
+    padding-top: 2rem;
+    border-top: 2px solid var(--border-color);
 }
 
 .quantity-btn {
@@ -1188,4 +1407,80 @@ body {
     margin: 0;
 }
 
+/* ============================================
+   Pagination
+   ============================================ */
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 2rem 0;
+    flex-wrap: wrap;
+}
 
+.pagination-link {
+    padding: 0.5rem 1rem;
+    border: 2px solid var(--border-color);
+    border-radius: 8px;
+    text-decoration: none;
+    color: var(--text-color);
+    font-weight: 500;
+    transition: all 0.3s;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 40px;
+    justify-content: center;
+}
+
+.pagination-link:hover {
+    background: var(--primary-color);
+    color: var(--white);
+    border-color: var(--primary-color);
+}
+
+.pagination-link.active {
+    background: var(--primary-color);
+    color: var(--white);
+    border-color: var(--primary-color);
+    cursor: default;
+}
+
+.pagination-link.active:hover {
+    background: var(--primary-dark);
+}
+
+.pagination-ellipsis {
+    padding: 0.5rem;
+    color: var(--text-color);
+    font-weight: 500;
+}
+
+.pagination-info {
+    text-align: center !important;
+    color: var(--text-color);
+    margin: 1rem auto 0;
+    font-size: 0.9rem;
+    width: 100%;
+    display: flex !important;
+    justify-content: center !important;
+    align-items: center !important;
+    box-sizing: border-box;
+}
+
+.pagination-info span {
+    display: inline-block;
+    text-align: center;
+}
+
+.empty-state {
+    text-align: center;
+    padding: 3rem;
+    color: var(--text-color);
+}
+
+.empty-state p {
+    font-size: 1.1rem;
+    color: var(--text-color);
+}

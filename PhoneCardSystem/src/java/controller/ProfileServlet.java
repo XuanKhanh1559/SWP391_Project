@@ -28,6 +28,7 @@ public class ProfileServlet extends HttpServlet {
             request.setAttribute("user", user);
             session.setAttribute("user", user);
             session.setAttribute("balance", user.getBalance());
+            session.setAttribute("role", user.getRole());
         }
         
         response.setContentType("text/html;charset=UTF-8");
@@ -71,6 +72,7 @@ public class ProfileServlet extends HttpServlet {
             if (updatedUser != null) {
                 session.setAttribute("user", updatedUser);
                 session.setAttribute("email", updatedUser.getEmail());
+                session.setAttribute("role", updatedUser.getRole());
                 request.setAttribute("user", updatedUser);
                 request.setAttribute("profileSuccess", "Cập nhật thông tin thành công");
             }

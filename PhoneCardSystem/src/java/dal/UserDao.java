@@ -33,6 +33,8 @@ public class UserDao extends DBContext {
         } else {
             user.setStatus(UserStatus.ACTIVE.getValue());
         }
+        String roleStr = rs.getString("role");
+        user.setRole(roleStr != null ? roleStr : "user");
         user.setCreated_at(rs.getTimestamp("created_at"));
         user.setUpdated_at(rs.getTimestamp("updated_at"));
         user.setDeleted(rs.getInt("deleted"));
@@ -44,7 +46,7 @@ public class UserDao extends DBContext {
             lastErrorMessage = "Lỗi kết nối database. Vui lòng kiểm tra cấu hình database.";
             return null;
         }
-        String sql = "SELECT id, username, email, password, phone, balance, status, created_at, updated_at, deleted "
+        String sql = "SELECT id, username, email, password, phone, balance, status, role, created_at, updated_at, deleted "
                    + "FROM users WHERE email = ? AND status = ? AND deleted = 0";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -69,7 +71,7 @@ public class UserDao extends DBContext {
             lastErrorMessage = "Lỗi kết nối database. Vui lòng kiểm tra cấu hình database.";
             return null;
         }
-        String sql = "SELECT id, username, email, password, phone, balance, status, created_at, updated_at, deleted "
+        String sql = "SELECT id, username, email, password, phone, balance, status, role, created_at, updated_at, deleted "
                    + "FROM users WHERE username = ? AND status = ? AND deleted = 0";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -130,8 +132,8 @@ public class UserDao extends DBContext {
             lastErrorMessage = "Lỗi kết nối database. Vui lòng kiểm tra cấu hình database.";
             return -1;
         }
-        String sql = "INSERT INTO users (username, email, password, phone, balance, status, created_at, updated_at, deleted) "
-                   + "VALUES (?, ?, ?, ?, ?, ?, NOW(), NOW(), 0)";
+        String sql = "INSERT INTO users (username, email, password, phone, balance, status, role, created_at, updated_at, deleted) "
+                   + "VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), 0)";
         try {
             PreparedStatement ps = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS);
             ps.setString(1, user.getUsername());
@@ -140,6 +142,8 @@ public class UserDao extends DBContext {
             ps.setString(4, user.getPhone());
             ps.setDouble(5, user.getBalance());
             ps.setString(6, UserStatus.ACTIVE.getLabel());
+            String role = user.getRole();
+            ps.setString(7, role != null && !role.isEmpty() ? role : "user");
             int affected = ps.executeUpdate();
             if (affected > 0) {
                 ResultSet keys = ps.getGeneratedKeys();
@@ -158,7 +162,7 @@ public class UserDao extends DBContext {
         if (connection == null) {
             return null;
         }
-        String sql = "SELECT id, username, email, password, phone, balance, status, created_at, updated_at, deleted "
+        String sql = "SELECT id, username, email, password, phone, balance, status, role, created_at, updated_at, deleted "
                    + "FROM users WHERE id = ? AND deleted = 0";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
@@ -177,7 +181,7 @@ public class UserDao extends DBContext {
         if (connection == null) {
             return null;
         }
-        String sql = "SELECT id, username, email, password, phone, balance, status, created_at, updated_at, deleted "
+        String sql = "SELECT id, username, email, password, phone, balance, status, role, created_at, updated_at, deleted "
                    + "FROM users WHERE email = ? AND deleted = 0";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
