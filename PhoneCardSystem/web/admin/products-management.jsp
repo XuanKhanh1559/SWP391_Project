@@ -29,6 +29,14 @@
             </button>
         </div>
         
+        <c:if test="${sessionScope.successMessage != null}">
+            <div class="alert alert-success">
+                <i class="fas fa-check-circle"></i>
+                ${sessionScope.successMessage}
+            </div>
+            <c:remove var="successMessage" scope="session"/>
+        </c:if>
+        
         <form method="GET" action="${pageContext.request.contextPath}/admin/products" id="filterForm">
             <div class="filter-bar">
                 <select name="provider" id="filterProvider" class="filter-select">
