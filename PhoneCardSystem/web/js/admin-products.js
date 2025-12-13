@@ -1,13 +1,67 @@
 const contextPath = window.location.pathname.split('/')[1] ? '/' + window.location.pathname.split('/')[1] : '';
 
 function editProduct(productId) {
-    showToast('Tính năng đang phát triển', 'info');
+    window.location.href = contextPath + '/admin/edit-product?id=' + productId;
 }
 
 function deleteProduct(productId) {
-    if (confirm('Bạn có chắc chắn muốn xóa sản phẩm này?')) {
-        showToast('Tính năng đang phát triển', 'info');
-    }
+    showConfirm(
+        'Bạn có chắc chắn muốn xóa sản phẩm này?',
+        function() {
+            fetch(contextPath + '/admin/delete-product', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'id=' + productId
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                } else {
+                    showToast(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Có lỗi xảy ra. Vui lòng thử lại.', 'error');
+            });
+        }
+    );
+}
+
+function restoreProduct(productId) {
+    showConfirm(
+        'Bạn có chắc chắn muốn khôi phục sản phẩm này?',
+        function() {
+            fetch(contextPath + '/admin/delete-product', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                },
+                body: 'id=' + productId + '&action=restore'
+            })
+            .then(response => response.json())
+            .then(data => {
+                if (data.success) {
+                    showToast(data.message, 'success');
+                    setTimeout(() => {
+                        window.location.reload();
+                    }, 1500);
+                } else {
+                    showToast(data.message, 'error');
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                showToast('Có lỗi xảy ra. Vui lòng thử lại.', 'error');
+            });
+        }
+    );
 }
 
 document.addEventListener('DOMContentLoaded', function() {

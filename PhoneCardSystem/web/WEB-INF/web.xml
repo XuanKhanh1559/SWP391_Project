@@ -128,6 +128,14 @@
         <servlet-name>EditProductServlet</servlet-name>
         <url-pattern>/admin/edit-product</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>DeleteProductServlet</servlet-name>
+        <servlet-class>controller.DeleteProductServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteProductServlet</servlet-name>
+        <url-pattern>/admin/delete-product</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

@@ -1351,6 +1351,23 @@ body {
     color: var(--white);
 }
 
+.btn-restore {
+    background: var(--secondary-color);
+    color: var(--white);
+}
+
+.btn-edit:hover {
+    background: var(--primary-dark);
+}
+
+.btn-delete:hover {
+    background: #c0392b;
+}
+
+.btn-restore:hover {
+    background: #45b369;
+}
+
 .btn-view {
     background: var(--secondary-color);
     color: var(--white);
