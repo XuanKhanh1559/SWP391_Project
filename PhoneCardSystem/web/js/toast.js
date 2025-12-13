@@ -119,8 +119,85 @@ function closeToast(toast, backdrop) {
     }, 300);
 }
 
+function showConfirm(message, onConfirm, onCancel = null, title = 'Xác nhận') {
+    let container = document.getElementById('toast-container');
+    if (!container) {
+        container = document.createElement('div');
+        container.id = 'toast-container';
+        container.className = 'toast-container';
+        document.body.appendChild(container);
+    }
+    
+    const backdrop = document.createElement('div');
+    backdrop.className = 'toast-backdrop';
+    backdrop.style.cssText = 'position: fixed; top: 0; left: 0; right: 0; bottom: 0; background: rgba(0, 0, 0, 0.5); z-index: 10001; pointer-events: auto;';
+    
+    const confirmDialog = document.createElement('div');
+    confirmDialog.className = 'toast warning';
+    
+    const baseStyles = 'position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); z-index: 10002; pointer-events: auto;';
+    const layoutStyles = 'display: flex; flex-direction: column; gap: 1.5rem;';
+    const visualStyles = 'background: white; border-radius: 12px; padding: 2rem 2.5rem; min-width: 400px; max-width: 500px;';
+    const shadowStyles = 'box-shadow: 0 5px 20px rgba(0,0,0,0.15);';
+    const borderStyles = 'border-left: 4px solid #f39c12;';
+    
+    confirmDialog.style.cssText = baseStyles + layoutStyles + visualStyles + shadowStyles + borderStyles;
+    
+    const escapedTitle = escapeHtml(title);
+    const escapedMessage = escapeHtml(message);
+    
+    confirmDialog.innerHTML = 
+        '<div style="display: flex; align-items: center; gap: 1rem;">' +
+            '<i class="fas fa-exclamation-triangle" style="font-size: 1.5rem; flex-shrink: 0; color: #f39c12;"></i>' +
+            '<div style="flex: 1;">' +
+                '<div style="font-weight: 600; margin-bottom: 0.25rem; color: #2c3e50;">' + escapedTitle + '</div>' +
+                '<div style="font-size: 0.9rem; color: #333333;">' + escapedMessage + '</div>' +
+            '</div>' +
+        '</div>' +
+        '<div style="display: flex; gap: 1rem; justify-content: flex-end;">' +
+            '<button id="confirm-cancel-btn" style="padding: 0.6rem 1.5rem; border: 1px solid #ddd; background: #ecf0f1; color: #333; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 500;">' +
+                '<i class="fas fa-times"></i> Hủy' +
+            '</button>' +
+            '<button id="confirm-ok-btn" style="padding: 0.6rem 1.5rem; border: none; background: #e74c3c; color: white; border-radius: 8px; cursor: pointer; font-size: 0.9rem; font-weight: 500;">' +
+                '<i class="fas fa-check"></i> Xác nhận' +
+            '</button>' +
+        '</div>';
+    
+    const handleClose = () => {
+        closeToast(confirmDialog, backdrop);
+    };
+    
+    backdrop.onclick = function() {
+        if (onCancel) onCancel();
+        handleClose();
+    };
+    
+    container.appendChild(backdrop);
+    container.appendChild(confirmDialog);
+    
+    setTimeout(() => {
+        const cancelBtn = document.getElementById('confirm-cancel-btn');
+        const okBtn = document.getElementById('confirm-ok-btn');
+        
+        if (cancelBtn) {
+            cancelBtn.onclick = function() {
+                if (onCancel) onCancel();
+                handleClose();
+            };
+        }
+        
+        if (okBtn) {
+            okBtn.onclick = function() {
+                handleClose();
+                if (onConfirm) onConfirm();
+            };
+        }
+    }, 0);
+}
+
 window.showToast = showToast;
 window.closeToast = closeToast;
+window.showConfirm = showConfirm;
 
 console.log('Toast.js loaded successfully');
 

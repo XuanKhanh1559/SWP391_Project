@@ -921,7 +921,7 @@ body {
 }
 
 .order-status {
-    padding: 0.5rem 1rem;
+    padding: 0.3rem 0.5rem;
     border-radius: 20px;
     font-size: 0.875rem;
     font-weight: 500;
@@ -1317,7 +1317,7 @@ body {
 
 .admin-table th,
 .admin-table td {
-    padding: 1rem;
+    padding: 0.3rem;
     text-align: left;
     border-bottom: 1px solid var(--border-color);
 }
@@ -1333,7 +1333,7 @@ body {
 }
 
 .btn-action {
-    padding: 0.5rem 1rem;
+    padding: 0.3rem 0.5rem;
     margin: 0 0.25rem;
     border: none;
     border-radius: 6px;
@@ -1349,6 +1349,23 @@ body {
 .btn-delete {
     background: var(--danger-color);
     color: var(--white);
+}
+
+.btn-restore {
+    background: var(--secondary-color);
+    color: var(--white);
+}
+
+.btn-edit:hover {
+    background: var(--primary-dark);
+}
+
+.btn-delete:hover {
+    background: #c0392b;
+}
+
+.btn-restore:hover {
+    background: #45b369;
 }
 
 .btn-view {
@@ -1480,7 +1497,250 @@ body {
     color: var(--text-color);
 }
 
+.empty-state i {
+    font-size: 4rem;
+    color: var(--light-color);
+    margin-bottom: 1rem;
+}
+
 .empty-state p {
     font-size: 1.1rem;
     color: var(--text-color);
+}
+
+/* ============================================
+   Alerts
+   ============================================ */
+.alert {
+    padding: 1rem 1.5rem;
+    margin-bottom: 1.5rem;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+}
+
+.alert i {
+    font-size: 1.2rem;
+}
+
+.alert-success {
+    background: #d4edda;
+    color: #155724;
+    border: 1px solid #c3e6cb;
+}
+
+.alert-error {
+    background: #f8d7da;
+    color: #721c24;
+    border: 1px solid #f5c6cb;
+}
+
+.alert-info {
+    background: #d1ecf1;
+    color: #0c5460;
+    border: 1px solid #bee5eb;
+}
+
+.alert-warning {
+    background: #fff3cd;
+    color: #856404;
+    border: 1px solid #ffeeba;
+}
+
+/* ============================================
+   Form Container & Admin Form
+   ============================================ */
+.form-container {
+    max-width: 800px;
+    margin: 0 auto;
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+}
+
+.admin-form .form-group {
+    margin-bottom: 1.5rem;
+}
+
+.admin-form label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.admin-form .required {
+    color: var(--danger-color);
+}
+
+.admin-form input[type="text"],
+.admin-form input[type="number"],
+.admin-form input[type="email"],
+.admin-form textarea {
+    width: 100%;
+    padding: 0.75rem;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s;
+}
+
+.admin-form input[type="text"]:focus,
+.admin-form input[type="number"]:focus,
+.admin-form input[type="email"]:focus,
+.admin-form select:focus,
+.admin-form textarea:focus {
+    outline: none;
+    border-color: var(--primary-color);
+}
+
+.admin-form textarea {
+    resize: vertical;
+}
+
+.form-row {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1.5rem;
+}
+
+.form-actions {
+    display: flex;
+    gap: 1rem;
+    margin-top: 2rem;
+}
+
+.btn-secondary {
+    background: var(--light-color);
+    color: var(--text-color);
+}
+
+.btn-secondary:hover {
+    background: #d5d9dc;
+}
+
+/* ============================================
+   User Detail Page
+   ============================================ */
+.user-detail-container {
+    display: grid;
+    gap: 2rem;
+}
+
+.user-info-card {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+}
+
+.user-info-card h3 {
+    color: var(--dark-color);
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--light-color);
+}
+
+.user-info-card h3 i {
+    margin-right: 0.5rem;
+    color: var(--primary-color);
+}
+
+.info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+    gap: 1.5rem;
+}
+
+.info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.info-item label {
+    font-weight: 600;
+    color: var(--dark-color);
+    font-size: 0.9rem;
+}
+
+.info-item span {
+    color: var(--text-color);
+    font-size: 1rem;
+}
+
+.balance-amount {
+    font-size: 1.2rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+}
+
+.badge {
+    display: inline-block;
+    padding: 0.3rem 0.75rem;
+    border-radius: 15px;
+    font-size: 0.85rem;
+    font-weight: 600;
+}
+
+.badge-admin {
+    background: var(--danger-color);
+    color: var(--white);
+}
+
+.badge-user {
+    background: var(--primary-color);
+    color: var(--white);
+}
+
+.user-actions {
+    margin-top: 2rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--light-color);
+    display: flex;
+    gap: 1rem;
+}
+
+.user-activity-section {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: 2rem;
+}
+
+.activity-card {
+    background: var(--white);
+    padding: 2rem;
+    border-radius: 12px;
+    box-shadow: var(--shadow);
+}
+
+.activity-card h3 {
+    color: var(--dark-color);
+    margin-bottom: 1.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 2px solid var(--light-color);
+}
+
+.activity-card h3 i {
+    margin-right: 0.5rem;
+    color: var(--primary-color);
+}
+
+.placeholder-text {
+    color: var(--text-color);
+    opacity: 0.6;
+    text-align: center;
+    padding: 2rem;
+    font-style: italic;
+}
+
+.btn-danger {
+    background: var(--danger-color);
+    color: var(--white);
+}
+
+.btn-danger:hover {
+    background: #c0392b;
 }

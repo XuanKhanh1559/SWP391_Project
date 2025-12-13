@@ -112,6 +112,62 @@
         <servlet-name>RemoveCartItemServlet</servlet-name>
         <url-pattern>/remove-cart-item</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>AdminProductServlet</servlet-name>
+        <servlet-class>controller.AdminProductServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminProductServlet</servlet-name>
+        <url-pattern>/admin/products</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>EditProductServlet</servlet-name>
+        <servlet-class>controller.EditProductServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EditProductServlet</servlet-name>
+        <url-pattern>/admin/edit-product</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>DeleteProductServlet</servlet-name>
+        <servlet-class>controller.DeleteProductServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteProductServlet</servlet-name>
+        <url-pattern>/admin/delete-product</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>CreateProductServlet</servlet-name>
+        <servlet-class>controller.CreateProductServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreateProductServlet</servlet-name>
+        <url-pattern>/admin/create-product</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>AdminUserServlet</servlet-name>
+        <servlet-class>controller.AdminUserServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminUserServlet</servlet-name>
+        <url-pattern>/admin/users</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>UserDetailServlet</servlet-name>
+        <servlet-class>controller.UserDetailServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserDetailServlet</servlet-name>
+        <url-pattern>/admin/user-detail</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>BanUserServlet</servlet-name>
+        <servlet-class>controller.BanUserServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BanUserServlet</servlet-name>
+        <url-pattern>/admin/ban-user</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

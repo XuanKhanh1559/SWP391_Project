@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Admin Dashboard - Hệ Thống Bán Thẻ Điện Thoại</title>
-    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
@@ -39,9 +39,9 @@
                 </div>
             </div>
             <div class="admin-actions">
-                <a href="products-management.jsp" class="btn btn-primary">Quản lý sản phẩm</a>
+                <a href="${pageContext.request.contextPath}/admin/products" class="btn btn-primary">Quản lý sản phẩm</a>
+                <a href="${pageContext.request.contextPath}/admin/users" class="btn btn-primary">Quản lý người dùng</a>
                 <a href="orders-management.jsp" class="btn btn-primary">Quản lý đơn hàng</a>
-                <a href="users-management.jsp" class="btn btn-primary">Quản lý người dùng</a>
                 <a href="coupons-management.jsp" class="btn btn-primary">Quản lý coupon</a>
             </div>
         </div>
@@ -53,7 +53,7 @@
     <%@ page import="model.User" %>
     <%
         User user = (User) session.getAttribute("user");
-        if (user == null || (!"admin".equalsIgnoreCase(user.getUsername()) && !"admin@admin.com".equalsIgnoreCase(user.getEmail()))) {
+        if (user == null || !"admin".equalsIgnoreCase(user.getRole())) {
             response.sendRedirect(request.getContextPath() + "/login");
             return;
         }
@@ -67,8 +67,8 @@
             balance: <%= user.getBalance() %>
         };
     </script>
-    <script src="../js/layout.js"></script>
-    <script src="../js/app.js"></script>
+    <script src="${pageContext.request.contextPath}/js/layout.js"></script>
+    <script src="${pageContext.request.contextPath}/js/app.js"></script>
 </body>
 </html>
 
