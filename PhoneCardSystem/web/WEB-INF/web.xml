@@ -208,6 +208,14 @@
         <servlet-name>UserDashboardServlet</servlet-name>
         <url-pattern>/user/dashboard</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>AdminDashboardServlet</servlet-name>
+        <servlet-class>controller.AdminDashboardServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminDashboardServlet</servlet-name>
+        <url-pattern>/admin/dashboard</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

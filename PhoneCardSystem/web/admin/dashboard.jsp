@@ -1,4 +1,6 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 <!DOCTYPE html>
 <html lang="vi">
 <head>
@@ -9,66 +11,129 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 </head>
 <body>
-    <!-- Header Placeholder -->
     <div id="header-placeholder"></div>
 
-    <!-- Main Content -->
     <main class="main-content">
-        <div class="admin-dashboard">
-            <h2>Admin Dashboard</h2>
-            <div class="dashboard-stats">
-                <div class="stat-card">
-                    <i class="fas fa-users"></i>
-                    <h3>Tổng người dùng</h3>
-                    <p class="stat-value" id="totalUsers">0</p>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-shopping-bag"></i>
-                    <h3>Tổng đơn hàng</h3>
-                    <p class="stat-value" id="totalOrders">0</p>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-dollar-sign"></i>
-                    <h3>Doanh thu</h3>
-                    <p class="stat-value" id="totalRevenue">0 đ</p>
-                </div>
-                <div class="stat-card">
-                    <i class="fas fa-box"></i>
-                    <h3>Sản phẩm</h3>
-                    <p class="stat-value" id="totalProducts">0</p>
+        <div class="admin-dashboard-container">
+            <h2 class="dashboard-title">Admin Dashboard</h2>
+            
+            <div class="stats-section">
+                <h3 class="section-title">Thống kê người dùng</h3>
+                <div class="stats-grid">
+                    <div class="stat-card-admin">
+                        <div class="stat-icon users-icon">
+                            <i class="fas fa-users"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4 class="stat-label">Tổng người dùng</h4>
+                            <p class="stat-value">${requestScope.totalUsers}</p>
+                            <p class="stat-detail">Hoạt động: ${requestScope.totalActiveUsers}</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card-admin">
+                        <div class="stat-icon balance-icon">
+                            <i class="fas fa-wallet"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4 class="stat-label">Tổng số dư người dùng</h4>
+                            <p class="stat-value">
+                                <fmt:formatNumber value="${requestScope.totalUserBalance}" type="currency" currencySymbol="₫" groupingUsed="true" maxFractionDigits="0"/>
+                            </p>
+                        </div>
+                    </div>
                 </div>
             </div>
-            <div class="admin-actions">
-                <a href="${pageContext.request.contextPath}/admin/products" class="btn btn-primary">Quản lý sản phẩm</a>
-                <a href="${pageContext.request.contextPath}/admin/users" class="btn btn-primary">Quản lý người dùng</a>
-                <a href="orders-management.jsp" class="btn btn-primary">Quản lý đơn hàng</a>
-                <a href="coupons-management.jsp" class="btn btn-primary">Quản lý coupon</a>
+
+            <div class="stats-section">
+                <h3 class="section-title">Thống kê sản phẩm</h3>
+                <div class="stats-grid">
+                    <div class="stat-card-admin">
+                        <div class="stat-icon products-icon">
+                            <i class="fas fa-box"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4 class="stat-label">Tổng sản phẩm</h4>
+                            <p class="stat-value">${requestScope.totalProducts}</p>
+                            <p class="stat-detail">Đang bán: ${requestScope.totalActiveProducts}</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="stats-section">
+                <h3 class="section-title">Thống kê đơn hàng</h3>
+                <div class="stats-grid">
+                    <div class="stat-card-admin">
+                        <div class="stat-icon orders-icon">
+                            <i class="fas fa-shopping-cart"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4 class="stat-label">Tổng đơn hàng</h4>
+                            <p class="stat-value">${requestScope.totalOrders}</p>
+                            <p class="stat-detail">Đang xử lý: ${requestScope.totalPendingOrders} | Hoàn thành: ${requestScope.totalCompletedOrders}</p>
+                        </div>
+                    </div>
+
+                    <div class="stat-card-admin">
+                        <div class="stat-icon revenue-icon">
+                            <i class="fas fa-dollar-sign"></i>
+                        </div>
+                        <div class="stat-info">
+                            <h4 class="stat-label">Tổng doanh thu</h4>
+                            <p class="stat-value">
+                                <fmt:formatNumber value="${requestScope.totalRevenue}" type="currency" currencySymbol="₫" groupingUsed="true" maxFractionDigits="0"/>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="admin-actions-section">
+                <h3 class="section-title">Quản lý nhanh</h3>
+                <div class="admin-actions-grid">
+                    <a href="${pageContext.request.contextPath}/admin/products" class="admin-action-btn products-btn">
+                        <i class="fas fa-box"></i>
+                        <span>Quản lý sản phẩm</span>
+                    </a>
+                    <a href="${pageContext.request.contextPath}/admin/orders" class="admin-action-btn orders-btn">
+                        <i class="fas fa-shopping-bag"></i>
+                        <span>Quản lý đơn hàng</span>
+                    </a>
+                    <a href="${pageContext.request.contextPath}/admin/users" class="admin-action-btn users-btn">
+                        <i class="fas fa-users"></i>
+                        <span>Quản lý người dùng</span>
+                    </a>
+                    <a href="${pageContext.request.contextPath}/admin/coupons" class="admin-action-btn coupons-btn">
+                        <i class="fas fa-ticket-alt"></i>
+                        <span>Quản lý mã giảm giá</span>
+                    </a>
+                    <a href="${pageContext.request.contextPath}/admin/providers" class="admin-action-btn providers-btn">
+                        <i class="fas fa-building"></i>
+                        <span>Quản lý nhà cung cấp</span>
+                    </a>
+                    <a href="${pageContext.request.contextPath}/admin/statistics" class="admin-action-btn statistics-btn">
+                        <i class="fas fa-chart-line"></i>
+                        <span>Thống kê chi tiết</span>
+                    </a>
+                </div>
             </div>
         </div>
     </main>
 
-    <!-- Footer Placeholder -->
     <div id="footer-placeholder"></div>
 
-    <%@ page import="model.User" %>
-    <%
-        User user = (User) session.getAttribute("user");
-        if (user == null || !"admin".equalsIgnoreCase(user.getRole())) {
-            response.sendRedirect(request.getContextPath() + "/login");
-            return;
-        }
-    %>
     <script>
         window.userData = {
-            id: <%= user.getId() %>,
-            username: '<%= user.getUsername().replace("'", "\\'") %>',
-            email: '<%= user.getEmail().replace("'", "\\'") %>',
-            role: '<%= user.getRole() != null ? user.getRole().replace("'", "\\'") : "user" %>',
-            balance: <%= user.getBalance() %>
+            id: ${sessionScope.user.id},
+            username: '<c:out value="${sessionScope.user.username}" escapeXml="true"/>',
+            email: '<c:out value="${sessionScope.user.email}" escapeXml="true"/>',
+            role: '<c:out value="${sessionScope.user.role}" escapeXml="true"/>',
+            balance: ${sessionScope.user.balance}
         };
     </script>
     <script src="${pageContext.request.contextPath}/js/layout.js"></script>
     <script src="${pageContext.request.contextPath}/js/app.js"></script>
+    <script src="${pageContext.request.contextPath}/js/toast.js"></script>
 </body>
 </html>
-
