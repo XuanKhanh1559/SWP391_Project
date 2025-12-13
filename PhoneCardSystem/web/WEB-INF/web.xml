@@ -144,6 +144,14 @@
         <servlet-name>CreateProductServlet</servlet-name>
         <url-pattern>/admin/create-product</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>AdminUserServlet</servlet-name>
+        <servlet-class>controller.AdminUserServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminUserServlet</servlet-name>
+        <url-pattern>/admin/users</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
