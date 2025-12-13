@@ -200,6 +200,14 @@
         <servlet-name>BalanceServlet</servlet-name>
         <url-pattern>/api/balance</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>UserDashboardServlet</servlet-name>
+        <servlet-class>controller.UserDashboardServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserDashboardServlet</servlet-name>
+        <url-pattern>/user/dashboard</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
