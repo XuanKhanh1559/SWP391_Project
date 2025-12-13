@@ -152,6 +152,14 @@
         <servlet-name>AdminUserServlet</servlet-name>
         <url-pattern>/admin/users</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>UserDetailServlet</servlet-name>
+        <servlet-class>controller.UserDetailServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserDetailServlet</servlet-name>
+        <url-pattern>/admin/user-detail</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

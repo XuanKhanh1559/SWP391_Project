@@ -1,7 +1,7 @@
 const contextPath = window.location.pathname.split('/')[1] ? '/' + window.location.pathname.split('/')[1] : '';
 
 function viewUserDetail(userId) {
-    showToast('Tính năng xem chi tiết đang được phát triển', 'info');
+    window.location.href = contextPath + '/admin/user-detail?id=' + userId;
 }
 
 function banUser(userId) {
