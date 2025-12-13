@@ -259,4 +259,58 @@ public class ProductDao extends DBContext {
         }
         return false;
     }
+
+    public boolean createProduct(int providerId, String name, int type, double denomination, double price, String description, String status) {
+        if (connection == null) {
+            lastErrorMessage = "Lỗi kết nối database. Vui lòng kiểm tra cấu hình database.";
+            return false;
+        }
+
+        if (price <= 0) {
+            lastErrorMessage = "Giá sản phẩm phải lớn hơn 0";
+            return false;
+        }
+
+        if (denomination <= 0) {
+            lastErrorMessage = "Mệnh giá sản phẩm phải lớn hơn 0";
+            return false;
+        }
+
+        if (name == null || name.trim().isEmpty()) {
+            lastErrorMessage = "Tên sản phẩm không được để trống";
+            return false;
+        }
+
+        if (status == null || (!status.equalsIgnoreCase("active") && !status.equalsIgnoreCase("inactive"))) {
+            lastErrorMessage = "Trạng thái sản phẩm không hợp lệ";
+            return false;
+        }
+
+        if (providerId < 1 || providerId > 3) {
+            lastErrorMessage = "Nhà mạng không hợp lệ";
+            return false;
+        }
+
+        if (type < 1 || type > 2) {
+            lastErrorMessage = "Loại sản phẩm không hợp lệ";
+            return false;
+        }
+
+        String sql = "INSERT INTO products (provider_id, name, type, denomination, price, description, status, created_at, updated_at, deleted) VALUES (?, ?, ?, ?, ?, ?, ?, NOW(), NOW(), 0)";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, providerId);
+            ps.setString(2, name.trim());
+            ps.setInt(3, type);
+            ps.setDouble(4, denomination);
+            ps.setDouble(5, price);
+            ps.setString(6, description);
+            ps.setString(7, status.toLowerCase());
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            lastErrorMessage = "Lỗi khi tạo sản phẩm: " + ex.getMessage();
+        }
+        return false;
+    }
 }
