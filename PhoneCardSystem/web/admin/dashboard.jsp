@@ -40,8 +40,8 @@
             </div>
             <div class="admin-actions">
                 <a href="${pageContext.request.contextPath}/admin/products" class="btn btn-primary">Quản lý sản phẩm</a>
+                <a href="${pageContext.request.contextPath}/admin/users" class="btn btn-primary">Quản lý người dùng</a>
                 <a href="orders-management.jsp" class="btn btn-primary">Quản lý đơn hàng</a>
-                <a href="users-management.jsp" class="btn btn-primary">Quản lý người dùng</a>
                 <a href="coupons-management.jsp" class="btn btn-primary">Quản lý coupon</a>
             </div>
         </div>

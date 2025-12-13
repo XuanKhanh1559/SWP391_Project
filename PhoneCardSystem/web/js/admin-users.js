@@ -1,53 +1,47 @@
-// Admin users management
-function formatCurrency(amount) {
-    return new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+const contextPath = window.location.pathname.split('/')[1] ? '/' + window.location.pathname.split('/')[1] : '';
+
+function viewUserDetail(userId) {
+    showToast('Tính năng xem chi tiết đang được phát triển', 'info');
 }
 
-function loadUsers() {
-    const user = JSON.parse(localStorage.getItem('currentUser') || '{}');
-    if (!user.id || user.role !== 'admin') {
-        window.location.href = '../guest/login.jsp';
-        return;
+function banUser(userId) {
+    showConfirm(
+        'Bạn có chắc chắn muốn khóa người dùng này?',
+        function() {
+            showToast('Tính năng khóa người dùng đang được phát triển', 'info');
+        }
+    );
+}
+
+function unbanUser(userId) {
+    showConfirm(
+        'Bạn có chắc chắn muốn mở khóa người dùng này?',
+        function() {
+            showToast('Tính năng mở khóa người dùng đang được phát triển', 'info');
+        }
+    );
+}
+
+document.addEventListener('DOMContentLoaded', function() {
+    const filterForm = document.getElementById('filterForm');
+    if (filterForm) {
+        const filterStatusEl = document.getElementById('filterStatus');
+        const searchUserEl = document.getElementById('searchUser');
+        
+        if (filterStatusEl) {
+            filterStatusEl.addEventListener('change', function() {
+                filterForm.submit();
+            });
+        }
+        
+        if (searchUserEl) {
+            let searchTimeout;
+            searchUserEl.addEventListener('input', function() {
+                clearTimeout(searchTimeout);
+                searchTimeout = setTimeout(function() {
+                    filterForm.submit();
+                }, 500);
+            });
+        }
     }
-    
-    const mockUsers = [
-        { id: 1, username: 'user1', email: 'user1@example.com', balance: 500000, status: 'active', created_at: '2024-01-01' },
-        { id: 2, username: 'user2', email: 'user2@example.com', balance: 200000, status: 'active', created_at: '2024-01-02' }
-    ];
-    
-    renderUsers(mockUsers);
-    
-    var searchUserEl = document.getElementById('searchUser');
-    if (searchUserEl) {
-        searchUserEl.addEventListener('input', function() {
-            const searchTerm = this.value.toLowerCase();
-            const filtered = mockUsers.filter(u => 
-                u.username.toLowerCase().includes(searchTerm) || 
-                u.email.toLowerCase().includes(searchTerm)
-            );
-            renderUsers(filtered);
-        });
-    }
-}
-
-function renderUsers(users) {
-    const tbody = document.getElementById('usersTableBody');
-    if (!tbody) return;
-    
-    tbody.innerHTML = users.map(u => `
-        <tr>
-            <td>${u.id}</td>
-            <td>${u.username}</td>
-            <td>${u.email}</td>
-            <td>${formatCurrency(u.balance)}</td>
-            <td><span class="order-status ${u.status}">${u.status === 'active' ? 'Hoạt động' : 'Tạm khóa'}</span></td>
-            <td>${new Date(u.created_at).toLocaleDateString('vi-VN')}</td>
-            <td>
-                <button class="btn-action btn-view">Xem</button>
-                <button class="btn-action btn-edit">Sửa</button>
-            </td>
-        </tr>
-    `).join('');
-}
-
-document.addEventListener('DOMContentLoaded', loadUsers);
+});

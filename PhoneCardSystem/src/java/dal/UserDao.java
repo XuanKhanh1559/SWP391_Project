@@ -5,6 +5,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.ArrayList;
+import java.util.List;
 import model.User;
 import config.UserStatus;
 import util.PasswordUtil;
@@ -350,5 +352,88 @@ public class UserDao extends DBContext {
             ex.printStackTrace();
         }
         return false;
+    }
+    
+    public List<User> getAllUsers(String search, String status, int page, int pageSize) {
+        List<User> users = new ArrayList<>();
+        if (connection == null) {
+            lastErrorMessage = "Lỗi kết nối database. Vui lòng kiểm tra cấu hình database.";
+            return users;
+        }
+
+        List<Object> params = new ArrayList<>();
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT id, username, email, password, phone, balance, status, role, created_at, updated_at, deleted ");
+        sql.append("FROM users WHERE 1=1 ");
+
+        if (search != null && !search.trim().isEmpty()) {
+            sql.append("AND (username LIKE ? OR email LIKE ?) ");
+            params.add("%" + search.trim() + "%");
+            params.add("%" + search.trim() + "%");
+        }
+
+        if (status != null && !status.trim().isEmpty()) {
+            sql.append("AND status = ? ");
+            params.add(status);
+        }
+
+        sql.append("ORDER BY created_at DESC ");
+        sql.append("LIMIT ? OFFSET ?");
+
+        int offset = (page - 1) * pageSize;
+        params.add(pageSize);
+        params.add(offset);
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql.toString());
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                users.add(mapResultSetToUser(rs));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            lastErrorMessage = "Lỗi khi lấy danh sách người dùng: " + ex.getMessage();
+        }
+        return users;
+    }
+
+    public int countUsers(String search, String status) {
+        if (connection == null) {
+            lastErrorMessage = "Lỗi kết nối database. Vui lòng kiểm tra cấu hình database.";
+            return 0;
+        }
+
+        List<Object> params = new ArrayList<>();
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT COUNT(*) as total FROM users WHERE 1=1 ");
+
+        if (search != null && !search.trim().isEmpty()) {
+            sql.append("AND (username LIKE ? OR email LIKE ?) ");
+            params.add("%" + search.trim() + "%");
+            params.add("%" + search.trim() + "%");
+        }
+
+        if (status != null && !status.trim().isEmpty()) {
+            sql.append("AND status = ? ");
+            params.add(status);
+        }
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql.toString());
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            lastErrorMessage = "Lỗi khi đếm số lượng người dùng: " + ex.getMessage();
+        }
+        return 0;
     }
 }
