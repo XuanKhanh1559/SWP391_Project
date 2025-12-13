@@ -89,7 +89,7 @@ public class RegisterServlet extends HttpServlet {
             session.setAttribute("balance", newUser.getBalance());
             session.setAttribute("role", newUser.getRole());
             
-            response.sendRedirect(request.getContextPath() + "/user/dashboard.jsp");
+            response.sendRedirect(request.getContextPath() + "/user/dashboard");
         } else {
             String error = userDao.getLastError();
             if (error == null || error.isEmpty()) {
