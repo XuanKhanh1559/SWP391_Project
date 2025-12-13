@@ -168,6 +168,38 @@
         <servlet-name>BanUserServlet</servlet-name>
         <url-pattern>/admin/ban-user</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>DepositServlet</servlet-name>
+        <servlet-class>controller.DepositServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DepositServlet</servlet-name>
+        <url-pattern>/deposit</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>VNPayServlet</servlet-name>
+        <servlet-class>controller.VNPayServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>VNPayServlet</servlet-name>
+        <url-pattern>/vnpay</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>VNPayResponseServlet</servlet-name>
+        <servlet-class>controller.VNPayResponseServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>VNPayResponseServlet</servlet-name>
+        <url-pattern>/vnpay-response</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>BalanceServlet</servlet-name>
+        <servlet-class>controller.BalanceServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BalanceServlet</servlet-name>
+        <url-pattern>/api/balance</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

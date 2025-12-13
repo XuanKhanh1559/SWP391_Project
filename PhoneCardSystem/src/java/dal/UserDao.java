@@ -474,4 +474,28 @@ public class UserDao extends DBContext {
         }
         return false;
     }
+
+    public boolean deposit(int userId, double amount) {
+        if (connection == null) {
+            lastErrorMessage = "Lỗi kết nối database. Vui lòng kiểm tra cấu hình database.";
+            return false;
+        }
+
+        if (amount <= 0) {
+            lastErrorMessage = "Số tiền nạp phải lớn hơn 0";
+            return false;
+        }
+
+        String sql = "UPDATE users SET balance = balance + ?, updated_at = NOW() WHERE id = ? AND deleted = 0";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setDouble(1, amount);
+            ps.setInt(2, userId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            lastErrorMessage = "Lỗi khi nạp tiền: " + ex.getMessage();
+        }
+        return false;
+    }
 }
