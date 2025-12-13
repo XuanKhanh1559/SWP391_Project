@@ -153,5 +153,37 @@ public class ProductDao extends DBContext {
         }
         return 0;
     }
+
+    public Product getProductById(int productId, boolean isAdmin) {
+        if (connection == null) {
+            lastErrorMessage = "Lỗi kết nối database. Vui lòng kiểm tra cấu hình database.";
+            return null;
+        }
+
+        StringBuilder sql = new StringBuilder();
+        sql.append("SELECT id, provider_id, name, type, denomination, price, description, status, created_at, updated_at, deleted ");
+        sql.append("FROM products WHERE id = ? ");
+
+        if (!isAdmin) {
+            sql.append("AND (status = ? OR status = ?) AND deleted = 0");
+        }
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql.toString());
+            ps.setInt(1, productId);
+            if (!isAdmin) {
+                ps.setInt(2, ProductStatus.ACTIVE.getValue());
+                ps.setString(3, ProductStatus.ACTIVE.getLabel());
+            }
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapResultSetToProduct(rs);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            lastErrorMessage = "Lỗi khi lấy thông tin sản phẩm: " + ex.getMessage();
+        }
+        return null;
+    }
 }
 
