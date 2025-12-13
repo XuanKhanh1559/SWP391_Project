@@ -6,7 +6,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chỉnh sửa mã giảm giá - Admin</title>
+    <title>Tạo mã giảm giá - Admin</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
@@ -26,7 +26,7 @@
 
     <main class="main-content">
         <div class="form-container">
-            <h2><i class="fas fa-edit"></i> Chỉnh sửa mã giảm giá</h2>
+            <h2><i class="fas fa-plus-circle"></i> Tạo mã giảm giá mới</h2>
             
             <c:if test="${requestScope.error != null}">
                 <div class="alert alert-danger">
@@ -34,45 +34,31 @@
                     <span>${requestScope.error}</span>
                 </div>
             </c:if>
-            
-            <c:if test="${requestScope.success != null}">
-                <div class="alert alert-success">
-                    <i class="fas fa-check-circle"></i>
-                    <span>${requestScope.success}</span>
-                </div>
-            </c:if>
 
-            <fmt:formatDate value="${coupon.start_date}" pattern="yyyy-MM-dd'T'HH:mm" var="formattedStartDate" />
-            <fmt:formatDate value="${coupon.end_date}" pattern="yyyy-MM-dd'T'HH:mm" var="formattedEndDate" />
-
-            <form action="${pageContext.request.contextPath}/admin/edit-coupon" method="POST" class="admin-form">
-                <input type="hidden" name="id" value="${coupon.id}">
-                
+            <form action="${pageContext.request.contextPath}/admin/create-coupon" method="POST" class="admin-form">
                 <div class="form-section">
                     <h3>Thông tin cơ bản</h3>
                     <div class="form-row">
                         <label for="code">Mã coupon: <span class="required">*</span></label>
-                        <input type="text" id="code" name="code" value="${coupon.code}" required 
+                        <input type="text" id="code" name="code" value="${param.code}" required 
                                pattern="[A-Z0-9]+" title="Chỉ chấp nhận chữ in hoa và số">
                     </div>
 
                     <div class="form-row">
                         <label for="name">Tên: <span class="required">*</span></label>
-                        <input type="text" id="name" name="name" value="${coupon.name}" required>
+                        <input type="text" id="name" name="name" value="${param.name}" required>
                     </div>
 
                     <div class="form-row">
                         <label for="description">Mô tả:</label>
-                        <textarea id="description" name="description" rows="3">${coupon.description}</textarea>
+                        <textarea id="description" name="description" rows="3">${param.description}</textarea>
                     </div>
 
                     <div class="form-row">
                         <label for="status">Trạng thái: <span class="required">*</span></label>
                         <select id="status" name="status" required>
-                            <option value="1" ${coupon.status == 1 ? 'selected' : ''}>Đang hoạt động</option>
-                            <option value="2" ${coupon.status == 2 ? 'selected' : ''}>Không hoạt động</option>
-                            <option value="3" ${coupon.status == 3 ? 'selected' : ''}>Hết hạn</option>
-                            <option value="4" ${coupon.status == 4 ? 'selected' : ''}>Đã hết lượt</option>
+                            <option value="1" ${param.status == '1' ? 'selected' : 'selected'}>Đang hoạt động</option>
+                            <option value="2" ${param.status == '2' ? 'selected' : ''}>Không hoạt động</option>
                         </select>
                     </div>
                 </div>
@@ -82,28 +68,28 @@
                     <div class="form-row">
                         <label for="discount_type">Loại giảm giá: <span class="required">*</span></label>
                         <select id="discount_type" name="discount_type" required onchange="toggleDiscountValue()">
-                            <option value="1" ${coupon.discount_type == 1 ? 'selected' : ''}>Phần trăm</option>
-                            <option value="2" ${coupon.discount_type == 2 ? 'selected' : ''}>Cố định</option>
+                            <option value="1" ${param.discount_type == '1' ? 'selected' : 'selected'}>Phần trăm</option>
+                            <option value="2" ${param.discount_type == '2' ? 'selected' : ''}>Cố định</option>
                         </select>
                     </div>
 
                     <div class="form-row">
                         <label for="discount_value">Giá trị giảm: <span class="required">*</span></label>
                         <input type="number" id="discount_value" name="discount_value" 
-                               value="${coupon.discount_value}" step="0.01" min="0" required>
+                               value="${param.discount_value}" step="0.01" min="0" required>
                         <small id="discount_hint" class="form-hint"></small>
                     </div>
 
                     <div class="form-row">
                         <label for="min_order_amount">Đơn hàng tối thiểu: <span class="required">*</span></label>
                         <input type="number" id="min_order_amount" name="min_order_amount" 
-                               value="${coupon.min_order_amount}" step="1000" min="0" required>
+                               value="${param.min_order_amount != null ? param.min_order_amount : '0'}" step="1000" min="0" required>
                     </div>
 
                     <div class="form-row">
                         <label for="max_discount_amount">Giảm tối đa:</label>
                         <input type="number" id="max_discount_amount" name="max_discount_amount" 
-                               value="${coupon.max_discount_amount}" step="1000" min="0">
+                               value="${param.max_discount_amount}" step="1000" min="0">
                         <small class="form-hint">Để trống nếu không giới hạn</small>
                     </div>
                 </div>
@@ -113,13 +99,13 @@
                     <div class="form-row">
                         <label for="start_date">Ngày bắt đầu: <span class="required">*</span></label>
                         <input type="datetime-local" id="start_date" name="start_date" 
-                               value="${formattedStartDate}" required>
+                               value="${param.start_date}" required>
                     </div>
 
                     <div class="form-row">
                         <label for="end_date">Ngày kết thúc: <span class="required">*</span></label>
                         <input type="datetime-local" id="end_date" name="end_date" 
-                               value="${formattedEndDate}" required>
+                               value="${param.end_date}" required>
                     </div>
                 </div>
 
@@ -128,13 +114,13 @@
                     <div class="form-row">
                         <label for="usage_limit_per_user">Lượt sử dụng/người: <span class="required">*</span></label>
                         <input type="number" id="usage_limit_per_user" name="usage_limit_per_user" 
-                               value="${coupon.usage_limit_per_user}" min="1" required>
+                               value="${param.usage_limit_per_user != null ? param.usage_limit_per_user : '1'}" min="1" required>
                     </div>
 
                     <div class="form-row">
                         <label for="total_usage_limit">Tổng lượt sử dụng:</label>
                         <input type="number" id="total_usage_limit" name="total_usage_limit" 
-                               value="${coupon.total_usage_limit}" min="1">
+                               value="${param.total_usage_limit}" min="1">
                         <small class="form-hint">Để trống nếu không giới hạn</small>
                     </div>
                 </div>
@@ -166,9 +152,9 @@
 
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">
-                        <i class="fas fa-save"></i> Cập nhật
+                        <i class="fas fa-save"></i> Tạo mã giảm giá
                     </button>
-                    <a href="${pageContext.request.contextPath}/admin/coupon-detail?id=${coupon.id}" class="btn btn-secondary">
+                    <a href="${pageContext.request.contextPath}/admin/coupons" class="btn btn-secondary">
                         <i class="fas fa-times"></i> Hủy
                     </a>
                 </div>
@@ -229,19 +215,6 @@
                 allowClear: true,
                 width: '100%'
             });
-            
-            // Pre-select existing values
-            const productIds = '${coupon.applicable_product_ids}';
-            if (productIds && productIds.trim() !== '') {
-                const productArray = productIds.split(',').map(id => id.trim());
-                $('#applicable_product_ids').val(productArray).trigger('change');
-            }
-            
-            const providerIds = '${coupon.applicable_provider_ids}';
-            if (providerIds && providerIds.trim() !== '') {
-                const providerArray = providerIds.split(',').map(id => id.trim());
-                $('#applicable_provider_ids').val(providerArray).trigger('change');
-            }
             
             // Create hidden inputs to send comma-separated values
             $('form').on('submit', function(e) {
