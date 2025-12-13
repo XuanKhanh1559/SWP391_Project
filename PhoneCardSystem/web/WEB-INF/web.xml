@@ -120,6 +120,14 @@
         <servlet-name>AdminProductServlet</servlet-name>
         <url-pattern>/admin/products</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>EditProductServlet</servlet-name>
+        <servlet-class>controller.EditProductServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EditProductServlet</servlet-name>
+        <url-pattern>/admin/edit-product</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30

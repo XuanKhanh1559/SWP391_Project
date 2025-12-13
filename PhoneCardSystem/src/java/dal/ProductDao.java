@@ -185,5 +185,42 @@ public class ProductDao extends DBContext {
         }
         return null;
     }
-}
 
+    public boolean updateProduct(int productId, String name, double denomination, double price, String description, String status) {
+        if (connection == null) {
+            lastErrorMessage = "Lỗi kết nối database. Vui lòng kiểm tra cấu hình database.";
+            return false;
+        }
+
+        if (price <= 0) {
+            lastErrorMessage = "Giá sản phẩm phải lớn hơn 0";
+            return false;
+        }
+
+        if (name == null || name.trim().isEmpty()) {
+            lastErrorMessage = "Tên sản phẩm không được để trống";
+            return false;
+        }
+
+        if (status == null || (!status.equalsIgnoreCase("active") && !status.equalsIgnoreCase("inactive"))) {
+            lastErrorMessage = "Trạng thái sản phẩm không hợp lệ";
+            return false;
+        }
+
+        String sql = "UPDATE products SET name = ?, denomination = ?, price = ?, description = ?, status = ?, updated_at = NOW() WHERE id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, name.trim());
+            ps.setDouble(2, denomination);
+            ps.setDouble(3, price);
+            ps.setString(4, description);
+            ps.setString(5, status.toLowerCase());
+            ps.setInt(6, productId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            lastErrorMessage = "Lỗi khi cập nhật sản phẩm: " + ex.getMessage();
+        }
+        return false;
+    }
+}
