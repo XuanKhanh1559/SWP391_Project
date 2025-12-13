@@ -113,9 +113,18 @@
                                         <button class="btn-action btn-edit" onclick="editProduct(${product.id})">
                                             <i class="fas fa-edit"></i> Sửa
                                         </button>
-                                        <button class="btn-action btn-delete" onclick="deleteProduct(${product.id})">
-                                            <i class="fas fa-trash"></i> Xóa
-                                        </button>
+                                        <c:choose>
+                                            <c:when test="${product.deleted == 1}">
+                                                <button class="btn-action btn-restore" onclick="restoreProduct(${product.id})">
+                                                    <i class="fas fa-undo"></i> Khôi phục
+                                                </button>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <button class="btn-action btn-delete" onclick="deleteProduct(${product.id})">
+                                                    <i class="fas fa-trash"></i> Xóa
+                                                </button>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </td>
                                 </tr>
                             </c:forEach>

@@ -223,4 +223,40 @@ public class ProductDao extends DBContext {
         }
         return false;
     }
+
+    public boolean deleteProduct(int productId) {
+        if (connection == null) {
+            lastErrorMessage = "Lỗi kết nối database. Vui lòng kiểm tra cấu hình database.";
+            return false;
+        }
+
+        String sql = "UPDATE products SET deleted = 1, updated_at = NOW() WHERE id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, productId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            lastErrorMessage = "Lỗi khi xóa sản phẩm: " + ex.getMessage();
+        }
+        return false;
+    }
+
+    public boolean restoreProduct(int productId) {
+        if (connection == null) {
+            lastErrorMessage = "Lỗi kết nối database. Vui lòng kiểm tra cấu hình database.";
+            return false;
+        }
+
+        String sql = "UPDATE products SET deleted = 0, updated_at = NOW() WHERE id = ?";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, productId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            lastErrorMessage = "Lỗi khi khôi phục sản phẩm: " + ex.getMessage();
+        }
+        return false;
+    }
 }
