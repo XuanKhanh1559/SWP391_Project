@@ -436,4 +436,42 @@ public class UserDao extends DBContext {
         }
         return 0;
     }
+
+    public boolean banUser(int userId) {
+        if (connection == null) {
+            lastErrorMessage = "Lỗi kết nối database. Vui lòng kiểm tra cấu hình database.";
+            return false;
+        }
+
+        String sql = "UPDATE users SET status = ?, updated_at = NOW() WHERE id = ? AND deleted = 0";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, UserStatus.BANNED.getLabel());
+            ps.setInt(2, userId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            lastErrorMessage = "Lỗi khi khóa người dùng: " + ex.getMessage();
+        }
+        return false;
+    }
+
+    public boolean unbanUser(int userId) {
+        if (connection == null) {
+            lastErrorMessage = "Lỗi kết nối database. Vui lòng kiểm tra cấu hình database.";
+            return false;
+        }
+
+        String sql = "UPDATE users SET status = ?, updated_at = NOW() WHERE id = ? AND deleted = 0";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setString(1, UserStatus.ACTIVE.getLabel());
+            ps.setInt(2, userId);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            lastErrorMessage = "Lỗi khi mở khóa người dùng: " + ex.getMessage();
+        }
+        return false;
+    }
 }

@@ -160,6 +160,14 @@
         <servlet-name>UserDetailServlet</servlet-name>
         <url-pattern>/admin/user-detail</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>BanUserServlet</servlet-name>
+        <servlet-class>controller.BanUserServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>BanUserServlet</servlet-name>
+        <url-pattern>/admin/ban-user</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
