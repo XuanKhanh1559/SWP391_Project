@@ -112,6 +112,14 @@
         <servlet-name>RemoveCartItemServlet</servlet-name>
         <url-pattern>/remove-cart-item</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>AdminProductServlet</servlet-name>
+        <servlet-class>controller.AdminProductServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminProductServlet</servlet-name>
+        <url-pattern>/admin/products</url-pattern>
+    </servlet-mapping>
     <session-config>
         <session-timeout>
             30
