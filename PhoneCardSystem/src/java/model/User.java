@@ -16,6 +16,7 @@ public class User {
     private String phone;
     private double balance;
     private int status;
+    private String role;
     private Date created_at;
     private Date updated_at;
     private int deleted;
@@ -23,7 +24,7 @@ public class User {
     public User() {
     }
 
-    public User(int id, String username, String email, String password, String phone, double balance, int status, Date created_at, Date updated_at, int deleted) {
+    public User(int id, String username, String email, String password, String phone, double balance, int status, String role, Date created_at, Date updated_at, int deleted) {
         this.id = id;
         this.username = username;
         this.email = email;
@@ -31,6 +32,7 @@ public class User {
         this.phone = phone;
         this.balance = balance;
         this.status = status;
+        this.role = role;
         this.created_at = created_at;
         this.updated_at = updated_at;
         this.deleted = deleted;
@@ -92,6 +94,14 @@ public class User {
         this.status = status;
     }
 
+    public String getRole() {
+        return role;
+    }
+
+    public void setRole(String role) {
+        this.role = role;
+    }
+
     public Date getCreated_at() {
         return created_at;
     }
@@ -118,6 +128,6 @@ public class User {
 
     @Override
     public String toString() {
-        return "User{" + "id=" + id + ", username=" + username + ", email=" + email + ", password=" + password + ", phone=" + phone + ", balance=" + balance + ", status=" + status + ", created_at=" + created_at + ", updated_at=" + updated_at + ", deleted=" + deleted + '}';
+        return "User{" + "id=" + id + ", username=" + username + ", email=" + email + ", password=" + password + ", phone=" + phone + ", balance=" + balance + ", status=" + status + ", role=" + role + ", created_at=" + created_at + ", updated_at=" + updated_at + ", deleted=" + deleted + '}';
     }
 }

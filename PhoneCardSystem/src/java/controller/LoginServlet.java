@@ -48,8 +48,9 @@ public class LoginServlet extends HttpServlet {
             session.setAttribute("username", user.getUsername());
             session.setAttribute("email", user.getEmail());
             session.setAttribute("balance", user.getBalance());
+            session.setAttribute("role", user.getRole());
             
-            if ("admin".equalsIgnoreCase(user.getUsername()) || "admin@admin.com".equalsIgnoreCase(user.getEmail())) {
+            if ("admin".equalsIgnoreCase(user.getRole())) {
                 response.sendRedirect(request.getContextPath() + "/admin/dashboard.jsp");
             } else {
                 response.sendRedirect(request.getContextPath() + "/user/dashboard.jsp");

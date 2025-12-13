@@ -75,6 +75,7 @@ public class RegisterServlet extends HttpServlet {
         newUser.setPassword(PasswordUtil.hashPassword(password));
         newUser.setBalance(0.0);
         newUser.setStatus(UserStatus.ACTIVE.getValue());
+        newUser.setRole("user");
         
         int userId = userDao.signup(newUser);
         
@@ -86,6 +87,7 @@ public class RegisterServlet extends HttpServlet {
             session.setAttribute("username", newUser.getUsername());
             session.setAttribute("email", newUser.getEmail());
             session.setAttribute("balance", newUser.getBalance());
+            session.setAttribute("role", newUser.getRole());
             
             response.sendRedirect(request.getContextPath() + "/user/dashboard.jsp");
         } else {
