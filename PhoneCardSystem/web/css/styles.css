@@ -1744,3 +1744,136 @@ body {
 .btn-danger:hover {
     background: #c0392b;
 }
+
+/* ============================================
+   Deposit Page Styles
+   ============================================ */
+.balance-display {
+    background: linear-gradient(135deg, var(--primary-color), var(--primary-dark));
+    color: var(--white);
+    padding: 2rem;
+    border-radius: 12px;
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.balance-display i {
+    font-size: 3rem;
+    opacity: 0.9;
+}
+
+.balance-display p {
+    margin: 0;
+    opacity: 0.9;
+    font-size: 0.9rem;
+}
+
+.balance-display h3 {
+    margin: 0.5rem 0 0 0;
+    font-size: 2rem;
+}
+
+.quick-amount-buttons {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+    gap: 1rem;
+    margin: 1.5rem 0;
+}
+
+.quick-amount-btn {
+    padding: 1rem;
+    border: 2px solid var(--primary-color);
+    background: var(--white);
+    color: var(--primary-color);
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: 600;
+    transition: all 0.3s;
+}
+
+.quick-amount-btn:hover {
+    background: var(--primary-color);
+    color: var(--white);
+}
+
+.payment-method-info {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--light-color);
+    border-radius: 8px;
+    margin: 1.5rem 0;
+}
+
+.payment-method-info i {
+    font-size: 1.5rem;
+    color: var(--primary-color);
+}
+
+.payment-method-info span {
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.result-success,
+.result-error {
+    text-align: center;
+    padding: 3rem 2rem;
+}
+
+.result-success i {
+    font-size: 5rem;
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+}
+
+.result-error i {
+    font-size: 5rem;
+    color: var(--danger-color);
+    margin-bottom: 1rem;
+}
+
+.result-success h2 {
+    color: var(--secondary-color);
+    margin-bottom: 1rem;
+}
+
+.result-error h2 {
+    color: var(--danger-color);
+    margin-bottom: 1rem;
+}
+
+.result-message {
+    font-size: 1.1rem;
+    color: var(--text-color);
+    margin-bottom: 1.5rem;
+}
+
+.result-amount {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--secondary-color);
+    margin: 1.5rem 0;
+}
+
+.result-balance {
+    background: var(--light-color);
+    padding: 1.5rem;
+    border-radius: 8px;
+    margin: 2rem 0;
+}
+
+.result-balance p {
+    margin: 0;
+    color: var(--text-color);
+    font-size: 0.9rem;
+}
+
+.result-balance h3 {
+    margin: 0.5rem 0 0 0;
+    color: var(--primary-color);
+    font-size: 1.8rem;
+}
