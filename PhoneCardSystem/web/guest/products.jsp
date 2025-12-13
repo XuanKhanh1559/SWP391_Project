@@ -119,7 +119,28 @@
 
     <div id="footer-placeholder"></div>
 
+    <%@ page import="model.User" %>
+    <%
+        User user = null;
+        HttpSession userSession = request.getSession(false);
+        if (userSession != null && userSession.getAttribute("user") != null) {
+            user = (User) userSession.getAttribute("user");
+        }
+    %>
     <script>
+        window.userData = <c:choose>
+            <c:when test="${sessionScope.user != null}">
+            {
+                id: ${sessionScope.user.id},
+                username: "<c:out value="${sessionScope.user.username}" escapeXml="true"/>",
+                email: "<c:out value="${sessionScope.user.email}" escapeXml="true"/>",
+                role: "<c:out value="${sessionScope.user.role != null ? sessionScope.user.role : 'user'}" escapeXml="true"/>",
+                balance: ${sessionScope.user.balance}
+            }
+            </c:when>
+            <c:otherwise>null</c:otherwise>
+        </c:choose>;
+        
         window.productsData = [
             <c:forEach var="product" items="${products}" varStatus="loop">
             {

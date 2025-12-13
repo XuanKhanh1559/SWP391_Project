@@ -108,6 +108,19 @@
     <div id="footer-placeholder"></div>
 
     <script>
+        window.userData = <c:choose>
+            <c:when test="${sessionScope.user != null}">
+            {
+                id: ${sessionScope.user.id},
+                username: "<c:out value="${sessionScope.user.username}" escapeXml="true"/>",
+                email: "<c:out value="${sessionScope.user.email}" escapeXml="true"/>",
+                role: "<c:out value="${sessionScope.user.role != null ? sessionScope.user.role : 'user'}" escapeXml="true"/>",
+                balance: ${sessionScope.user.balance}
+            }
+            </c:when>
+            <c:otherwise>null</c:otherwise>
+        </c:choose>;
+        
         window.productData = {
             id: ${product != null ? product.id : 0},
             name: "<c:out value="${product != null ? product.name : ''}" escapeXml="true"/>",
