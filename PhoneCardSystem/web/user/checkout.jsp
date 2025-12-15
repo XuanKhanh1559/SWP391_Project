@@ -141,6 +141,91 @@
         .btn-cancel:hover {
             background: #da190b;
         }
+        .coupon-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 10001;
+            justify-content: center;
+            align-items: center;
+        }
+        .coupon-modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 10px;
+            max-width: 700px;
+            max-height: 85vh;
+            width: 90%;
+            display: flex;
+            flex-direction: column;
+        }
+        #couponList {
+            overflow-y: auto;
+            max-height: calc(85vh - 100px);
+            padding-right: 10px;
+        }
+        #couponList::-webkit-scrollbar {
+            width: 8px;
+        }
+        #couponList::-webkit-scrollbar-track {
+            background: #f1f1f1;
+            border-radius: 4px;
+        }
+        #couponList::-webkit-scrollbar-thumb {
+            background: #ff6b6b;
+            border-radius: 4px;
+        }
+        #couponList::-webkit-scrollbar-thumb:hover {
+            background: #ff5252;
+        }
+        .coupon-modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+        .coupon-modal-close {
+            cursor: pointer;
+            font-size: 24px;
+            color: #666;
+        }
+        .coupon-item {
+            border: 2px solid #eee;
+            border-radius: 8px;
+            padding: 15px;
+            margin-bottom: 15px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        .coupon-item:hover {
+            border-color: #ff6b6b;
+            background: #fff5f5;
+        }
+        .coupon-item-code {
+            font-size: 18px;
+            font-weight: bold;
+            color: #ff6b6b;
+            margin-bottom: 5px;
+        }
+        .coupon-item-value {
+            font-size: 20px;
+            font-weight: bold;
+            color: #4CAF50;
+            margin-bottom: 5px;
+        }
+        .coupon-item-desc {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        .coupon-item-details {
+            font-size: 12px;
+            color: #999;
+        }
     </style>
 </head>
 <body>
@@ -161,13 +246,25 @@
                     </div>
                 </c:forEach>
                 
-                <div class="order-summary-item">
-                    <span>Tổng cộng:</span>
-                    <span class="order-total">
+                <div class="order-summary-item" style="border-top: 1px dashed #ddd; padding-top: 10px; margin-top: 10px;">
+                    <span>Tạm tính:</span>
+                    <span id="subtotal">
                         <c:set var="total" value="0"/>
                         <c:forEach var="item" items="${cartItems}">
                             <c:set var="total" value="${total + (item.unit_price * item.quantity)}"/>
                         </c:forEach>
+                        <fmt:formatNumber value="${total}" type="currency" currencyCode="VND" pattern="#,##0 đ"/>
+                    </span>
+                </div>
+                
+                <div class="order-summary-item" id="discountRow" style="color: #4CAF50; display: none;">
+                    <span>Giảm giá:</span>
+                    <span id="discountAmount">0 đ</span>
+                </div>
+                
+                <div class="order-summary-item" style="font-size: 18px; font-weight: bold; border-top: 2px solid #333; padding-top: 10px; margin-top: 10px;">
+                    <span>Tổng cộng:</span>
+                    <span class="order-total" style="color: #ff6b6b;" id="finalTotal">
                         <fmt:formatNumber value="${total}" type="currency" currencyCode="VND" pattern="#,##0 đ"/>
                     </span>
                 </div>
@@ -188,8 +285,11 @@
 
             <div class="checkout-section">
                 <h3>Mã giảm giá (Không bắt buộc)</h3>
-                <div class="form-group">
-                    <input type="text" id="couponCode" class="form-input" placeholder="Nhập mã giảm giá">
+                <div class="form-group" style="display: flex; gap: 10px;">
+                    <input type="text" id="couponCode" class="form-input" placeholder="Nhập mã giảm giá" style="flex: 1;">
+                    <button class="btn btn-outline" onclick="showCouponModal()" style="white-space: nowrap;">
+                        <i class="fas fa-list"></i> Chọn mã
+                    </button>
                 </div>
             </div>
 
@@ -210,6 +310,18 @@
             <div class="modal-buttons">
                 <button class="btn-deposit" onclick="goToDeposit()"><i class="fas fa-wallet"></i> Nạp tiền ngay</button>
                 <button class="btn-cancel" onclick="closeInsufficientModal()"><i class="fas fa-times"></i> Thoát</button>
+            </div>
+        </div>
+    </div>
+
+    <div class="coupon-modal" id="couponModal">
+        <div class="coupon-modal-content">
+            <div class="coupon-modal-header">
+                <h3><i class="fas fa-tag"></i> Chọn mã giảm giá</h3>
+                <span class="coupon-modal-close" onclick="closeCouponModal()">&times;</span>
+            </div>
+            <div id="couponList">
+                <p style="text-align: center; padding: 20px;">Đang tải...</p>
             </div>
         </div>
     </div>
@@ -237,6 +349,8 @@
     </div>
 
     <script>
+        const contextPath = '${pageContext.request.contextPath}';
+        
         window.userData = {
             id: ${sessionScope.user.id},
             username: '<c:out value="${sessionScope.user.username}" escapeXml="true"/>',
@@ -247,9 +361,11 @@
     </script>
     <script src="${pageContext.request.contextPath}/js/layout.js"></script>
     <script src="${pageContext.request.contextPath}/js/app.js"></script>
-    <script src="${pageContext.request.contextPath}/js/common.js"></script>
     <script>
         let pollInterval;
+        let subtotalAmount = ${total};
+        let selectedCouponData = null;
+        let availableCoupons = [];
         
         window.onload = function() {
             <c:if test="${insufficientBalance == true}">
@@ -357,6 +473,132 @@
         function closeOverlay() {
             document.getElementById('processingOverlay').style.display = 'none';
         }
+        
+        function showCouponModal() {
+            document.getElementById('couponModal').style.display = 'flex';
+            loadAvailableCoupons();
+        }
+        
+        function closeCouponModal() {
+            document.getElementById('couponModal').style.display = 'none';
+        }
+        
+        function loadAvailableCoupons() {
+            console.log('Loading coupons for modal...');
+            fetch(contextPath + '/user/coupons?action=getAvailable')
+                .then(response => {
+                    console.log('Response status:', response.status);
+                    return response.json();
+                })
+                .then(coupons => {
+                    console.log('Loaded coupons:', coupons);
+                    console.log('Number of coupons:', coupons.length);
+                    availableCoupons = coupons;
+                    displayCouponList(coupons);
+                })
+                .catch(error => {
+                    console.error('Error loading coupons:', error);
+                    document.getElementById('couponList').innerHTML = '<p style="text-align: center; color: red;">Có lỗi xảy ra khi tải mã giảm giá</p>';
+                });
+        }
+        
+        function displayCouponList(coupons) {
+            const couponList = document.getElementById('couponList');
+            
+            // Filter coupons: Chỉ hiển thị coupon có min_order_amount <= subtotal
+            const eligibleCoupons = coupons.filter(coupon => coupon.min_order_amount <= subtotalAmount);
+            
+            if (!eligibleCoupons || eligibleCoupons.length === 0) {
+                couponList.innerHTML = '<p style="text-align: center; color: #999;">Không có mã giảm giá khả dụng cho đơn hàng này</p>';
+                return;
+            }
+            
+            let html = '';
+            eligibleCoupons.forEach(coupon => {
+                const discountValue = coupon.discount_type == 1 
+                    ? '-' + coupon.discount_value + '%' 
+                    : '-' + formatCurrency(coupon.discount_value);
+                
+                const maxDiscountText = coupon.max_discount_amount 
+                    ? ' | Giảm tối đa: ' + formatCurrency(coupon.max_discount_amount) 
+                    : '';
+                
+                html += '<div class="coupon-item" onclick="selectCoupon(\'' + coupon.code + '\')">' +
+                    '<div class="coupon-item-code">' + coupon.code + '</div>' +
+                    '<div class="coupon-item-value">' + discountValue + '</div>' +
+                    '<div class="coupon-item-desc">' + (coupon.description || '') + '</div>' +
+                    '<div class="coupon-item-details">' +
+                    'Đơn tối thiểu: ' + formatCurrency(coupon.min_order_amount) + ' | ' +
+                    'HSD: ' + formatDate(coupon.end_date) + ' | ' +
+                    'Còn ' + coupon.usage_limit_per_user + ' lượt' +
+                    maxDiscountText +
+                    '</div></div>';
+            });
+            
+            couponList.innerHTML = html;
+        }
+        
+        function selectCoupon(code) {
+            // Tìm coupon data
+            selectedCouponData = availableCoupons.find(c => c.code === code);
+            
+            if (!selectedCouponData) {
+                showToast('Không tìm thấy mã giảm giá', 'error');
+                return;
+            }
+            
+            // Tính discount
+            let discountAmount = 0;
+            if (selectedCouponData.discount_type == 1) {
+                // Percentage
+                discountAmount = subtotalAmount * (selectedCouponData.discount_value / 100);
+                // Apply max discount if exists
+                if (selectedCouponData.max_discount_amount && discountAmount > selectedCouponData.max_discount_amount) {
+                    discountAmount = selectedCouponData.max_discount_amount;
+                }
+            } else {
+                // Fixed amount
+                discountAmount = selectedCouponData.discount_value;
+            }
+            
+            // Update UI
+            document.getElementById('couponCode').value = code;
+            document.getElementById('discountRow').style.display = 'flex';
+            document.getElementById('discountAmount').textContent = '- ' + formatCurrency(discountAmount);
+            
+            const finalTotal = subtotalAmount - discountAmount;
+            document.getElementById('finalTotal').textContent = formatCurrency(finalTotal);
+            
+            closeCouponModal();
+            showToast('Đã áp dụng mã: ' + code + ' (Giảm ' + formatCurrency(discountAmount) + ')', 'success');
+        }
+        
+        function formatCurrency(value) {
+            return new Intl.NumberFormat('vi-VN', {
+                style: 'currency',
+                currency: 'VND'
+            }).format(value);
+        }
+        
+        function formatDate(dateStr) {
+            const date = new Date(dateStr);
+            return date.toLocaleDateString('vi-VN');
+        }
+        
+        // Reset discount when coupon code is cleared
+        document.addEventListener('DOMContentLoaded', function() {
+            const couponInput = document.getElementById('couponCode');
+            if (couponInput) {
+                couponInput.addEventListener('input', function() {
+                    if (!this.value || this.value.trim() === '') {
+                        selectedCouponData = null;
+                        document.getElementById('discountRow').style.display = 'none';
+                        document.getElementById('discountAmount').textContent = '0 đ';
+                        document.getElementById('finalTotal').textContent = formatCurrency(subtotalAmount);
+                    }
+                });
+            }
+        });
     </script>
 </body>
 </html>

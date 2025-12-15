@@ -46,8 +46,8 @@ public class OrderDao extends DBContext {
                     throw new Exception("Mã giảm giá không tồn tại");
                 }
 
-                if (!couponDao.canUserUseCoupon(payload.getUserId(), coupon.getId())) {
-                    throw new Exception("Bạn đã sử dụng hết lượt dùng mã giảm giá này");
+                if (!couponDao.canUserUseCouponFromUserCoupons(payload.getUserId(), coupon.getId())) {
+                    throw new Exception("Bạn không sở hữu mã này hoặc đã sử dụng hết lượt dùng");
                 }
             }
 

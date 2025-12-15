@@ -254,9 +254,9 @@ public class CouponDao extends DBContext {
         return false;
     }
 
-    public boolean createCoupon(Coupon coupon) {
+    public int createCoupon(Coupon coupon) {
         if (connection == null) {
-            return false;
+            return 0;
         }
         
         StringBuilder sql = new StringBuilder(
@@ -268,18 +268,11 @@ public class CouponDao extends DBContext {
         );
         
         try {
-            PreparedStatement ps = connection.prepareStatement(sql.toString());
+            PreparedStatement ps = connection.prepareStatement(sql.toString(), PreparedStatement.RETURN_GENERATED_KEYS);
             ps.setString(1, coupon.getCode());
             ps.setString(2, coupon.getName());
             ps.setString(3, coupon.getDescription());
-            
-            DiscountType discountType = DiscountType.fromValue(coupon.getDiscount_type());
-            if (discountType != null) {
-                ps.setString(4, discountType.getLabel());
-            } else {
-                ps.setString(4, DiscountType.PERCENTAGE.getLabel());
-            }
-            
+            ps.setInt(4, coupon.getDiscount_type());
             ps.setDouble(5, coupon.getDiscount_value());
             ps.setDouble(6, coupon.getMin_order_amount());
             
@@ -299,21 +292,21 @@ public class CouponDao extends DBContext {
                 ps.setNull(11, java.sql.Types.INTEGER);
             }
             
-            CouponStatus status = CouponStatus.fromValue(coupon.getStatus());
-            if (status != null) {
-                ps.setString(12, status.getLabel());
-            } else {
-                ps.setString(12, CouponStatus.ACTIVE.getLabel());
-            }
-            
+            ps.setInt(12, coupon.getStatus());
             ps.setString(13, coupon.getApplicable_product_ids());
             ps.setString(14, coupon.getApplicable_provider_ids());
             
-            return ps.executeUpdate() > 0;
+            int affectedRows = ps.executeUpdate();
+            if (affectedRows > 0) {
+                ResultSet generatedKeys = ps.getGeneratedKeys();
+                if (generatedKeys.next()) {
+                    return generatedKeys.getInt(1);
+                }
+            }
         } catch (SQLException ex) {
             ex.printStackTrace();
         }
-        return false;
+        return 0;
     }
 
     public boolean updateCoupon(Coupon coupon) {
@@ -403,6 +396,180 @@ public class CouponDao extends DBContext {
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, userId);
             ps.setInt(2, couponId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                int usageLimit = rs.getInt("usage_limit_per_user");
+                int usedCount = rs.getInt("used_count");
+                return usedCount < usageLimit;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+
+    public List<Coupon> getAvailableCouponsForUser(int userId) {
+        List<Coupon> coupons = new ArrayList<>();
+        if (connection == null) {
+            return coupons;
+        }
+        
+        String sql = "SELECT c.*, " +
+                     "COALESCE(COUNT(cu.id), 0) as user_usage_count " +
+                     "FROM user_coupons uc " +
+                     "INNER JOIN coupons c ON uc.coupon_id = c.id " +
+                     "LEFT JOIN coupon_usages cu ON c.id = cu.coupon_id AND cu.user_id = ? " +
+                     "WHERE uc.user_id = ? " +
+                     "AND uc.status = 'available' " +
+                     "AND c.status = 1 " +
+                     "AND c.deleted = 0 " +
+                     "AND c.start_date <= NOW() " +
+                     "AND c.end_date >= NOW() " +
+                     "AND (uc.expires_at IS NULL OR uc.expires_at >= NOW()) " +
+                     "AND (c.total_usage_limit IS NULL OR c.current_usage_count < c.total_usage_limit) " +
+                     "GROUP BY c.id " +
+                     "HAVING user_usage_count < c.usage_limit_per_user " +
+                     "ORDER BY c.discount_value DESC";
+        
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ps.setInt(2, userId);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                coupons.add(mapResultSetToCoupon(rs));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return coupons;
+    }
+    
+    public List<Coupon> getAvailableCouponsForUser(int userId, int limit, int offset) {
+        List<Coupon> coupons = new ArrayList<>();
+        if (connection == null) {
+            return coupons;
+        }
+        
+        String sql = "SELECT c.*, " +
+                     "COALESCE(COUNT(cu.id), 0) as user_usage_count " +
+                     "FROM user_coupons uc " +
+                     "INNER JOIN coupons c ON uc.coupon_id = c.id " +
+                     "LEFT JOIN coupon_usages cu ON c.id = cu.coupon_id AND cu.user_id = ? " +
+                     "WHERE uc.user_id = ? " +
+                     "AND uc.status = 'available' " +
+                     "AND c.status = 1 " +
+                     "AND c.deleted = 0 " +
+                     "AND c.start_date <= NOW() " +
+                     "AND c.end_date >= NOW() " +
+                     "AND (uc.expires_at IS NULL OR uc.expires_at >= NOW()) " +
+                     "AND (c.total_usage_limit IS NULL OR c.current_usage_count < c.total_usage_limit) " +
+                     "GROUP BY c.id " +
+                     "HAVING user_usage_count < c.usage_limit_per_user " +
+                     "ORDER BY c.discount_value DESC " +
+                     "LIMIT ? OFFSET ?";
+        
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ps.setInt(2, userId);
+            ps.setInt(3, limit);
+            ps.setInt(4, offset);
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                coupons.add(mapResultSetToCoupon(rs));
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return coupons;
+    }
+    
+    public int countAvailableCouponsForUser(int userId) {
+        if (connection == null) {
+            return 0;
+        }
+        
+        String sql = "SELECT COUNT(DISTINCT c.id) as total " +
+                     "FROM user_coupons uc " +
+                     "INNER JOIN coupons c ON uc.coupon_id = c.id " +
+                     "LEFT JOIN coupon_usages cu ON c.id = cu.coupon_id AND cu.user_id = ? " +
+                     "WHERE uc.user_id = ? " +
+                     "AND uc.status = 'available' " +
+                     "AND c.status = 1 " +
+                     "AND c.deleted = 0 " +
+                     "AND c.start_date <= NOW() " +
+                     "AND c.end_date >= NOW() " +
+                     "AND (uc.expires_at IS NULL OR uc.expires_at >= NOW()) " +
+                     "AND (c.total_usage_limit IS NULL OR c.current_usage_count < c.total_usage_limit) " +
+                     "GROUP BY c.id " +
+                     "HAVING COALESCE(COUNT(cu.id), 0) < c.usage_limit_per_user";
+        
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ps.setInt(2, userId);
+            ResultSet rs = ps.executeQuery();
+            int count = 0;
+            while (rs.next()) {
+                count++;
+            }
+            return count;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return 0;
+    }
+    
+    public boolean assignCouponToUser(int userId, int couponId, String expiresAt) {
+        String sql = "INSERT INTO user_coupons (user_id, coupon_id, status, expires_at) " +
+                     "VALUES (?, ?, 'available', ?) " +
+                     "ON DUPLICATE KEY UPDATE status = 'available', expires_at = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, couponId);
+            ps.setString(3, expiresAt);
+            ps.setString(4, expiresAt);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+    
+    public boolean assignCouponToAllUsers(int couponId, String expiresAt) {
+        String sql = "INSERT INTO user_coupons (user_id, coupon_id, status, expires_at) " +
+                     "SELECT u.id, ?, 'available', ? " +
+                     "FROM users u " +
+                     "WHERE u.deleted = 0 AND u.role = 'user' " +
+                     "ON DUPLICATE KEY UPDATE status = 'available', expires_at = ?";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, couponId);
+            ps.setString(2, expiresAt);
+            ps.setString(3, expiresAt);
+            return ps.executeUpdate() > 0;
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
+    
+    public boolean canUserUseCouponFromUserCoupons(int userId, int couponId) {
+        String sql = "SELECT uc.status, c.usage_limit_per_user, COUNT(cu.id) as used_count " +
+                     "FROM user_coupons uc " +
+                     "INNER JOIN coupons c ON uc.coupon_id = c.id " +
+                     "LEFT JOIN coupon_usages cu ON c.id = cu.coupon_id AND cu.user_id = ? " +
+                     "WHERE uc.user_id = ? " +
+                     "AND uc.coupon_id = ? " +
+                     "AND uc.status = 'available' " +
+                     "AND c.status = 1 " +
+                     "AND c.deleted = 0 " +
+                     "AND (uc.expires_at IS NULL OR uc.expires_at >= NOW()) " +
+                     "GROUP BY uc.id, c.usage_limit_per_user";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, userId);
+            ps.setInt(3, couponId);
             ResultSet rs = ps.executeQuery();
             if (rs.next()) {
                 int usageLimit = rs.getInt("usage_limit_per_user");
