@@ -74,9 +74,12 @@
                                     <label for="quantity">Số lượng:</label>
                                     <input type="number" id="quantity" name="quantity" min="1" value="1" class="quantity-input">
                                 </div>
-                                <div class="product-detail-actions">
-                                    <button class="btn btn-primary btn-large" onclick="addToCartFromDetail(${product.id})">
+                                <div class="product-detail-actions" style="display: flex; gap: 10px;">
+                                    <button class="btn btn-primary btn-large" onclick="addToCartFromDetail(${product.id})" style="flex: 1;">
                                         <i class="fas fa-cart-plus"></i> Thêm vào giỏ hàng
+                                    </button>
+                                    <button class="btn btn-success btn-large" onclick="buyNow(${product.id})" style="flex: 1; background-color: #ff6b6b;">
+                                        <i class="fas fa-shopping-bag"></i> Mua ngay
                                     </button>
                                 </div>
                             </c:if>
@@ -173,6 +176,17 @@
                 console.error('Error:', error);
                 showToast('Có lỗi xảy ra. Vui lòng thử lại.', 'error');
             });
+        }
+        
+        function buyNow(productId) {
+            const quantity = parseInt(document.getElementById('quantity').value) || 1;
+            if (quantity < 1) {
+                showToast('Số lượng phải lớn hơn 0', 'warning');
+                return;
+            }
+            
+            const contextPath = '${pageContext.request.contextPath}';
+            window.location.href = contextPath + '/user/checkout?direct=true&productId=' + productId + '&quantity=' + quantity;
         }
     </script>
 </body>

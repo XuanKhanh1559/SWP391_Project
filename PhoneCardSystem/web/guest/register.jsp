@@ -52,7 +52,7 @@
                             <i class="fas fa-eye" id="toggleRegisterConfirmPassword" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #666;"></i>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block">Đăng ký</button>
+                    <button type="submit" class="btn btn-primary btn-block" style="padding: 0.5rem 0.5rem;">Đăng ký</button>
                     <p class="auth-link">Đã có tài khoản? <a href="${pageContext.request.contextPath}/login">Đăng nhập</a></p>
                 </form>
             </div>

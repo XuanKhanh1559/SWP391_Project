@@ -379,4 +379,39 @@ public class CouponDao extends DBContext {
         }
         return false;
     }
+
+    public Coupon getCouponByCode(String code) {
+        String sql = "SELECT * FROM coupons WHERE code = ? AND deleted = 0";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setString(1, code);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return mapResultSetToCoupon(rs);
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return null;
+    }
+
+    public boolean canUserUseCoupon(int userId, int couponId) {
+        String sql = "SELECT c.usage_limit_per_user, COUNT(cu.id) as used_count " +
+                     "FROM coupons c " +
+                     "LEFT JOIN coupon_usages cu ON c.id = cu.coupon_id AND cu.user_id = ? " +
+                     "WHERE c.id = ? " +
+                     "GROUP BY c.id, c.usage_limit_per_user";
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, couponId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                int usageLimit = rs.getInt("usage_limit_per_user");
+                int usedCount = rs.getInt("used_count");
+                return usedCount < usageLimit;
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return false;
+    }
 }

@@ -256,6 +256,33 @@
         <servlet-name>CreateCouponServlet</servlet-name>
         <url-pattern>/admin/create-coupon</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>CheckoutPageServlet</servlet-name>
+        <servlet-class>controller.CheckoutPageServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CheckoutPageServlet</servlet-name>
+        <url-pattern>/user/checkout</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>CheckoutServlet</servlet-name>
+        <servlet-class>controller.CheckoutServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CheckoutServlet</servlet-name>
+        <url-pattern>/checkout</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>OrderStatusServlet</servlet-name>
+        <servlet-class>controller.OrderStatusServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>OrderStatusServlet</servlet-name>
+        <url-pattern>/order-status</url-pattern>
+    </servlet-mapping>
+    <listener>
+        <listener-class>worker.WorkerManager</listener-class>
+    </listener>
     <session-config>
         <session-timeout>
             30
