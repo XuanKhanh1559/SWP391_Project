@@ -226,6 +226,15 @@
             font-size: 12px;
             color: #999;
         }
+        
+        @keyframes progressFill {
+            from {
+                width: 0%;
+            }
+            to {
+                width: 100%;
+            }
+        }
     </style>
 </head>
 <body>
@@ -336,8 +345,10 @@
             <div id="successStatus" style="display: none;">
                 <div class="success-icon"><i class="fas fa-check-circle"></i></div>
                 <h3>Đặt hàng thành công!</h3>
-                <p>Đơn hàng của bạn đã được tạo</p>
-                <button class="btn btn-primary" onclick="window.location.href='${pageContext.request.contextPath}/orders'">Xem đơn hàng</button>
+                <p>Đang chuyển đến chi tiết đơn hàng...</p>
+                <div class="progress-bar" style="width: 200px; height: 4px; background: #e0e0e0; border-radius: 2px; margin: 20px auto; overflow: hidden;">
+                    <div class="progress-fill" style="width: 0%; height: 100%; background: #4CAF50; animation: progressFill 2s linear;"></div>
+                </div>
             </div>
             <div id="errorStatus" style="display: none;">
                 <div class="error-icon"><i class="fas fa-times-circle"></i></div>
@@ -462,6 +473,14 @@
         function showSuccess(orderId) {
             document.getElementById('processingStatus').style.display = 'none';
             document.getElementById('successStatus').style.display = 'block';
+            
+            if (typeof showToast === 'function') {
+                showToast('Đặt hàng thành công! Đang chuyển đến chi tiết đơn hàng...', 'success');
+            }
+            
+            setTimeout(() => {
+                window.location.href = contextPath + '/user/order-detail?id=' + orderId;
+            }, 2000);
         }
         
         function showError(message) {
