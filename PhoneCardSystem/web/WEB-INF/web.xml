@@ -320,6 +320,46 @@
         <servlet-name>AdminOrderDetailServlet</servlet-name>
         <url-pattern>/admin/order-detail</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>AdminProviderServlet</servlet-name>
+        <servlet-class>controller.AdminProviderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminProviderServlet</servlet-name>
+        <url-pattern>/admin/providers</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>CreateProviderServlet</servlet-name>
+        <servlet-class>controller.CreateProviderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>CreateProviderServlet</servlet-name>
+        <url-pattern>/admin/create-provider</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>EditProviderServlet</servlet-name>
+        <servlet-class>controller.EditProviderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>EditProviderServlet</servlet-name>
+        <url-pattern>/admin/edit-provider</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>DeleteProviderServlet</servlet-name>
+        <servlet-class>controller.DeleteProviderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DeleteProviderServlet</servlet-name>
+        <url-pattern>/admin/delete-provider</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>RestoreProviderServlet</servlet-name>
+        <servlet-class>controller.RestoreProviderServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>RestoreProviderServlet</servlet-name>
+        <url-pattern>/admin/restore-provider</url-pattern>
+    </servlet-mapping>
     <listener>
         <listener-class>worker.WorkerManager</listener-class>
     </listener>

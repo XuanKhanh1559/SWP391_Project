@@ -7,7 +7,9 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import dal.ProductDao;
+import dal.ProviderDao;
 import model.Product;
+import model.Provider;
 
 public class ProductDetailServlet extends HttpServlet {
 
@@ -47,6 +49,13 @@ public class ProductDetailServlet extends HttpServlet {
             request.setAttribute("error", "Sản phẩm không tồn tại");
             response.sendRedirect(request.getContextPath() + "/products");
             return;
+        }
+        
+        ProviderDao providerDao = new ProviderDao();
+        Provider provider = providerDao.getProviderById(product.getProvider_id(), true);
+        
+        if (provider != null && provider.getDeleted() == 1) {
+            request.setAttribute("providerWarning", "Nhà cung cấp này đã dừng hỗ trợ. Sản phẩm không thể mua.");
         }
         
         request.setAttribute("product", product);
