@@ -305,12 +305,20 @@
         <url-pattern>/user/order-detail</url-pattern>
     </servlet-mapping>
     <servlet>
-        <servlet-name>DebugCouponServlet</servlet-name>
-        <servlet-class>controller.DebugCouponServlet</servlet-class>
+        <servlet-name>AdminOrderServlet</servlet-name>
+        <servlet-class>controller.AdminOrderServlet</servlet-class>
     </servlet>
     <servlet-mapping>
-        <servlet-name>DebugCouponServlet</servlet-name>
-        <url-pattern>/debug-coupon</url-pattern>
+        <servlet-name>AdminOrderServlet</servlet-name>
+        <url-pattern>/admin/orders</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>AdminOrderDetailServlet</servlet-name>
+        <servlet-class>controller.AdminOrderDetailServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>AdminOrderDetailServlet</servlet-name>
+        <url-pattern>/admin/order-detail</url-pattern>
     </servlet-mapping>
     <listener>
         <listener-class>worker.WorkerManager</listener-class>
