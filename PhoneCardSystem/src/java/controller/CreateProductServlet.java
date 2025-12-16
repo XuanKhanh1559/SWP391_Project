@@ -1,12 +1,15 @@
 package controller;
 
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import dal.ProductDao;
+import dal.ProviderDao;
+import model.Provider;
 import model.User;
 
 public class CreateProductServlet extends HttpServlet {
@@ -27,6 +30,10 @@ public class CreateProductServlet extends HttpServlet {
             response.sendRedirect(request.getContextPath() + "/products");
             return;
         }
+        
+        ProviderDao providerDao = new ProviderDao();
+        List<Provider> providers = providerDao.getAllActiveProviders();
+        request.setAttribute("providers", providers);
         
         request.getRequestDispatcher("/admin/create-product.jsp").forward(request, response);
     }

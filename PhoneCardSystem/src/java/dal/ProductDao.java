@@ -62,27 +62,27 @@ public class ProductDao extends DBContext {
         StringBuilder whereClause = new StringBuilder();
         
         if (!isAdmin) {
-            whereClause.append("AND (status = ? OR status = ?) AND deleted = 0 ");
+            whereClause.append("AND (p.status = ? OR p.status = ?) AND p.deleted = 0 ");
             params.add(ProductStatus.ACTIVE.getValue());
             params.add(ProductStatus.ACTIVE.getLabel());
         }
 
         if (providerId != null && providerId > 0) {
-            whereClause.append("AND provider_id = ? ");
+            whereClause.append("AND p.provider_id = ? ");
             params.add(providerId);
         }
 
         if (type != null && type > 0) {
             ProductType productType = ProductType.fromValue(type);
             if (productType != null) {
-                whereClause.append("AND (type = ? OR type = ?) ");
+                whereClause.append("AND (p.type = ? OR p.type = ?) ");
                 params.add(type);
                 params.add(productType.getLabel());
             }
         }
 
         if (search != null && !search.trim().isEmpty()) {
-            whereClause.append("AND name LIKE ? ");
+            whereClause.append("AND p.name LIKE ? ");
             params.add("%" + search.trim() + "%");
         }
         
@@ -122,10 +122,12 @@ public class ProductDao extends DBContext {
         String whereClause = buildWhereClause(providerId, type, search, isAdmin, params);
 
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT id, provider_id, name, type, denomination, price, description, status, stock, created_at, updated_at, deleted ");
-        sql.append("FROM products WHERE 1=1 ");
+        sql.append("SELECT p.id, p.provider_id, p.name, p.type, p.denomination, p.price, p.description, p.status, p.stock, p.created_at, p.updated_at, p.deleted ");
+        sql.append("FROM products p ");
+        sql.append("INNER JOIN providers pr ON p.provider_id = pr.id ");
+        sql.append("WHERE pr.deleted = 0 ");
         sql.append(whereClause);
-        sql.append("ORDER BY created_at DESC ");
+        sql.append("ORDER BY p.created_at DESC ");
         sql.append("LIMIT ? OFFSET ?");
 
         int offset = (page - 1) * pageSize;
@@ -158,7 +160,9 @@ public class ProductDao extends DBContext {
         String whereClause = buildWhereClause(providerId, type, search, isAdmin, params);
 
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT COUNT(*) as total FROM products WHERE 1=1 ");
+        sql.append("SELECT COUNT(*) as total FROM products p ");
+        sql.append("INNER JOIN providers pr ON p.provider_id = pr.id ");
+        sql.append("WHERE pr.deleted = 0 ");
         sql.append(whereClause);
 
         try {

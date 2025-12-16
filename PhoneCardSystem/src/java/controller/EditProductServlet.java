@@ -1,13 +1,16 @@
 package controller;
 
 import java.io.IOException;
+import java.util.List;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 import dal.ProductDao;
+import dal.ProviderDao;
 import model.Product;
+import model.Provider;
 import model.User;
 
 public class EditProductServlet extends HttpServlet {
@@ -46,7 +49,11 @@ public class EditProductServlet extends HttpServlet {
                 return;
             }
             
+            ProviderDao providerDao = new ProviderDao();
+            List<Provider> providers = providerDao.getAllActiveProviders();
+            
             request.setAttribute("product", product);
+            request.setAttribute("providers", providers);
             request.getRequestDispatcher("/admin/edit-product.jsp").forward(request, response);
         } catch (NumberFormatException e) {
             response.sendRedirect(request.getContextPath() + "/admin/products");

@@ -69,7 +69,15 @@
                                     </span>
                                 </div>
                             </div>
-                            <c:if test="${sessionScope.user != null && product.status == 1}">
+                            
+                            <c:if test="${providerWarning != null}">
+                                <div class="alert alert-error" style="margin: 20px 0;">
+                                    <i class="fas fa-exclamation-triangle"></i>
+                                    ${providerWarning}
+                                </div>
+                            </c:if>
+                            
+                            <c:if test="${sessionScope.user != null && product.status == 1 && providerWarning == null}">
                                 <div class="quantity-selector">
                                     <label for="quantity">Số lượng:</label>
                                     <input type="number" id="quantity" name="quantity" min="1" value="1" class="quantity-input">

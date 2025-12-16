@@ -38,9 +38,9 @@
                     <label for="providerId">Nhà mạng <span class="required">*</span></label>
                     <select id="providerId" name="providerId" required>
                         <option value="">Chọn nhà mạng</option>
-                        <option value="1">Viettel</option>
-                        <option value="2">Vinaphone</option>
-                        <option value="3">Mobifone</option>
+                        <c:forEach var="provider" items="${providers}">
+                            <option value="${provider.id}">${provider.name}</option>
+                        </c:forEach>
                     </select>
                 </div>
 
