@@ -50,6 +50,7 @@ public class ProductDao extends DBContext {
             statusValue = 1;
         }
         product.setStatus(statusValue);
+        product.setStock(rs.getInt("stock"));
         
         product.setCreated_at(rs.getTimestamp("created_at"));
         product.setUpdated_at(rs.getTimestamp("updated_at"));
@@ -121,7 +122,7 @@ public class ProductDao extends DBContext {
         String whereClause = buildWhereClause(providerId, type, search, isAdmin, params);
 
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT id, provider_id, name, type, denomination, price, description, status, created_at, updated_at, deleted ");
+        sql.append("SELECT id, provider_id, name, type, denomination, price, description, status, stock, created_at, updated_at, deleted ");
         sql.append("FROM products WHERE 1=1 ");
         sql.append(whereClause);
         sql.append("ORDER BY created_at DESC ");
@@ -183,7 +184,7 @@ public class ProductDao extends DBContext {
         }
 
         StringBuilder sql = new StringBuilder();
-        sql.append("SELECT id, provider_id, name, type, denomination, price, description, status, created_at, updated_at, deleted ");
+        sql.append("SELECT id, provider_id, name, type, denomination, price, description, status, stock, created_at, updated_at, deleted ");
         sql.append("FROM products WHERE id = ? ");
 
         if (!isAdmin) {

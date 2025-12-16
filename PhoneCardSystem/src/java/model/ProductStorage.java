@@ -15,7 +15,7 @@ public class ProductStorage {
     private String card_code;
     private String card_serial;
     private String pin_code;
-    private int status;
+    private String status;
     private Date sold_at;
     private Date used_at;
     private Date created_at;
@@ -25,7 +25,7 @@ public class ProductStorage {
     public ProductStorage() {
     }
 
-    public ProductStorage(int id, int product_id, String card_code, String card_serial, String pin_code, int status, Date sold_at, Date used_at, Date created_at, Date updated_at, int deleted) {
+    public ProductStorage(int id, int product_id, String card_code, String card_serial, String pin_code, String status, Date sold_at, Date used_at, Date created_at, Date updated_at, int deleted) {
         this.id = id;
         this.product_id = product_id;
         this.card_code = card_code;
@@ -79,11 +79,11 @@ public class ProductStorage {
         this.pin_code = pin_code;
     }
 
-    public int getStatus() {
+    public String getStatus() {
         return status;
     }
 
-    public void setStatus(int status) {
+    public void setStatus(String status) {
         this.status = status;
     }
 
