@@ -21,6 +21,11 @@ public class DepositServlet extends HttpServlet {
             return;
         }
         
+        String returnUrl = request.getParameter("returnUrl");
+        if (returnUrl != null && !returnUrl.isEmpty()) {
+            session.setAttribute("depositReturnUrl", returnUrl);
+        }
+        
         request.getRequestDispatcher("/user/deposit.jsp").forward(request, response);
     }
 

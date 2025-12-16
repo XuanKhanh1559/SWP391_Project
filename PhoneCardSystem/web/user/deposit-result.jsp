@@ -50,12 +50,24 @@
             </c:choose>
 
             <div class="form-actions" style="justify-content: center; margin-top: 2rem;">
-                <a href="${pageContext.request.contextPath}/deposit" class="btn btn-primary">
-                    <i class="fas fa-redo"></i> Nạp tiền lại
-                </a>
-                <a href="${pageContext.request.contextPath}/profile" class="btn btn-secondary">
-                    <i class="fas fa-user"></i> Về trang cá nhân
-                </a>
+                <c:choose>
+                    <c:when test="${success == true && not empty sessionScope.depositReturnUrl}">
+                        <a href="${sessionScope.depositReturnUrl}" class="btn btn-primary">
+                            <i class="fas fa-shopping-cart"></i> Tiếp tục thanh toán
+                        </a>
+                        <a href="${pageContext.request.contextPath}/profile" class="btn btn-secondary">
+                            <i class="fas fa-user"></i> Về trang cá nhân
+                        </a>
+                    </c:when>
+                    <c:otherwise>
+                        <a href="${pageContext.request.contextPath}/deposit" class="btn btn-primary">
+                            <i class="fas fa-redo"></i> Nạp tiền lại
+                        </a>
+                        <a href="${pageContext.request.contextPath}/profile" class="btn btn-secondary">
+                            <i class="fas fa-user"></i> Về trang cá nhân
+                        </a>
+                    </c:otherwise>
+                </c:choose>
             </div>
         </div>
     </main>
@@ -72,6 +84,25 @@
     </script>
     <script src="${pageContext.request.contextPath}/js/layout.js"></script>
     <script src="${pageContext.request.contextPath}/js/app.js"></script>
+    <c:if test="${success == true && not empty sessionScope.depositReturnUrl}">
+        <script>
+            let countdown = 3;
+            const resultMessage = document.querySelector('.result-message');
+            
+            function updateCountdown() {
+                resultMessage.innerHTML = 'Đang chuyển hướng đến trang thanh toán trong ' + countdown + ' giây...';
+                countdown--;
+                
+                if (countdown < 0) {
+                    window.location.href = '${sessionScope.depositReturnUrl}';
+                    <% session.removeAttribute("depositReturnUrl"); %>
+                }
+            }
+            
+            updateCountdown();
+            setInterval(updateCountdown, 1000);
+        </script>
+    </c:if>
 </body>
 </html>
 

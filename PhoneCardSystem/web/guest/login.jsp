@@ -39,7 +39,7 @@
                             <i class="fas fa-eye" id="toggleLoginPassword" style="position: absolute; right: 12px; top: 50%; transform: translateY(-50%); cursor: pointer; color: #666;"></i>
                         </div>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block">Đăng nhập</button>
+                    <button type="submit" class="btn btn-primary btn-block" style="padding: 0.5rem 0.5rem;">Đăng nhập</button>
                     <p class="auth-link">
                         <a href="${pageContext.request.contextPath}/forgot-password">Quên mật khẩu?</a>
                     </p>

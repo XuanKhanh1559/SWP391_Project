@@ -18,6 +18,7 @@ public class Product {
     private double price;
     private String description;
     private int status;
+    private int stock;
     private Date created_at;
     private Date updated_at;
     private int deleted;
@@ -101,6 +102,14 @@ public class Product {
 
     public void setStatus(int status) {
         this.status = status;
+    }
+
+    public int getStock() {
+        return stock;
+    }
+
+    public void setStock(int stock) {
+        this.stock = stock;
     }
 
     public Date getCreated_at() {

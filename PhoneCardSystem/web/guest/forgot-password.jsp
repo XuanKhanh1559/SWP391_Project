@@ -27,7 +27,7 @@
                         <input type="email" id="forgotEmail" name="email" 
                                value="<%= request.getAttribute("email") != null ? request.getAttribute("email") : "" %>" required>
                     </div>
-                    <button type="submit" class="btn btn-primary btn-block">Gửi mã xác nhận</button>
+                    <button type="submit" class="btn btn-primary btn-block" style="padding: 0.5rem 0.5rem;">Gửi mã xác nhận</button>
                     <p class="auth-link">
                         <a href="${pageContext.request.contextPath}/login">Quay lại đăng nhập</a>
                     </p>

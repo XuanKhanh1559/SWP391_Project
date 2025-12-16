@@ -45,9 +45,9 @@
             </div>
             <div class="cart-summary">
                 <h3>Tổng kết</h3>
-                <div class="summary-row">
-                    <span>Tạm tính:</span>
-                    <span id="cartSubtotal">
+                <div class="summary-row total">
+                    <span>Tổng cộng:</span>
+                    <span id="cartTotal">
                         <c:set var="subtotal" value="0"/>
                         <c:forEach var="item" items="${cartItems}">
                             <c:set var="subtotal" value="${subtotal + (item.unit_price * item.quantity)}"/>
@@ -55,21 +55,7 @@
                         <fmt:formatNumber value="${subtotal}" type="currency" currencyCode="VND" pattern="#,##0 đ"/>
                     </span>
                 </div>
-                <div class="summary-row">
-                    <span>Giảm giá:</span>
-                    <span id="cartDiscount">0 đ</span>
-                </div>
-                <div class="summary-row total">
-                    <span>Tổng cộng:</span>
-                    <span id="cartTotal">
-                        <fmt:formatNumber value="${subtotal}" type="currency" currencyCode="VND" pattern="#,##0 đ"/>
-                    </span>
-                </div>
-                <div class="coupon-section">
-                    <input type="text" id="couponCode" placeholder="Nhập mã giảm giá">
-                    <button class="btn btn-outline" id="applyCouponBtn">Áp dụng</button>
-                </div>
-                <a href="${pageContext.request.contextPath}/checkout" class="btn btn-primary btn-block">Thanh toán</a>
+                <a href="${pageContext.request.contextPath}/user/checkout" class="btn btn-primary btn-block" style="padding: 0.5rem 0.5rem;">Thanh toán</a>
             </div>
         </div>
     </main>
@@ -142,6 +128,15 @@
                 }
             });
         }
+    </script>
+    <script>
+        window.userData = {
+            id: ${sessionScope.user.id},
+            username: '<c:out value="${sessionScope.user.username}" escapeXml="true"/>',
+            email: '<c:out value="${sessionScope.user.email}" escapeXml="true"/>',
+            role: '<c:out value="${sessionScope.user.role}" escapeXml="true"/>',
+            balance: ${sessionScope.user.balance}
+        };
     </script>
     <script src="${pageContext.request.contextPath}/js/toast.js"></script>
     <script src="${pageContext.request.contextPath}/js/layout.js"></script>
