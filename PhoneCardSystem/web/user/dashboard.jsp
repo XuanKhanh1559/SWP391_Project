@@ -72,7 +72,7 @@
                         <i class="fas fa-plus-circle"></i>
                         <span>Nạp tiền</span>
                     </a>
-                    <a href="${pageContext.request.contextPath}/user/orders.jsp" class="action-btn view-orders">
+                    <a href="${pageContext.request.contextPath}/user/orders" class="action-btn view-orders">
                         <i class="fas fa-list"></i>
                         <span>Xem đơn hàng</span>
                     </a>
