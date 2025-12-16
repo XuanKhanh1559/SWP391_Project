@@ -341,4 +341,119 @@ public class OrderDao extends DBContext {
         
         return item;
     }
+
+    public List<Order> getAllOrders(String search, String status, String dateFilter, int page, int pageSize) {
+        List<Order> orders = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT o.* FROM orders o INNER JOIN users u ON o.user_id = u.id WHERE o.deleted = 0");
+        
+        if (search != null && !search.trim().isEmpty()) {
+            sql.append(" AND (o.order_code LIKE ? OR u.username LIKE ? OR u.email LIKE ?)");
+        }
+        
+        if (status != null && !status.trim().isEmpty()) {
+            sql.append(" AND o.status = ?");
+        }
+        
+        if (dateFilter != null && !dateFilter.trim().isEmpty()) {
+            if ("today".equals(dateFilter)) {
+                sql.append(" AND DATE(o.created_at) = CURDATE()");
+            } else if ("week".equals(dateFilter)) {
+                sql.append(" AND YEARWEEK(o.created_at) = YEARWEEK(NOW())");
+            } else if ("month".equals(dateFilter)) {
+                sql.append(" AND YEAR(o.created_at) = YEAR(NOW()) AND MONTH(o.created_at) = MONTH(NOW())");
+            }
+        }
+        
+        sql.append(" ORDER BY o.created_at DESC LIMIT ? OFFSET ?");
+        
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+            
+            if (search != null && !search.trim().isEmpty()) {
+                String searchPattern = "%" + search + "%";
+                ps.setString(paramIndex++, searchPattern);
+                ps.setString(paramIndex++, searchPattern);
+                ps.setString(paramIndex++, searchPattern);
+            }
+            
+            if (status != null && !status.trim().isEmpty()) {
+                ps.setString(paramIndex++, status);
+            }
+            
+            ps.setInt(paramIndex++, pageSize);
+            ps.setInt(paramIndex++, (page - 1) * pageSize);
+            
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                orders.add(mapResultSetToOrder(rs));
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(OrderDao.class.getName()).log(Level.SEVERE, "Error getting all orders", e);
+        }
+        
+        return orders;
+    }
+
+    public int countOrders(String search, String status, String dateFilter) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM orders o INNER JOIN users u ON o.user_id = u.id WHERE o.deleted = 0");
+        
+        if (search != null && !search.trim().isEmpty()) {
+            sql.append(" AND (o.order_code LIKE ? OR u.username LIKE ? OR u.email LIKE ?)");
+        }
+        
+        if (status != null && !status.trim().isEmpty()) {
+            sql.append(" AND o.status = ?");
+        }
+        
+        if (dateFilter != null && !dateFilter.trim().isEmpty()) {
+            if ("today".equals(dateFilter)) {
+                sql.append(" AND DATE(o.created_at) = CURDATE()");
+            } else if ("week".equals(dateFilter)) {
+                sql.append(" AND YEARWEEK(o.created_at) = YEARWEEK(NOW())");
+            } else if ("month".equals(dateFilter)) {
+                sql.append(" AND YEAR(o.created_at) = YEAR(NOW()) AND MONTH(o.created_at) = MONTH(NOW())");
+            }
+        }
+        
+        try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
+            int paramIndex = 1;
+            
+            if (search != null && !search.trim().isEmpty()) {
+                String searchPattern = "%" + search + "%";
+                ps.setString(paramIndex++, searchPattern);
+                ps.setString(paramIndex++, searchPattern);
+                ps.setString(paramIndex++, searchPattern);
+            }
+            
+            if (status != null && !status.trim().isEmpty()) {
+                ps.setString(paramIndex++, status);
+            }
+            
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(OrderDao.class.getName()).log(Level.SEVERE, "Error counting orders", e);
+        }
+        
+        return 0;
+    }
+
+    public String getUsernameByOrderId(int orderId) {
+        String sql = "SELECT u.username FROM orders o INNER JOIN users u ON o.user_id = u.id WHERE o.id = ?";
+        
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, orderId);
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getString("username");
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(OrderDao.class.getName()).log(Level.SEVERE, "Error getting username by order id", e);
+        }
+        
+        return "";
+    }
 }
