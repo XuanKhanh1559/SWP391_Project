@@ -46,8 +46,8 @@ public class OrderDao extends DBContext {
                     throw new Exception("Mã giảm giá không tồn tại");
                 }
 
-                if (!couponDao.canUserUseCoupon(payload.getUserId(), coupon.getId())) {
-                    throw new Exception("Bạn đã sử dụng hết lượt dùng mã giảm giá này");
+                if (!couponDao.canUserUseCouponFromUserCoupons(payload.getUserId(), coupon.getId())) {
+                    throw new Exception("Bạn không sở hữu mã này hoặc đã sử dụng hết lượt dùng");
                 }
             }
 
@@ -187,6 +187,11 @@ public class OrderDao extends DBContext {
             PreparedStatement clearCartPs = conn.prepareStatement(clearCartSql);
             clearCartPs.setInt(1, payload.getUserId());
             clearCartPs.executeUpdate();
+            
+            String updateOrderStatusSql = "UPDATE orders SET status = 'completed', updated_at = NOW() WHERE id = ?";
+            PreparedStatement updateOrderPs = conn.prepareStatement(updateOrderStatusSql);
+            updateOrderPs.setInt(1, orderId);
+            updateOrderPs.executeUpdate();
 
             conn.commit();
             return orderId;
@@ -210,5 +215,130 @@ public class OrderDao extends DBContext {
                 }
             }
         }
+    }
+
+    public List<Order> getOrdersByUserId(int userId, int limit, int offset) {
+        List<Order> orders = new ArrayList<>();
+        String sql = "SELECT * FROM orders WHERE user_id = ? AND deleted = 0 ORDER BY created_at DESC LIMIT ? OFFSET ?";
+        
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ps.setInt(2, limit);
+            ps.setInt(3, offset);
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                orders.add(mapResultSetToOrder(rs));
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(OrderDao.class.getName()).log(Level.SEVERE, "Error getting orders by user id", e);
+        }
+        
+        return orders;
+    }
+
+    public int countOrdersByUserId(int userId) {
+        String sql = "SELECT COUNT(*) FROM orders WHERE user_id = ? AND deleted = 0";
+        
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(OrderDao.class.getName()).log(Level.SEVERE, "Error counting orders by user id", e);
+        }
+        
+        return 0;
+    }
+
+    public Order getOrderById(int orderId) {
+        String sql = "SELECT * FROM orders WHERE id = ? AND deleted = 0";
+        
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, orderId);
+            ResultSet rs = ps.executeQuery();
+            
+            if (rs.next()) {
+                return mapResultSetToOrder(rs);
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(OrderDao.class.getName()).log(Level.SEVERE, "Error getting order by id", e);
+        }
+        
+        return null;
+    }
+
+    private Order mapResultSetToOrder(ResultSet rs) throws SQLException {
+        Order order = new Order();
+        order.setId(rs.getInt("id"));
+        order.setUser_id(rs.getInt("user_id"));
+        order.setPayment_transaction_id(rs.getInt("payment_transaction_id"));
+        
+        Integer couponId = (Integer) rs.getObject("coupon_id");
+        order.setCoupon_id(couponId);
+        
+        order.setOrder_code(rs.getString("order_code"));
+        order.setSubtotal_amount(rs.getDouble("subtotal_amount"));
+        order.setDiscount_amount(rs.getDouble("discount_amount"));
+        order.setTotal_amount(rs.getDouble("total_amount"));
+        
+        String statusStr = rs.getString("status");
+        if ("pending".equals(statusStr)) {
+            order.setStatus(0);
+        } else if ("completed".equals(statusStr)) {
+            order.setStatus(1);
+        } else if ("cancelled".equals(statusStr)) {
+            order.setStatus(2);
+        } else {
+            order.setStatus(0);
+        }
+        
+        order.setNotes(rs.getString("notes"));
+        order.setCreated_at(rs.getTimestamp("created_at"));
+        order.setUpdated_at(rs.getTimestamp("updated_at"));
+        order.setDeleted(rs.getInt("deleted"));
+        
+        return order;
+    }
+
+    public List<OrderItem> getOrderItemsByOrderId(int orderId) {
+        List<OrderItem> items = new ArrayList<>();
+        String sql = "SELECT * FROM order_items WHERE order_id = ? AND deleted = 0 ORDER BY id ASC";
+        
+        try (PreparedStatement ps = connection.prepareStatement(sql)) {
+            ps.setInt(1, orderId);
+            ResultSet rs = ps.executeQuery();
+            
+            while (rs.next()) {
+                items.add(mapResultSetToOrderItem(rs));
+            }
+        } catch (SQLException e) {
+            Logger.getLogger(OrderDao.class.getName()).log(Level.SEVERE, "Error getting order items", e);
+        }
+        
+        return items;
+    }
+
+    private OrderItem mapResultSetToOrderItem(ResultSet rs) throws SQLException {
+        OrderItem item = new OrderItem();
+        item.setId(rs.getInt("id"));
+        item.setOrder_id(rs.getInt("order_id"));
+        item.setProduct_id(rs.getInt("product_id"));
+        item.setProduct_name_snapshot(rs.getString("product_name_snapshot"));
+        
+        Integer productStorageId = (Integer) rs.getObject("product_storage_id");
+        item.setProduct_storage_id(productStorageId);
+        
+        item.setQuantity(rs.getInt("quantity"));
+        item.setUnit_price(rs.getDouble("unit_price"));
+        item.setTotal_price(rs.getDouble("total_price"));
+        item.setCreated_at(rs.getTimestamp("created_at"));
+        item.setUpdated_at(rs.getTimestamp("updated_at"));
+        item.setDeleted(rs.getInt("deleted"));
+        
+        return item;
     }
 }

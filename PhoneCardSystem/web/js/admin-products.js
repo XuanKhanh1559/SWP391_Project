@@ -54,7 +54,7 @@ function restoreProduct(productId) {
                     }, 1500);
                 } else {
                     showToast(data.message, 'error');
-                }
+    }
             })
             .catch(error => {
                 console.error('Error:', error);

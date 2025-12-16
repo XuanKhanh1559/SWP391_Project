@@ -280,6 +280,38 @@
         <servlet-name>OrderStatusServlet</servlet-name>
         <url-pattern>/order-status</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>UserCouponsServlet</servlet-name>
+        <servlet-class>controller.UserCouponsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserCouponsServlet</servlet-name>
+        <url-pattern>/user/coupons</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>UserOrdersServlet</servlet-name>
+        <servlet-class>controller.UserOrdersServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserOrdersServlet</servlet-name>
+        <url-pattern>/user/orders</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>UserOrderDetailServlet</servlet-name>
+        <servlet-class>controller.UserOrderDetailServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>UserOrderDetailServlet</servlet-name>
+        <url-pattern>/user/order-detail</url-pattern>
+    </servlet-mapping>
+    <servlet>
+        <servlet-name>DebugCouponServlet</servlet-name>
+        <servlet-class>controller.DebugCouponServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>DebugCouponServlet</servlet-name>
+        <url-pattern>/debug-coupon</url-pattern>
+    </servlet-mapping>
     <listener>
         <listener-class>worker.WorkerManager</listener-class>
     </listener>

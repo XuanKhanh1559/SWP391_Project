@@ -17,8 +17,8 @@ function updateCartCount() {
         })
         .catch(error => {
             console.error('Error updating cart count:', error);
-            const cartCountEl = document.getElementById('cartCount');
-            if (cartCountEl) {
+    const cartCountEl = document.getElementById('cartCount');
+    if (cartCountEl) {
                 cartCountEl.textContent = '0';
             }
         });

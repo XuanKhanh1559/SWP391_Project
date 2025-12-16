@@ -150,6 +150,17 @@
                     </div>
                 </div>
 
+                <div class="form-section">
+                    <h3><i class="fas fa-users"></i> Phân phối mã giảm giá</h3>
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="is_public" value="true" checked>
+                            <span>Public cho tất cả người dùng (Tự động gán mã này cho tất cả tài khoản)</span>
+                        </label>
+                        <small class="form-hint">Nếu bỏ chọn, admin cần gán thủ công cho từng user</small>
+                    </div>
+                </div>
+
                 <div class="form-actions">
                     <button type="submit" class="btn btn-primary">
                         <i class="fas fa-save"></i> Tạo mã giảm giá

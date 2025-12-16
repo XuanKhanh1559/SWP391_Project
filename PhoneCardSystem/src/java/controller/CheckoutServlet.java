@@ -122,9 +122,9 @@ public class CheckoutServlet extends HttpServlet {
                     return;
                 }
 
-                if (!couponDao.canUserUseCoupon(user.getId(), coupon.getId())) {
+                if (!couponDao.canUserUseCouponFromUserCoupons(user.getId(), coupon.getId())) {
                     result.put("success", false);
-                    result.put("error", "Bạn đã sử dụng hết lượt dùng mã này");
+                    result.put("error", "Bạn không sở hữu mã này hoặc đã sử dụng hết lượt dùng");
                     out.print(gson.toJson(result));
                     return;
                 }

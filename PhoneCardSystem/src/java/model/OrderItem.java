@@ -13,6 +13,7 @@ public class OrderItem {
     private int id;
     private int order_id;
     private int product_id;
+    private String product_name_snapshot;
     private Integer product_storage_id;
     private int quantity;
     private double unit_price;
@@ -59,6 +60,14 @@ public class OrderItem {
 
     public void setProduct_id(int product_id) {
         this.product_id = product_id;
+    }
+
+    public String getProduct_name_snapshot() {
+        return product_name_snapshot;
+    }
+
+    public void setProduct_name_snapshot(String product_name_snapshot) {
+        this.product_name_snapshot = product_name_snapshot;
     }
 
     public Integer getProduct_storage_id() {

@@ -118,9 +118,15 @@ public class CreateCouponServlet extends HttpServlet {
             coupon.setApplicable_product_ids(applicableProductIds);
             coupon.setApplicable_provider_ids(applicableProviderIds);
             
-            boolean success = couponDao.createCoupon(coupon);
+            int couponId = couponDao.createCoupon(coupon);
             
-            if (success) {
+            if (couponId > 0) {
+                String isPublic = request.getParameter("is_public");
+                if ("true".equals(isPublic)) {
+                    SimpleDateFormat sdfExpire = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                    String expiresAt = sdfExpire.format(endDate);
+                    couponDao.assignCouponToAllUsers(couponId, expiresAt);
+                }
                 response.sendRedirect(request.getContextPath() + "/admin/coupons");
             } else {
                 request.setAttribute("error", "Tạo mã giảm giá thất bại");
