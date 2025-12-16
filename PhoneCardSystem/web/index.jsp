@@ -19,7 +19,7 @@
             <div class="hero-content">
                 <h1>Nạp Thẻ Điện Thoại Nhanh Chóng</h1>
                 <p>Nạp tiền, mua gói data cho tất cả nhà mạng Việt Nam</p>
-                <a href="guest/products.jsp" class="btn btn-primary btn-large">Mua ngay</a>
+                <a href="${pageContext.request.contextPath}/products" class="btn btn-primary btn-large">Mua ngay</a>
             </div>
         </section>
 
