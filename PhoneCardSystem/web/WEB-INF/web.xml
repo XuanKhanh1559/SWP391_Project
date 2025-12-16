@@ -360,6 +360,14 @@
         <servlet-name>RestoreProviderServlet</servlet-name>
         <url-pattern>/admin/restore-provider</url-pattern>
     </servlet-mapping>
+    <servlet>
+        <servlet-name>StatisticsServlet</servlet-name>
+        <servlet-class>controller.StatisticsServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>StatisticsServlet</servlet-name>
+        <url-pattern>/admin/statistics</url-pattern>
+    </servlet-mapping>
     <listener>
         <listener-class>worker.WorkerManager</listener-class>
     </listener>
