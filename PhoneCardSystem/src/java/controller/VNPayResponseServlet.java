@@ -40,7 +40,8 @@ public class VNPayResponseServlet extends HttpServlet {
             double amount = storedAmount != null ? storedAmount : (Double.parseDouble(amountStr) / 100);
             
             UserDao userDao = new UserDao();
-            boolean success = userDao.deposit(user.getId(), amount);
+            String description = "Nạp tiền qua VNPay - " + vnp_TxnRef;
+            boolean success = userDao.deposit(user.getId(), amount, description);
             
             if (success) {
                 User updatedUser = userDao.getUserById(user.getId());
@@ -52,7 +53,7 @@ public class VNPayResponseServlet extends HttpServlet {
                 request.setAttribute("message", "Nạp tiền thành công");
                 request.setAttribute("amount", amount);
             } else {
-                request.setAttribute("error", "Cập nhật số dư thất bại");
+                request.setAttribute("error", "Cập nhật số dư thất bại: " + userDao.getLastError());
             }
         } else {
             request.setAttribute("error", "Thanh toán thất bại hoặc bị hủy");

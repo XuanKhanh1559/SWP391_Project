@@ -1,5 +1,7 @@
 package dal;
 
+import java.sql.Connection;
+import java.sql.DriverManager;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -475,27 +477,69 @@ public class UserDao extends DBContext {
         return false;
     }
 
-    public boolean deposit(int userId, double amount) {
-        if (connection == null) {
-            lastErrorMessage = "Lỗi kết nối database. Vui lòng kiểm tra cấu hình database.";
-            return false;
-        }
-
+    public boolean deposit(int userId, double amount, String description) {
         if (amount <= 0) {
             lastErrorMessage = "Số tiền nạp phải lớn hơn 0";
             return false;
         }
 
-        String sql = "UPDATE users SET balance = balance + ?, updated_at = NOW() WHERE id = ? AND deleted = 0";
+        Connection conn = null;
         try {
-            PreparedStatement ps = connection.prepareStatement(sql);
-            ps.setDouble(1, amount);
-            ps.setInt(2, userId);
-            return ps.executeUpdate() > 0;
+            conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/phone_card_system", "root", "123456");
+            conn.setAutoCommit(false);
+
+            String lockUserSql = "SELECT id, balance FROM users WHERE id = ? FOR UPDATE";
+            PreparedStatement lockUserPs = conn.prepareStatement(lockUserSql);
+            lockUserPs.setInt(1, userId);
+            ResultSet userRs = lockUserPs.executeQuery();
+            
+            double currentBalance = 0;
+            if (userRs.next()) {
+                currentBalance = userRs.getDouble("balance");
+            } else {
+                throw new SQLException("Người dùng không tồn tại");
+            }
+
+            String transactionCode = "DEP" + System.currentTimeMillis();
+            String paymentSql = "INSERT INTO payment_transactions (user_id, transaction_code, type, amount, balance_before, balance_after, status, description) VALUES (?, ?, 'deposit', ?, ?, ?, 'completed', ?)";
+            PreparedStatement paymentPs = conn.prepareStatement(paymentSql);
+            paymentPs.setInt(1, userId);
+            paymentPs.setString(2, transactionCode);
+            paymentPs.setDouble(3, amount);
+            paymentPs.setDouble(4, currentBalance);
+            paymentPs.setDouble(5, currentBalance + amount);
+            paymentPs.setString(6, description != null ? description : "Nạp tiền");
+            paymentPs.executeUpdate();
+
+            String updateBalanceSql = "UPDATE users SET balance = balance + ?, updated_at = NOW() WHERE id = ?";
+            PreparedStatement updateBalancePs = conn.prepareStatement(updateBalanceSql);
+            updateBalancePs.setDouble(1, amount);
+            updateBalancePs.setInt(2, userId);
+            updateBalancePs.executeUpdate();
+
+            conn.commit();
+            return true;
+
         } catch (SQLException ex) {
+            if (conn != null) {
+                try {
+                    conn.rollback();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
             ex.printStackTrace();
             lastErrorMessage = "Lỗi khi nạp tiền: " + ex.getMessage();
+            return false;
+        } finally {
+            if (conn != null) {
+                try {
+                    conn.setAutoCommit(true);
+                    conn.close();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
         }
-        return false;
     }
 }
