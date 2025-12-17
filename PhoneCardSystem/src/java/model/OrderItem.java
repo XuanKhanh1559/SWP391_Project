@@ -21,6 +21,8 @@ public class OrderItem {
     private Date created_at;
     private Date updated_at;
     private int deleted;
+    private String card_code;
+    private String card_serial;
 
     public OrderItem() {
     }
@@ -124,6 +126,22 @@ public class OrderItem {
 
     public void setDeleted(int deleted) {
         this.deleted = deleted;
+    }
+
+    public String getCard_code() {
+        return card_code;
+    }
+
+    public void setCard_code(String card_code) {
+        this.card_code = card_code;
+    }
+
+    public String getCard_serial() {
+        return card_serial;
+    }
+
+    public void setCard_serial(String card_serial) {
+        this.card_serial = card_serial;
     }
 
     @Override
