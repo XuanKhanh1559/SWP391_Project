@@ -76,12 +76,14 @@
 
             <div class="detail-section">
                 <h3><i class="fas fa-box"></i> Danh sách sản phẩm</h3>
-                <div class="table-responsive">
+                <div class="table-responsive order-items-table">
                     <table class="data-table">
                         <thead>
                             <tr>
                                 <th>STT</th>
                                 <th>Sản phẩm</th>
+                                <th>Mã thẻ</th>
+                                <th>Serial</th>
                                 <th>Số lượng</th>
                                 <th>Đơn giá</th>
                                 <th>Thành tiền</th>
@@ -93,6 +95,26 @@
                                     <td>${status.index + 1}</td>
                                     <td>
                                         <strong>${item.product_name_snapshot}</strong>
+                                    </td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${not empty item.card_code}">
+                                                <span style="font-weight: bold; color: #2196F3;">${item.card_code}</span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span style="color: #999;">-</span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </td>
+                                    <td>
+                                        <c:choose>
+                                            <c:when test="${not empty item.card_serial}">
+                                                <span style="font-weight: bold; color: #2196F3;">${item.card_serial}</span>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span style="color: #999;">-</span>
+                                            </c:otherwise>
+                                        </c:choose>
                                     </td>
                                     <td>${item.quantity}</td>
                                     <td>

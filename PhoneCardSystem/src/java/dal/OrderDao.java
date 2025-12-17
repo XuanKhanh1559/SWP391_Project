@@ -306,7 +306,11 @@ public class OrderDao extends DBContext {
 
     public List<OrderItem> getOrderItemsByOrderId(int orderId) {
         List<OrderItem> items = new ArrayList<>();
-        String sql = "SELECT * FROM order_items WHERE order_id = ? AND deleted = 0 ORDER BY id ASC";
+        String sql = "SELECT oi.*, ps.card_code, ps.card_serial " +
+                     "FROM order_items oi " +
+                     "LEFT JOIN product_storage ps ON oi.product_storage_id = ps.id " +
+                     "WHERE oi.order_id = ? AND oi.deleted = 0 " +
+                     "ORDER BY oi.id ASC";
         
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, orderId);
@@ -331,6 +335,10 @@ public class OrderDao extends DBContext {
         
         Integer productStorageId = (Integer) rs.getObject("product_storage_id");
         item.setProduct_storage_id(productStorageId);
+        
+        // Get card_code and card_serial from product_storage
+        item.setCard_code(rs.getString("card_code"));
+        item.setCard_serial(rs.getString("card_serial"));
         
         item.setQuantity(rs.getInt("quantity"));
         item.setUnit_price(rs.getDouble("unit_price"));

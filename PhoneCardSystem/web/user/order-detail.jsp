@@ -63,6 +63,8 @@
                                 <tr>
                                     <th>STT</th>
                                     <th>Sản phẩm</th>
+                                    <th>Mã thẻ</th>
+                                    <th>Serial</th>
                                     <th>Số lượng</th>
                                     <th>Đơn giá</th>
                                     <th>Thành tiền</th>
@@ -73,6 +75,26 @@
                                     <tr>
                                         <td data-label="STT">${status.index + 1}</td>
                                         <td data-label="Sản phẩm">${item.product_name_snapshot}</td>
+                                        <td data-label="Mã thẻ">
+                                            <c:choose>
+                                                <c:when test="${not empty item.card_code}">
+                                                    <span style="font-weight: bold; color: #2196F3;">${item.card_code}</span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span style="color: #999;">-</span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
+                                        <td data-label="Serial">
+                                            <c:choose>
+                                                <c:when test="${not empty item.card_serial}">
+                                                    <span style="font-weight: bold; color: #2196F3;">${item.card_serial}</span>
+                                                </c:when>
+                                                <c:otherwise>
+                                                    <span style="color: #999;">-</span>
+                                                </c:otherwise>
+                                            </c:choose>
+                                        </td>
                                         <td data-label="Số lượng">${item.quantity}</td>
                                         <td data-label="Đơn giá">
                                             <fmt:formatNumber value="${item.unit_price}" type="currency" currencyCode="VND" pattern="#,##0 đ"/>

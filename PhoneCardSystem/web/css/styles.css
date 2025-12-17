@@ -2261,6 +2261,33 @@ body {
     letter-spacing: 0.5px;
 }
 
+/* Alignment for order items table */
+.order-items-table .data-table thead th:first-child,
+.order-items-table .data-table tbody td:first-child {
+    text-align: center;
+}
+
+.order-items-table .data-table thead th:nth-child(2),
+.order-items-table .data-table tbody td:nth-child(2) {
+    text-align: left;
+}
+
+.order-items-table .data-table thead th:nth-child(3),
+.order-items-table .data-table thead th:nth-child(4),
+.order-items-table .data-table thead th:nth-child(5),
+.order-items-table .data-table tbody td:nth-child(3),
+.order-items-table .data-table tbody td:nth-child(4),
+.order-items-table .data-table tbody td:nth-child(5) {
+    text-align: center;
+}
+
+.order-items-table .data-table thead th:nth-child(6),
+.order-items-table .data-table thead th:last-child,
+.order-items-table .data-table tbody td:nth-child(6),
+.order-items-table .data-table tbody td:last-child {
+    text-align: right;
+}
+
 .data-table thead th:first-child {
     border-radius: 8px 0 0 0;
 }
@@ -2293,19 +2320,23 @@ body {
 .data-table tbody td:first-child {
     font-weight: 600;
     color: var(--primary-color);
+    text-align: center;
 }
 
 .data-table tbody td:nth-child(2) {
     font-weight: 500;
     color: var(--dark-color);
+    text-align: left;
 }
 
-.data-table tbody td:nth-child(3) {
+.data-table tbody td:nth-child(3),
+.data-table tbody td:nth-child(4),
+.data-table tbody td:nth-child(5) {
     text-align: center;
 }
 
-.data-table tbody td:nth-child(4),
-.data-table tbody td:nth-child(5) {
+.data-table tbody td:nth-child(6),
+.data-table tbody td:last-child {
     text-align: right;
     font-weight: 500;
 }
