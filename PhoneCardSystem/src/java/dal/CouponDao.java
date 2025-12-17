@@ -100,7 +100,7 @@ public class CouponDao extends DBContext {
             sql.append(" AND status = ?");
         }
 
-        sql.append(" ORDER BY created_at DESC LIMIT ? OFFSET ?");
+        sql.append(" ORDER BY id ASC LIMIT ? OFFSET ?");
 
         try {
             PreparedStatement ps = connection.prepareStatement(sql.toString());

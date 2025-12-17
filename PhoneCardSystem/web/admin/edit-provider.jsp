@@ -36,7 +36,7 @@
                 </div>
             </c:if>
 
-            <form method="POST" action="${pageContext.request.contextPath}/admin/edit-provider" class="admin-form">
+            <form method="POST" action="${pageContext.request.contextPath}/admin/edit-provider" class="admin-form" accept-charset="UTF-8">
                 <input type="hidden" name="id" value="${provider.id}">
 
                 <div class="form-group">

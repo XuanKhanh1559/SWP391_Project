@@ -188,6 +188,28 @@ public class CartDao extends DBContext {
         return 0;
     }
 
+    public int getCartItemQuantity(int userId, int productId) {
+        if (connection == null) {
+            return 0;
+        }
+
+        String sql = "SELECT SUM(quantity) as total FROM cart_items WHERE user_id = ? AND product_id = ? AND deleted = 0";
+
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ps.setInt(2, productId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt("total");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+            lastErrorMessage = "Lỗi khi lấy số lượng sản phẩm trong giỏ hàng: " + ex.getMessage();
+        }
+        return 0;
+    }
+
     public boolean updateCartItemQuantity(int cartItemId, int quantity) {
         if (connection == null) {
             lastErrorMessage = "Lỗi kết nối database. Vui lòng kiểm tra cấu hình database.";
@@ -219,13 +241,20 @@ public class CartDao extends DBContext {
             return false;
         }
 
-        String sql = "UPDATE cart_items SET deleted = 1, updated_at = CURRENT_TIMESTAMP WHERE id = ?";
+        // Delete the record permanently instead of soft delete
+        // Cart items don't need history, so we can safely delete them
+        String sql = "DELETE FROM cart_items WHERE id = ?";
 
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setInt(1, cartItemId);
             int result = ps.executeUpdate();
-            return result > 0;
+            if (result > 0) {
+                return true;
+            } else {
+                lastErrorMessage = "Cart item không tồn tại";
+                return false;
+            }
         } catch (SQLException ex) {
             ex.printStackTrace();
             lastErrorMessage = "Lỗi khi xóa khỏi giỏ hàng: " + ex.getMessage();
@@ -239,7 +268,8 @@ public class CartDao extends DBContext {
             return false;
         }
 
-        String sql = "UPDATE cart_items SET deleted = 1, updated_at = CURRENT_TIMESTAMP WHERE user_id = ? AND deleted = 0";
+        // Delete all cart items permanently
+        String sql = "DELETE FROM cart_items WHERE user_id = ?";
 
         try {
             PreparedStatement ps = connection.prepareStatement(sql);

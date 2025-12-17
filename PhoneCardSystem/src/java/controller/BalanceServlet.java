@@ -14,12 +14,16 @@ public class BalanceServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
         
         HttpSession session = request.getSession(false);
+        PrintWriter out = response.getWriter();
+        
         if (session == null || session.getAttribute("user") == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("{\"success\": false, \"message\": \"Vui lòng đăng nhập\"}");
+            out.print("{\"success\": false, \"message\": \"Vui lòng đăng nhập\"}");
+            out.flush();
             return;
         }
         
@@ -29,9 +33,11 @@ public class BalanceServlet extends HttpServlet {
         
         if (updatedUser != null) {
             session.setAttribute("user", updatedUser);
-            response.getWriter().write("{\"success\": true, \"balance\": " + updatedUser.getBalance() + "}");
+            out.print("{\"success\": true, \"balance\": " + updatedUser.getBalance() + "}");
+            out.flush();
         } else {
-            response.getWriter().write("{\"success\": false, \"message\": \"Không thể lấy thông tin số dư\"}");
+            out.print("{\"success\": false, \"message\": \"Không thể lấy thông tin số dư\"}");
+            out.flush();
         }
     }
 

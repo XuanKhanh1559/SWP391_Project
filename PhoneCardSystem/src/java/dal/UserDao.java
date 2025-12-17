@@ -379,7 +379,7 @@ public class UserDao extends DBContext {
             params.add(status);
         }
 
-        sql.append("ORDER BY created_at DESC ");
+        sql.append("ORDER BY id ASC ");
         sql.append("LIMIT ? OFFSET ?");
 
         int offset = (page - 1) * pageSize;
@@ -485,7 +485,7 @@ public class UserDao extends DBContext {
 
         Connection conn = null;
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/phone_card_system", "root", "123456");
+            conn = getNewConnection();
             conn.setAutoCommit(false);
 
             String lockUserSql = "SELECT id, balance FROM users WHERE id = ? FOR UPDATE";
@@ -541,5 +541,39 @@ public class UserDao extends DBContext {
                 }
             }
         }
+    }
+    
+    /**
+     * Get fresh balance from database for a user
+     * This ensures we always get the latest balance value
+     */
+    public double getUserBalance(int userId) {
+        if (connection == null) {
+            return 0.0;
+        }
+        String sql = "SELECT balance FROM users WHERE id = ? AND deleted = 0";
+        try {
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ps.setInt(1, userId);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getDouble("balance");
+            }
+        } catch (SQLException ex) {
+            ex.printStackTrace();
+        }
+        return 0.0;
+    }
+    
+    /**
+     * Refresh user balance from database
+     * Updates the balance field of the user object with the latest value from database
+     */
+    public void refreshUserBalance(User user) {
+        if (user == null) {
+            return;
+        }
+        double latestBalance = getUserBalance(user.getId());
+        user.setBalance(latestBalance);
     }
 }

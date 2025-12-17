@@ -39,7 +39,7 @@ public class JobDao extends DBContext {
         String sql = "SELECT * FROM jobs WHERE queue = ? AND status = 'PENDING' AND (reserved_at IS NULL OR reserved_at < DATE_SUB(NOW(), INTERVAL 5 MINUTE)) ORDER BY created_at ASC LIMIT 1 FOR UPDATE";
         Connection conn = null;
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/phone_card_system", "root", "123456");
+            conn = getNewConnection();
             conn.setAutoCommit(false);
             
             PreparedStatement ps = conn.prepareStatement(sql);

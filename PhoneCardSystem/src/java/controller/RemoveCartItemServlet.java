@@ -15,6 +15,7 @@ public class RemoveCartItemServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
         
         HttpSession session = request.getSession(false);
@@ -55,7 +56,12 @@ public class RemoveCartItemServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
             PrintWriter out = response.getWriter();
             String error = cartDao.getLastError();
-            String errorMessage = (error != null ? error : "Lỗi khi xóa khỏi giỏ hàng").replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r");
+            // Clean up error message - remove technical SQL errors for user
+            String errorMessage = (error != null ? error : "Lỗi khi xóa khỏi giỏ hàng");
+            if (errorMessage.contains("Duplicate entry") || errorMessage.contains("unique_user_product")) {
+                errorMessage = "Lỗi khi xóa khỏi giỏ hàng. Vui lòng thử lại.";
+            }
+            errorMessage = errorMessage.replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r");
             out.print("{\"success\": false, \"message\": \"" + errorMessage + "\"}");
             out.flush();
             return;

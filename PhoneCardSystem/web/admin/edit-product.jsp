@@ -33,7 +33,7 @@
                 </div>
             </c:if>
 
-            <form method="POST" action="${pageContext.request.contextPath}/admin/edit-product" class="admin-form">
+            <form method="POST" action="${pageContext.request.contextPath}/admin/edit-product" class="admin-form" accept-charset="UTF-8">
                 <input type="hidden" name="id" value="${product.id}">
                 
                 <div class="form-group">

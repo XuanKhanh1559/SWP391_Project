@@ -17,6 +17,7 @@ public class AddToCartServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
         
         HttpSession session = request.getSession(false);
@@ -89,6 +90,34 @@ public class AddToCartServlet extends HttpServlet {
             response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
             PrintWriter out = response.getWriter();
             out.print("{\"success\": false, \"message\": \"Sản phẩm không tồn tại\"}");
+            out.flush();
+            return;
+        }
+        
+        // Check stock availability
+        int availableStock = product.getStock();
+        if (availableStock <= 0) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            PrintWriter out = response.getWriter();
+            out.print("{\"success\": false, \"message\": \"Sản phẩm đã hết hàng\"}");
+            out.flush();
+            return;
+        }
+        
+        // Check if quantity exceeds available stock
+        CartDao cartDaoForCheck = new CartDao();
+        int currentCartQuantity = cartDaoForCheck.getCartItemQuantity(user.getId(), productId);
+        int totalRequestedQuantity = currentCartQuantity + quantity;
+        
+        if (totalRequestedQuantity > availableStock) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            PrintWriter out = response.getWriter();
+            int maxCanAdd = availableStock - currentCartQuantity;
+            if (maxCanAdd <= 0) {
+                out.print("{\"success\": false, \"message\": \"Bạn đã thêm tối đa số lượng có thể mua của sản phẩm này\"}");
+            } else {
+                out.print("{\"success\": false, \"message\": \"Số lượng vượt quá hàng có sẵn. Bạn chỉ có thể thêm tối đa " + maxCanAdd + " sản phẩm\"}");
+            }
             out.flush();
             return;
         }

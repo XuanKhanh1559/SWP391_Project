@@ -51,6 +51,7 @@ public class ProfileServlet extends HttpServlet {
     
     private void handleGetTransactions(HttpServletRequest request, HttpServletResponse response, User user)
     throws ServletException, IOException {
+        response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
         PrintWriter out = response.getWriter();
         
@@ -118,6 +119,23 @@ public class ProfileServlet extends HttpServlet {
             request.setAttribute("profileError", "Email không được để trống");
             request.getRequestDispatcher("/user/profile.jsp").forward(request, response);
             return;
+        }
+        
+        // Validate phone number if provided
+        if (phone != null && !phone.trim().isEmpty()) {
+            String phoneTrimmed = phone.trim();
+            if (!phoneTrimmed.startsWith("0")) {
+                request.setAttribute("profileError", "Số điện thoại phải bắt đầu bằng 0");
+                request.setAttribute("user", currentUser);
+                request.getRequestDispatcher("/user/profile.jsp").forward(request, response);
+                return;
+            }
+            if (!phoneTrimmed.matches("^0[0-9]{9,10}$")) {
+                request.setAttribute("profileError", "Số điện thoại không hợp lệ. Phải bắt đầu bằng 0 và có 10-11 chữ số");
+                request.setAttribute("user", currentUser);
+                request.getRequestDispatcher("/user/profile.jsp").forward(request, response);
+                return;
+            }
         }
         
         UserDao userDao = new UserDao();

@@ -5,7 +5,8 @@ function addToCart(productId) {
     fetch(contextPath + '/add-to-cart', {
         method: 'POST',
         headers: {
-            'Content-Type': 'application/x-www-form-urlencoded',
+            'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+            'Accept': 'application/json; charset=UTF-8'
         },
         body: 'productId=' + productId + '&quantity=1'
     })

@@ -36,7 +36,11 @@
                     <div class="form-group">
                         <label>Số điện thoại</label>
                         <input type="tel" id="registerPhone" name="phone" 
-                               value="<%= request.getAttribute("phone") != null ? request.getAttribute("phone") : "" %>">
+                               value="<%= request.getAttribute("phone") != null ? request.getAttribute("phone") : "" %>"
+                               pattern="^0[0-9]{9,10}$"
+                               title="Số điện thoại phải bắt đầu bằng 0 và có 10-11 chữ số"
+                               placeholder="0xxxxxxxxx">
+                        <small style="color: #666; font-size: 0.85rem;">Số điện thoại phải bắt đầu bằng 0 (10-11 chữ số)</small>
                     </div>
                     <div class="form-group">
                         <label>Mật khẩu</label>
@@ -83,6 +87,28 @@
             toggleRegisterConfirmPassword.classList.toggle('fa-eye');
             toggleRegisterConfirmPassword.classList.toggle('fa-eye-slash');
         });
+        
+        // Validate phone number
+        const registerForm = document.getElementById('registerForm');
+        const registerPhone = document.getElementById('registerPhone');
+        
+        if (registerForm && registerPhone) {
+            registerForm.addEventListener('submit', function(e) {
+                const phone = registerPhone.value.trim();
+                if (phone && !phone.startsWith('0')) {
+                    e.preventDefault();
+                    alert('Số điện thoại phải bắt đầu bằng 0');
+                    registerPhone.focus();
+                    return false;
+                }
+                if (phone && !/^0[0-9]{9,10}$/.test(phone)) {
+                    e.preventDefault();
+                    alert('Số điện thoại không hợp lệ. Phải bắt đầu bằng 0 và có 10-11 chữ số');
+                    registerPhone.focus();
+                    return false;
+                }
+            });
+        }
     </script>
 </body>
 </html>

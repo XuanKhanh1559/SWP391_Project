@@ -35,7 +35,7 @@
                 </div>
             </c:if>
 
-            <form action="${pageContext.request.contextPath}/admin/create-coupon" method="POST" class="admin-form">
+            <form action="${pageContext.request.contextPath}/admin/create-coupon" method="POST" class="admin-form" accept-charset="UTF-8">
                 <div class="form-section">
                     <h3>Thông tin cơ bản</h3>
                     <div class="form-row">

@@ -48,6 +48,9 @@ public class UserDetailServlet extends HttpServlet {
                 return;
             }
             
+            // Refresh balance from database to ensure we have the latest value
+            userDao.refreshUserBalance(viewUser);
+            
             // Pagination for orders
             int orderPage = 1;
             int orderPageSize = 10;

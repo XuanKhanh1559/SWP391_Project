@@ -15,19 +15,24 @@ public class DeleteProductServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
         
         HttpSession session = request.getSession(false);
+        PrintWriter out = response.getWriter();
+        
         if (session == null || session.getAttribute("user") == null) {
             response.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
-            response.getWriter().write("{\"success\": false, \"message\": \"Vui lòng đăng nhập\"}");
+            out.print("{\"success\": false, \"message\": \"Vui lòng đăng nhập\"}");
+            out.flush();
             return;
         }
         
         User user = (User) session.getAttribute("user");
         if (!"admin".equalsIgnoreCase(user.getRole())) {
             response.setStatus(HttpServletResponse.SC_FORBIDDEN);
-            response.getWriter().write("{\"success\": false, \"message\": \"Bạn không có quyền thực hiện thao tác này\"}");
+            out.print("{\"success\": false, \"message\": \"Bạn không có quyền thực hiện thao tác này\"}");
+            out.flush();
             return;
         }
         
@@ -35,7 +40,8 @@ public class DeleteProductServlet extends HttpServlet {
         String action = request.getParameter("action");
         
         if (productIdParam == null || productIdParam.trim().isEmpty()) {
-            response.getWriter().write("{\"success\": false, \"message\": \"ID sản phẩm không hợp lệ\"}");
+            out.print("{\"success\": false, \"message\": \"ID sản phẩm không hợp lệ\"}");
+            out.flush();
             return;
         }
         
@@ -57,9 +63,13 @@ public class DeleteProductServlet extends HttpServlet {
                 message = productDao.getLastError();
             }
             
-            response.getWriter().write("{\"success\": " + success + ", \"message\": \"" + message + "\"}");
+            // Escape message for JSON
+            String escapedMessage = message.replace("\\", "\\\\").replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r");
+            out.print("{\"success\": " + success + ", \"message\": \"" + escapedMessage + "\"}");
+            out.flush();
         } catch (NumberFormatException e) {
-            response.getWriter().write("{\"success\": false, \"message\": \"ID sản phẩm không hợp lệ\"}");
+            out.print("{\"success\": false, \"message\": \"ID sản phẩm không hợp lệ\"}");
+            out.flush();
         }
     }
 
