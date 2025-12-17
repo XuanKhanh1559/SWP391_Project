@@ -117,13 +117,199 @@
 
             <div class="user-activity-section">
                 <div class="activity-card">
-                    <h3><i class="fas fa-shopping-bag"></i> Lịch sử đơn hàng</h3>
-                    <p class="placeholder-text">Tính năng đang được phát triển</p>
+                    <h3><i class="fas fa-shopping-bag"></i> Lịch sử đơn hàng 
+                        <span class="badge badge-info">${totalOrders}</span>
+                    </h3>
+                    
+                    <c:choose>
+                        <c:when test="${empty orders}">
+                            <p class="placeholder-text">Người dùng này chưa có đơn hàng nào</p>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Mã đơn</th>
+                                            <th>Ngày đặt</th>
+                                            <th>Tổng tiền</th>
+                                            <th>Trạng thái</th>
+                                            <th>Thao tác</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach var="order" items="${orders}">
+                                            <tr>
+                                                <td>${order.order_code}</td>
+                                                <td>
+                                                    <fmt:formatDate value="${order.created_at}" pattern="dd/MM/yyyy HH:mm"/>
+                                                </td>
+                                                <td>
+                                                    <strong style="color: #ff6b6b;">
+                                                        <fmt:formatNumber value="${order.total_amount}" type="currency" currencyCode="VND" pattern="#,##0 đ"/>
+                                                    </strong>
+                                                </td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${order.status == 0}">
+                                                            <span class="badge badge-warning">Đang xử lý</span>
+                                                        </c:when>
+                                                        <c:when test="${order.status == 1}">
+                                                            <span class="badge badge-success">Hoàn thành</span>
+                                                        </c:when>
+                                                        <c:when test="${order.status == 2}">
+                                                            <span class="badge badge-danger">Đã hủy</span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="badge">N/A</span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                                <td>
+                                                    <a href="${pageContext.request.contextPath}/admin/order-detail?id=${order.id}" 
+                                                       class="btn btn-sm btn-primary">
+                                                        <i class="fas fa-eye"></i>
+                                                    </a>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <c:if test="${totalOrderPages > 1}">
+                                <div class="pagination">
+                                    <c:if test="${orderPage > 1}">
+                                        <a href="${pageContext.request.contextPath}/admin/user-detail?id=${viewUser.id}&orderPage=${orderPage - 1}&transactionPage=${transactionPage}" 
+                                           class="pagination-btn">
+                                            <i class="fas fa-chevron-left"></i> Trước
+                                        </a>
+                                    </c:if>
+                                    
+                                    <span class="pagination-info">
+                                        Trang ${orderPage} / ${totalOrderPages}
+                                    </span>
+                                    
+                                    <c:if test="${orderPage < totalOrderPages}">
+                                        <a href="${pageContext.request.contextPath}/admin/user-detail?id=${viewUser.id}&orderPage=${orderPage + 1}&transactionPage=${transactionPage}" 
+                                           class="pagination-btn">
+                                            Sau <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    </c:if>
+                                </div>
+                            </c:if>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
 
                 <div class="activity-card">
-                    <h3><i class="fas fa-history"></i> Lịch sử giao dịch</h3>
-                    <p class="placeholder-text">Tính năng đang được phát triển</p>
+                    <h3><i class="fas fa-history"></i> Lịch sử giao dịch 
+                        <span class="badge badge-info">${totalTransactions}</span>
+                    </h3>
+                    
+                    <c:choose>
+                        <c:when test="${empty transactions}">
+                            <p class="placeholder-text">Người dùng này chưa có giao dịch nào</p>
+                        </c:when>
+                        <c:otherwise>
+                            <div class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Mã giao dịch</th>
+                                            <th>Loại</th>
+                                            <th>Số tiền</th>
+                                            <th>Số dư trước</th>
+                                            <th>Số dư sau</th>
+                                            <th>Trạng thái</th>
+                                            <th>Ngày giao dịch</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <c:forEach var="transaction" items="${transactions}">
+                                            <tr>
+                                                <td>${transaction.transaction_code}</td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${transaction.type == 1}">
+                                                            <span class="badge badge-success">
+                                                                <i class="fas fa-arrow-down"></i> Nạp tiền
+                                                            </span>
+                                                        </c:when>
+                                                        <c:when test="${transaction.type == 2}">
+                                                            <span class="badge badge-danger">
+                                                                <i class="fas fa-arrow-up"></i> Mua hàng
+                                                            </span>
+                                                        </c:when>
+                                                        <c:when test="${transaction.type == 3}">
+                                                            <span class="badge badge-info">
+                                                                <i class="fas fa-undo"></i> Hoàn tiền
+                                                            </span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="badge">Khác</span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                                <td>
+                                                    <strong style="color: ${transaction.type == 1 ? '#4CAF50' : '#ff6b6b'};">
+                                                        <c:if test="${transaction.type == 2}">-</c:if>
+                                                        <fmt:formatNumber value="${transaction.amount}" type="currency" currencyCode="VND" pattern="#,##0 đ"/>
+                                                    </strong>
+                                                </td>
+                                                <td>
+                                                    <fmt:formatNumber value="${transaction.balance_before}" type="currency" currencyCode="VND" pattern="#,##0 đ"/>
+                                                </td>
+                                                <td>
+                                                    <strong>
+                                                        <fmt:formatNumber value="${transaction.balance_after}" type="currency" currencyCode="VND" pattern="#,##0 đ"/>
+                                                    </strong>
+                                                </td>
+                                                <td>
+                                                    <c:choose>
+                                                        <c:when test="${transaction.status == 1}">
+                                                            <span class="badge badge-success">Hoàn thành</span>
+                                                        </c:when>
+                                                        <c:when test="${transaction.status == 2}">
+                                                            <span class="badge badge-danger">Thất bại</span>
+                                                        </c:when>
+                                                        <c:otherwise>
+                                                            <span class="badge badge-warning">Đang xử lý</span>
+                                                        </c:otherwise>
+                                                    </c:choose>
+                                                </td>
+                                                <td>
+                                                    <fmt:formatDate value="${transaction.created_at}" pattern="dd/MM/yyyy HH:mm"/>
+                                                </td>
+                                            </tr>
+                                        </c:forEach>
+                                    </tbody>
+                                </table>
+                            </div>
+                            
+                            <c:if test="${totalTransactionPages > 1}">
+                                <div class="pagination">
+                                    <c:if test="${transactionPage > 1}">
+                                        <a href="${pageContext.request.contextPath}/admin/user-detail?id=${viewUser.id}&orderPage=${orderPage}&transactionPage=${transactionPage - 1}" 
+                                           class="pagination-btn">
+                                            <i class="fas fa-chevron-left"></i> Trước
+                                        </a>
+                                    </c:if>
+                                    
+                                    <span class="pagination-info">
+                                        Trang ${transactionPage} / ${totalTransactionPages}
+                                    </span>
+                                    
+                                    <c:if test="${transactionPage < totalTransactionPages}">
+                                        <a href="${pageContext.request.contextPath}/admin/user-detail?id=${viewUser.id}&orderPage=${orderPage}&transactionPage=${transactionPage + 1}" 
+                                           class="pagination-btn">
+                                            Sau <i class="fas fa-chevron-right"></i>
+                                        </a>
+                                    </c:if>
+                                </div>
+                            </c:if>
+                        </c:otherwise>
+                    </c:choose>
                 </div>
             </div>
         </div>

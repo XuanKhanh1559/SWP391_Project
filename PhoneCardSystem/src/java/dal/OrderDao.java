@@ -307,17 +307,21 @@ public class OrderDao extends DBContext {
     public List<OrderItem> getOrderItemsByOrderId(int orderId) {
         List<OrderItem> items = new ArrayList<>();
         String sql = "SELECT oi.*, ps.card_code, ps.card_serial " +
-                     "FROM order_items oi " +
-                     "LEFT JOIN product_storage ps ON oi.product_storage_id = ps.id " +
-                     "WHERE oi.order_id = ? AND oi.deleted = 0 " +
-                     "ORDER BY oi.id ASC";
+                    "FROM order_items oi " +
+                    "LEFT JOIN product_storage ps ON oi.product_storage_id = ps.id " +
+                    "WHERE oi.order_id = ? AND oi.deleted = 0 " +
+                    "ORDER BY oi.product_id, oi.id ASC";
         
         try (PreparedStatement ps = connection.prepareStatement(sql)) {
             ps.setInt(1, orderId);
             ResultSet rs = ps.executeQuery();
             
             while (rs.next()) {
-                items.add(mapResultSetToOrderItem(rs));
+                OrderItem item = mapResultSetToOrderItem(rs);
+                // Set card info from product_storage
+                item.setCard_code(rs.getString("card_code"));
+                item.setCard_serial(rs.getString("card_serial"));
+                items.add(item);
             }
         } catch (SQLException e) {
             Logger.getLogger(OrderDao.class.getName()).log(Level.SEVERE, "Error getting order items", e);

@@ -2237,8 +2237,212 @@ body {
 }
 
 .order-items-table {
-    overflow-x: auto;
     margin-top: 1rem;
+}
+
+/* Product Group Styles for Order Detail */
+.order-items-container {
+    margin-top: 1rem;
+}
+
+.product-group {
+    background: var(--white);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    margin-bottom: 1rem;
+    overflow: hidden;
+    transition: all 0.3s ease;
+}
+
+.product-group:hover {
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+}
+
+.product-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1.25rem;
+    cursor: pointer;
+    background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+    transition: background 0.3s ease;
+}
+
+.product-header:hover {
+    background: linear-gradient(135deg, #e8ecf1 0%, #b8c6db 100%);
+}
+
+.product-info {
+    flex: 1;
+}
+
+.product-name {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin-bottom: 0.75rem;
+    font-size: 1.1rem;
+    color: var(--text-dark);
+}
+
+.product-number {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 28px;
+    height: 28px;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    border-radius: 50%;
+    font-size: 0.85rem;
+    font-weight: bold;
+}
+
+.product-details {
+    display: flex;
+    gap: 2rem;
+    flex-wrap: wrap;
+    font-size: 0.9rem;
+    color: var(--text-light);
+}
+
+.product-details span {
+    display: flex;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.product-quantity strong,
+.product-unit-price strong,
+.product-total strong {
+    color: var(--text-dark);
+    margin-left: 0.25rem;
+}
+
+.toggle-icon {
+    color: var(--primary-color);
+    font-size: 1.2rem;
+    transition: transform 0.3s ease;
+}
+
+.card-list {
+    background: #f9fafb;
+    border-top: 2px solid var(--border-color);
+    padding: 1.25rem;
+    animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+    from {
+        opacity: 0;
+        max-height: 0;
+    }
+    to {
+        opacity: 1;
+        max-height: 1000px;
+    }
+}
+
+.card-list-header {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-weight: 600;
+    color: var(--primary-color);
+    margin-bottom: 1rem;
+    font-size: 1rem;
+    padding-bottom: 0.5rem;
+    border-bottom: 2px solid var(--primary-color);
+}
+
+.card-list-header i {
+    font-size: 1.1rem;
+}
+
+.card-item {
+    background: white;
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 0.75rem;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.05);
+    transition: all 0.2s ease;
+}
+
+.card-item:hover {
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.1);
+    transform: translateY(-2px);
+}
+
+.card-item:last-child {
+    margin-bottom: 0;
+}
+
+.card-number {
+    display: inline-block;
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+    padding: 0.25rem 0.75rem;
+    border-radius: 20px;
+    font-size: 0.85rem;
+    font-weight: bold;
+    margin-bottom: 0.75rem;
+}
+
+.card-info-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+}
+
+.card-info-item {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+}
+
+.card-label {
+    font-size: 0.85rem;
+    color: var(--text-light);
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+
+.card-label i {
+    color: var(--primary-color);
+}
+
+.card-value {
+    font-size: 1rem;
+    color: var(--text-dark);
+    font-weight: 600;
+    font-family: 'Courier New', monospace;
+    background: #f0f4f8;
+    padding: 0.5rem 0.75rem;
+    border-radius: 4px;
+    border-left: 3px solid var(--primary-color);
+}
+
+/* Responsive for product groups */
+@media (max-width: 768px) {
+    .product-details {
+        flex-direction: column;
+        gap: 0.5rem;
+    }
+    
+    .card-info-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .product-header {
+        padding: 1rem;
+    }
+    
+    .product-name {
+        font-size: 1rem;
+    }
 }
 
 .data-table {
@@ -2639,6 +2843,108 @@ body {
     text-align: center;
     padding: 2rem;
     font-style: italic;
+}
+
+.activity-card .table-container {
+    overflow-x: auto;
+    margin-top: 1rem;
+}
+
+.activity-card .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
+    font-size: 0.9rem;
+}
+
+.activity-card .data-table thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.activity-card .data-table thead th {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.activity-card .data-table tbody tr {
+    border-bottom: 1px solid var(--border-color);
+    transition: background 0.2s ease;
+}
+
+.activity-card .data-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.activity-card .data-table tbody td {
+    padding: 0.75rem 1rem;
+    color: var(--text-dark);
+}
+
+.activity-card .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.activity-card .pagination-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.activity-card .pagination-btn:hover {
+    background: #5568d3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.activity-card .pagination-info {
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.activity-card .badge-info {
+    background: #17a2b8;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+}
+
+.activity-card .btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+    .user-activity-section {
+        grid-template-columns: 1fr;
+    }
+    
+    .activity-card .table-container {
+        overflow-x: scroll;
+    }
+    
+    .activity-card .data-table {
+        min-width: 600px;
+    }
 }
 
 .btn-danger {

@@ -9,6 +9,24 @@
     <title>Chi tiết đơn hàng - Hệ Thống Bán Thẻ Điện Thoại</title>
     <link rel="stylesheet" href="${pageContext.request.contextPath}/css/styles.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        .copy-icon {
+            margin-left: 8px;
+            cursor: pointer;
+            color: #666;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            padding: 4px;
+        }
+        .copy-icon:hover {
+            color: #4CAF50;
+            transform: scale(1.1);
+        }
+        .card-value {
+            display: inline-flex;
+            align-items: center;
+        }
+    </style>
 </head>
 <body>
     <div id="header-placeholder"></div>
@@ -57,55 +75,77 @@
 
                 <div class="detail-section">
                     <h3><i class="fas fa-box"></i> Sản phẩm</h3>
-                    <div class="order-items-table">
-                        <table class="data-table">
-                            <thead>
-                                <tr>
-                                    <th>STT</th>
-                                    <th>Sản phẩm</th>
-                                    <th>Mã thẻ</th>
-                                    <th>Serial</th>
-                                    <th>Số lượng</th>
-                                    <th>Đơn giá</th>
-                                    <th>Thành tiền</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <c:forEach var="item" items="${orderItems}" varStatus="status">
-                                    <tr>
-                                        <td data-label="STT">${status.index + 1}</td>
-                                        <td data-label="Sản phẩm">${item.product_name_snapshot}</td>
-                                        <td data-label="Mã thẻ">
-                                            <c:choose>
-                                                <c:when test="${not empty item.card_code}">
-                                                    <span style="font-weight: bold; color: #2196F3;">${item.card_code}</span>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <span style="color: #999;">-</span>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </td>
-                                        <td data-label="Serial">
-                                            <c:choose>
-                                                <c:when test="${not empty item.card_serial}">
-                                                    <span style="font-weight: bold; color: #2196F3;">${item.card_serial}</span>
-                                                </c:when>
-                                                <c:otherwise>
-                                                    <span style="color: #999;">-</span>
-                                                </c:otherwise>
-                                            </c:choose>
-                                        </td>
-                                        <td data-label="Số lượng">${item.quantity}</td>
-                                        <td data-label="Đơn giá">
-                                            <fmt:formatNumber value="${item.unit_price}" type="currency" currencyCode="VND" pattern="#,##0 đ"/>
-                                        </td>
-                                        <td data-label="Thành tiền">
-                                            <fmt:formatNumber value="${item.total_price}" type="currency" currencyCode="VND" pattern="#,##0 đ"/>
-                                        </td>
-                                    </tr>
-                                </c:forEach>
-                            </tbody>
-                        </table>
+                    <div class="order-items-container">
+                        <%@ page import="java.util.*" %>
+                        <%
+                            // Group items by product
+                            Map<String, List<model.OrderItem>> groupedItems = new LinkedHashMap<>();
+                            List<model.OrderItem> orderItems = (List<model.OrderItem>) request.getAttribute("orderItems");
+                            if (orderItems != null) {
+                                for (model.OrderItem item : orderItems) {
+                                    String key = item.getProduct_name_snapshot();
+                                    if (!groupedItems.containsKey(key)) {
+                                        groupedItems.put(key, new ArrayList<>());
+                                    }
+                                    groupedItems.get(key).add(item);
+                                }
+                            }
+                            request.setAttribute("groupedItems", groupedItems);
+                        %>
+                        
+                        <c:forEach var="entry" items="${groupedItems}" varStatus="status">
+                            <c:set var="productName" value="${entry.key}" />
+                            <c:set var="items" value="${entry.value}" />
+                            <c:set var="itemCount" value="${items.size()}" />
+                            <c:set var="firstItem" value="${items[0]}" />
+                            <c:set var="totalPrice" value="0" />
+                            <c:forEach var="item" items="${items}">
+                                <c:set var="totalPrice" value="${totalPrice + item.total_price}" />
+                            </c:forEach>
+                            
+                            <div class="product-group">
+                                <div class="product-header" onclick="toggleCardList(${status.index})">
+                                    <div class="product-info">
+                                        <div class="product-name">
+                                            <span class="product-number">${status.index + 1}.</span>
+                                            <strong>${productName}</strong>
+                                        </div>
+                                        <div class="product-details">
+                                            <span class="product-quantity">Số lượng: <strong>${itemCount}</strong></span>
+                                            <span class="product-unit-price">Đơn giá: <strong><fmt:formatNumber value="${firstItem.unit_price}" type="currency" currencyCode="VND" pattern="#,##0 đ"/></strong></span>
+                                            <span class="product-total">Thành tiền: <strong style="color: #ff6b6b;"><fmt:formatNumber value="${totalPrice}" type="currency" currencyCode="VND" pattern="#,##0 đ"/></strong></span>
+                                        </div>
+                                    </div>
+                                    <div class="toggle-icon">
+                                        <i class="fas fa-chevron-down" id="icon-${status.index}"></i>
+                                    </div>
+                                </div>
+                                
+                                <div class="card-list" id="cardList-${status.index}" style="display: none;">
+                                    <div class="card-list-header">
+                                        <i class="fas fa-ticket-alt"></i> Thông tin thẻ đã mua
+                                    </div>
+                                    <c:forEach var="item" items="${items}" varStatus="cardStatus">
+                                        <div class="card-item">
+                                            <div class="card-number">#${cardStatus.index + 1}</div>
+                                            <div class="card-info-grid">
+                                                <div class="card-info-item">
+                                                    <span class="card-label"><i class="fas fa-barcode"></i> Mã thẻ:</span>
+                                                    <span class="card-value">${item.card_code}</span>
+                                                </div>
+                                                <div class="card-info-item">
+                                                    <span class="card-label"><i class="fas fa-hashtag"></i> Serial:</span>
+                                                    <span class="card-value">
+                                                        ${item.card_serial}
+                                                        <i class="fas fa-copy copy-icon" onclick="copySerial('${item.card_serial}', this)" title="Sao chép serial"></i>
+                                                    </span>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </c:forEach>
+                                </div>
+                            </div>
+                        </c:forEach>
                     </div>
                 </div>
 
@@ -153,6 +193,44 @@
             role: '<c:out value="${sessionScope.user.role}" escapeXml="true"/>',
             balance: ${sessionScope.user.balance}
         };
+        
+        function toggleCardList(index) {
+            const cardList = document.getElementById('cardList-' + index);
+            const icon = document.getElementById('icon-' + index);
+            
+            if (cardList.style.display === 'none') {
+                cardList.style.display = 'block';
+                icon.classList.remove('fa-chevron-down');
+                icon.classList.add('fa-chevron-up');
+            } else {
+                cardList.style.display = 'none';
+                icon.classList.remove('fa-chevron-up');
+                icon.classList.add('fa-chevron-down');
+            }
+        }
+        
+        function copySerial(serial, iconElement) {
+            navigator.clipboard.writeText(serial).then(function() {
+                // Visual feedback
+                const originalClass = iconElement.className;
+                iconElement.classList.remove('fa-copy');
+                iconElement.classList.add('fa-check');
+                iconElement.style.color = '#4CAF50';
+                
+                // Show tooltip
+                const originalTitle = iconElement.title;
+                iconElement.title = 'Đã sao chép!';
+                
+                setTimeout(function() {
+                    iconElement.className = originalClass;
+                    iconElement.style.color = '';
+                    iconElement.title = originalTitle;
+                }, 2000);
+            }).catch(function(err) {
+                console.error('Lỗi khi sao chép:', err);
+                alert('Không thể sao chép serial. Vui lòng thử lại.');
+            });
+        }
     </script>
     <script src="${pageContext.request.contextPath}/js/layout.js"></script>
     <script src="${pageContext.request.contextPath}/js/app.js"></script>
