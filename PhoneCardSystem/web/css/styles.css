@@ -2814,6 +2814,108 @@ body {
     font-style: italic;
 }
 
+.activity-card .table-container {
+    overflow-x: auto;
+    margin-top: 1rem;
+}
+
+.activity-card .data-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: var(--white);
+    font-size: 0.9rem;
+}
+
+.activity-card .data-table thead {
+    background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+    color: white;
+}
+
+.activity-card .data-table thead th {
+    padding: 0.75rem 1rem;
+    text-align: left;
+    font-weight: 600;
+    font-size: 0.85rem;
+    white-space: nowrap;
+}
+
+.activity-card .data-table tbody tr {
+    border-bottom: 1px solid var(--border-color);
+    transition: background 0.2s ease;
+}
+
+.activity-card .data-table tbody tr:hover {
+    background: #f8f9fa;
+}
+
+.activity-card .data-table tbody td {
+    padding: 0.75rem 1rem;
+    color: var(--text-dark);
+}
+
+.activity-card .pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 1rem;
+    margin-top: 1.5rem;
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--border-color);
+}
+
+.activity-card .pagination-btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.5rem 1rem;
+    background: var(--primary-color);
+    color: white;
+    border-radius: 6px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    transition: all 0.3s ease;
+}
+
+.activity-card .pagination-btn:hover {
+    background: #5568d3;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+}
+
+.activity-card .pagination-info {
+    color: var(--text-light);
+    font-size: 0.9rem;
+}
+
+.activity-card .badge-info {
+    background: #17a2b8;
+    color: white;
+    padding: 0.25rem 0.5rem;
+    border-radius: 12px;
+    font-size: 0.75rem;
+    font-weight: 600;
+    margin-left: 0.5rem;
+}
+
+.activity-card .btn-sm {
+    padding: 0.4rem 0.8rem;
+    font-size: 0.85rem;
+}
+
+@media (max-width: 768px) {
+    .user-activity-section {
+        grid-template-columns: 1fr;
+    }
+    
+    .activity-card .table-container {
+        overflow-x: scroll;
+    }
+    
+    .activity-card .data-table {
+        min-width: 600px;
+    }
+}
+
 .btn-danger {
     background: var(--danger-color);
     color: var(--white);
