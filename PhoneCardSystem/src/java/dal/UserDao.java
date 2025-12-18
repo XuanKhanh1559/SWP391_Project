@@ -320,20 +320,64 @@ public class UserDao extends DBContext {
     }
 
     public boolean verifyPasswordResetToken(String email, String token) {
+        lastErrorMessage = null;
         if (connection == null) {
+            lastErrorMessage = "Không thể kết nối database";
             return false;
         }
-        String sql = "SELECT pr.id FROM password_resets pr "
+        
+        // Trim and normalize inputs
+        if (email != null) {
+            email = email.trim().toLowerCase(); // Email is case-insensitive
+        }
+        if (token != null) {
+            token = token.trim();
+            // Normalize token to 6 digits with leading zeros (same format as generated)
+            try {
+                int tokenInt = Integer.parseInt(token);
+                token = String.format("%06d", tokenInt);
+            } catch (NumberFormatException e) {
+                lastErrorMessage = "Mã xác nhận phải là số";
+                return false;
+            }
+        }
+        
+        if (email == null || email.isEmpty() || token == null || token.isEmpty()) {
+            lastErrorMessage = "Email hoặc mã xác nhận không hợp lệ";
+            return false;
+        }
+        
+        // Use LOWER() for case-insensitive email comparison and TRIM() for token comparison
+        // Get all matching tokens and check expiration in Java to avoid timezone issues
+        String sql = "SELECT pr.id, pr.token, pr.expires_at, pr.used, u.email " 
+                   + "FROM password_resets pr "
                    + "INNER JOIN users u ON pr.user_id = u.id "
-                   + "WHERE u.email = ? AND pr.token = ? AND pr.expires_at > NOW() AND pr.used = 0";
+                   + "WHERE LOWER(u.email) = ? AND TRIM(pr.token) = ? AND pr.used = 0 "
+                   + "ORDER BY pr.created_at DESC LIMIT 1";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, email);
             ps.setString(2, token);
             ResultSet rs = ps.executeQuery();
-            return rs.next();
+            
+            if (rs.next()) {
+                // Check expiration in Java to avoid timezone issues
+                java.sql.Timestamp expiresAt = rs.getTimestamp("expires_at");
+                java.sql.Timestamp currentTime = new java.sql.Timestamp(System.currentTimeMillis());
+                
+                // Check if token is still valid (not expired)
+                if (expiresAt != null && expiresAt.after(currentTime)) {
+                    return true;
+                } else {
+                    lastErrorMessage = "Mã xác nhận đã hết hạn";
+                    return false;
+                }
+            } else {
+                lastErrorMessage = "Mã xác nhận không hợp lệ hoặc đã hết hạn";
+            }
         } catch (SQLException ex) {
             ex.printStackTrace();
+            lastErrorMessage = "Lỗi khi xác thực mã: " + ex.getMessage();
         }
         return false;
     }
@@ -342,9 +386,25 @@ public class UserDao extends DBContext {
         if (connection == null) {
             return false;
         }
+        
+        // Trim and normalize inputs (same as verifyPasswordResetToken)
+        if (email != null) {
+            email = email.trim().toLowerCase();
+        }
+        if (token != null) {
+            token = token.trim();
+            try {
+                int tokenInt = Integer.parseInt(token);
+                token = String.format("%06d", tokenInt);
+            } catch (NumberFormatException e) {
+                return false;
+            }
+        }
+        
+        // Use LOWER() for case-insensitive email comparison
         String sql = "UPDATE password_resets pr "
                    + "INNER JOIN users u ON pr.user_id = u.id "
-                   + "SET pr.used = 1 WHERE u.email = ? AND pr.token = ?";
+                   + "SET pr.used = 1 WHERE LOWER(u.email) = ? AND pr.token = ?";
         try {
             PreparedStatement ps = connection.prepareStatement(sql);
             ps.setString(1, email);

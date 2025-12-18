@@ -9,6 +9,7 @@ import javax.servlet.http.HttpSession;
 import model.User;
 import dal.CouponDao;
 import com.google.gson.JsonObject;
+import java.io.PrintWriter;
 
 public class DeleteCouponServlet extends HttpServlet {
 

@@ -51,8 +51,13 @@ public class ProfileServlet extends HttpServlet {
     
     private void handleGetTransactions(HttpServletRequest request, HttpServletResponse response, User user)
     throws ServletException, IOException {
+        // Set request encoding to UTF-8
+        request.setCharacterEncoding("UTF-8");
+        
+        // Set response encoding and content type
         response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
+        
         PrintWriter out = response.getWriter();
         
         int page = 1;
@@ -84,20 +89,28 @@ public class ProfileServlet extends HttpServlet {
         for (PaymentTransaction transaction : transactions) {
             JsonObject jsonTransaction = new JsonObject();
             jsonTransaction.addProperty("id", transaction.getId());
-            jsonTransaction.addProperty("transaction_code", transaction.getTransaction_code());
+            jsonTransaction.addProperty("transaction_code", transaction.getTransaction_code() != null ? transaction.getTransaction_code() : "");
             jsonTransaction.addProperty("type", transaction.getType());
             jsonTransaction.addProperty("amount", transaction.getAmount());
             jsonTransaction.addProperty("balance_before", transaction.getBalance_before());
             jsonTransaction.addProperty("balance_after", transaction.getBalance_after());
             jsonTransaction.addProperty("status", transaction.getStatus());
-            jsonTransaction.addProperty("description", transaction.getDescription());
+            // Ensure description is properly encoded
+            String description = transaction.getDescription();
+            if (description != null) {
+                jsonTransaction.addProperty("description", description);
+            } else {
+                jsonTransaction.addProperty("description", "");
+            }
             jsonTransaction.addProperty("created_at", transaction.getCreated_at() != null ? transaction.getCreated_at().getTime() : null);
             jsonArray.add(jsonTransaction);
         }
         result.add("transactions", jsonArray);
         
+        // Write JSON with UTF-8 encoding
         out.print(gson.toJson(result));
         out.flush();
+        out.close();
     } 
 
     @Override

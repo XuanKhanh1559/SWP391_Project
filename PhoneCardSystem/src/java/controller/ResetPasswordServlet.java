@@ -31,8 +31,33 @@ public class ResetPasswordServlet extends HttpServlet {
         String password = request.getParameter("password");
         String confirmPassword = request.getParameter("confirmPassword");
         
+        // Trim and normalize inputs
+        if (email != null) {
+            email = email.trim().toLowerCase(); // Email is case-insensitive
+        }
+        if (token != null) {
+            token = token.trim();
+            // Normalize token to 6 digits with leading zeros
+            try {
+                int tokenInt = Integer.parseInt(token);
+                token = String.format("%06d", tokenInt);
+            } catch (NumberFormatException e) {
+                request.setAttribute("error", "Mã xác nhận phải là số 6 chữ số");
+                request.setAttribute("email", email);
+                request.setAttribute("token", token);
+                request.getRequestDispatcher("/guest/reset-password.jsp").forward(request, response);
+                return;
+            }
+        }
+        if (password != null) {
+            password = password.trim();
+        }
+        if (confirmPassword != null) {
+            confirmPassword = confirmPassword.trim();
+        }
+        
         if (email == null || token == null || password == null || confirmPassword == null ||
-            email.trim().isEmpty() || token.trim().isEmpty() || password.trim().isEmpty() || confirmPassword.trim().isEmpty()) {
+            email.isEmpty() || token.isEmpty() || password.isEmpty() || confirmPassword.isEmpty()) {
             request.setAttribute("error", "Vui lòng nhập đầy đủ thông tin");
             request.setAttribute("email", email);
             request.setAttribute("token", token);
@@ -51,7 +76,8 @@ public class ResetPasswordServlet extends HttpServlet {
         UserDao userDao = new UserDao();
         
         if (!userDao.verifyPasswordResetToken(email, token)) {
-            request.setAttribute("error", "Mã xác nhận không hợp lệ hoặc đã hết hạn");
+            String errorMsg = userDao.getLastError();
+            request.setAttribute("error", errorMsg != null && !errorMsg.isEmpty() ? errorMsg : "Mã xác nhận không hợp lệ hoặc đã hết hạn");
             request.setAttribute("email", email);
             request.setAttribute("token", token);
             request.getRequestDispatcher("/guest/reset-password.jsp").forward(request, response);

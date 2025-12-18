@@ -130,7 +130,17 @@
                 </div>
                 <div id="transactions" class="profile-section <%= "transactions".equals(activeTab) ? "active" : "" %>">
                     <h2>Lịch sử giao dịch</h2>
-                    <div class="transactions-list" id="transactionsList">
+                    <div class="transactions-list" id="transactionsList" 
+                         data-text-ma-gd="Mã GD:"
+                         data-text-so-du="Số dư:"
+                         data-text-mua-hang="Mua hàng"
+                         data-text-nap-tien="Nạp tiền"
+                         data-text-hoan-tien="Hoàn tiền"
+                         data-text-thanh-cong="Thành công"
+                         data-text-dang-xu-ly="Đang xử lý"
+                         data-text-that-bai="Thất bại"
+                         data-text-khac="Khác"
+                         data-text-khong-xac-dinh="Không xác định">
                     </div>
                 </div>
             </div>
@@ -172,9 +182,9 @@
             });
         });
     </script>
-    <script src="${pageContext.request.contextPath}/js/layout.js"></script>
-    <script src="${pageContext.request.contextPath}/js/app.js"></script>
-    <script src="${pageContext.request.contextPath}/js/profile.js"></script>
+    <script src="${pageContext.request.contextPath}/js/layout.js" charset="UTF-8"></script>
+    <script src="${pageContext.request.contextPath}/js/app.js" charset="UTF-8"></script>
+    <script src="${pageContext.request.contextPath}/js/profile.js" charset="UTF-8"></script>
     <script>
         const toggleCurrentPassword = document.getElementById('toggleCurrentPassword');
         const currentPassword = document.getElementById('currentPassword');

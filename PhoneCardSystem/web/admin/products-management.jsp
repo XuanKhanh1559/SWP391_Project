@@ -74,6 +74,7 @@
                                 <th>Loại</th>
                                 <th>Mệnh giá</th>
                                 <th>Giá bán</th>
+                                <th>Số lượng còn lại</th>
                                 <th>Trạng thái</th>
                                 <th>Thao tác</th>
                             </tr>
@@ -103,6 +104,9 @@
                                     </td>
                                     <td>
                                         <fmt:formatNumber value="${product.price}" type="currency" currencyCode="VND" pattern="#,##0 đ"/>
+                                    </td>
+                                    <td>
+                                        <fmt:formatNumber value="${product.stock}" type="number" groupingUsed="true"/>
                                     </td>
                                     <td>
                                         <span class="order-status ${product.status == 1 ? 'completed' : 'cancelled'}">
