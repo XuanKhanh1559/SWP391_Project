@@ -51,7 +51,7 @@
                     </div>
                     <div class="info-item">
                         <label>Số dư tài khoản:</label>
-                        <span class="balance-amount">
+                        <span class="balance-amount view-user-balance" data-balance="${viewUser.balance}">
                             <fmt:formatNumber value="${viewUser.balance}" type="currency" currencyCode="VND" pattern="#,##0 đ"/>
                         </span>
                     </div>

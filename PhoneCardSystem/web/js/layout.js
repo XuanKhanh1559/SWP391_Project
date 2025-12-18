@@ -104,7 +104,11 @@ function initFooter() {
 function updateCartCount() {
     const contextPath = window.location.pathname.split('/')[1] ? '/' + window.location.pathname.split('/')[1] : '';
     
-    fetch(`${contextPath}/cart-count`)
+    fetch(`${contextPath}/cart-count`, {
+        headers: {
+            'Accept': 'application/json; charset=UTF-8'
+        }
+    })
         .then(response => response.json())
         .then(data => {
             const cartCountEl = document.getElementById('cartCount');

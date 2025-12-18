@@ -25,8 +25,8 @@ public class CheckoutServlet extends HttpServlet {
             return;
         }
 
-        response.setContentType("application/json");
         response.setCharacterEncoding("UTF-8");
+        response.setContentType("application/json;charset=UTF-8");
         PrintWriter out = response.getWriter();
         Gson gson = new Gson();
         Map<String, Object> result = new HashMap<>();

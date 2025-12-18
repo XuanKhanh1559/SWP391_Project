@@ -127,7 +127,7 @@ public class ProductDao extends DBContext {
         sql.append("INNER JOIN providers pr ON p.provider_id = pr.id ");
         sql.append("WHERE pr.deleted = 0 ");
         sql.append(whereClause);
-        sql.append("ORDER BY p.created_at DESC ");
+        sql.append("ORDER BY p.id ASC ");
         sql.append("LIMIT ? OFFSET ?");
 
         int offset = (page - 1) * pageSize;

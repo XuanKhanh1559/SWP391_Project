@@ -45,7 +45,7 @@
             <fmt:formatDate value="${coupon.start_date}" pattern="yyyy-MM-dd'T'HH:mm" var="formattedStartDate" />
             <fmt:formatDate value="${coupon.end_date}" pattern="yyyy-MM-dd'T'HH:mm" var="formattedEndDate" />
 
-            <form action="${pageContext.request.contextPath}/admin/edit-coupon" method="POST" class="admin-form">
+            <form action="${pageContext.request.contextPath}/admin/edit-coupon" method="POST" class="admin-form" accept-charset="UTF-8">
                 <input type="hidden" name="id" value="${coupon.id}">
                 
                 <div class="form-section">

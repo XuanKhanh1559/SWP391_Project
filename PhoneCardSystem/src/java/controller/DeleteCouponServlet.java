@@ -15,15 +15,18 @@ public class DeleteCouponServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
         
         HttpSession session = request.getSession(false);
+        PrintWriter out = response.getWriter();
         JsonObject jsonResponse = new JsonObject();
         
         if (session == null || session.getAttribute("user") == null) {
             jsonResponse.addProperty("success", false);
             jsonResponse.addProperty("message", "Vui lòng đăng nhập");
-            response.getWriter().write(jsonResponse.toString());
+            out.print(jsonResponse.toString());
+            out.flush();
             return;
         }
         
@@ -31,7 +34,8 @@ public class DeleteCouponServlet extends HttpServlet {
         if (!"admin".equalsIgnoreCase(user.getRole())) {
             jsonResponse.addProperty("success", false);
             jsonResponse.addProperty("message", "Bạn không có quyền thực hiện thao tác này");
-            response.getWriter().write(jsonResponse.toString());
+            out.print(jsonResponse.toString());
+            out.flush();
             return;
         }
         
@@ -41,7 +45,8 @@ public class DeleteCouponServlet extends HttpServlet {
         if (idParam == null || idParam.trim().isEmpty()) {
             jsonResponse.addProperty("success", false);
             jsonResponse.addProperty("message", "ID mã giảm giá không hợp lệ");
-            response.getWriter().write(jsonResponse.toString());
+            out.print(jsonResponse.toString());
+            out.flush();
             return;
         }
         
@@ -70,11 +75,13 @@ public class DeleteCouponServlet extends HttpServlet {
                 }
             }
             
-            response.getWriter().write(jsonResponse.toString());
+            out.print(jsonResponse.toString());
+            out.flush();
         } catch (NumberFormatException e) {
             jsonResponse.addProperty("success", false);
             jsonResponse.addProperty("message", "ID mã giảm giá không hợp lệ");
-            response.getWriter().write(jsonResponse.toString());
+            out.print(jsonResponse.toString());
+            out.flush();
         }
     }
 

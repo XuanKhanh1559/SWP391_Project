@@ -16,6 +16,7 @@ public class UpdateCartServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest request, HttpServletResponse response)
     throws ServletException, IOException {
+        response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
         
         HttpSession session = request.getSession(false);
@@ -66,15 +67,70 @@ public class UpdateCartServlet extends HttpServlet {
         
         CartDao cartDao = new CartDao();
         
-        int currentQuantity = 0;
+        CartItem cartItem = null;
         for (CartItem item : cartDao.getCartByUserId(user.getId())) {
             if (item.getId() == cartItemId) {
-                currentQuantity = item.getQuantity();
+                cartItem = item;
                 break;
             }
         }
         
+        if (cartItem == null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            PrintWriter out = response.getWriter();
+            out.print("{\"success\": false, \"message\": \"Cart item không tồn tại\"}");
+            out.flush();
+            return;
+        }
+        
+        int currentQuantity = cartItem.getQuantity();
         int newQuantity = currentQuantity + delta;
+        
+        if (newQuantity <= 0) {
+            // Remove item if quantity becomes 0 or negative
+            boolean success = cartDao.removeCartItem(cartItemId);
+            if (success) {
+                PrintWriter out = response.getWriter();
+                out.print("{\"success\": true, \"message\": \"Đã xóa khỏi giỏ hàng\"}");
+                out.flush();
+            } else {
+                response.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+                PrintWriter out = response.getWriter();
+                String error = cartDao.getLastError();
+                String errorMessage = (error != null ? error : "Lỗi khi xóa khỏi giỏ hàng").replace("\"", "\\\"").replace("\n", "\\n").replace("\r", "\\r");
+                out.print("{\"success\": false, \"message\": \"" + errorMessage + "\"}");
+                out.flush();
+            }
+            return;
+        }
+        
+        // Check stock availability
+        dal.ProductDao productDao = new dal.ProductDao();
+        model.Product product = productDao.getProductById(cartItem.getProduct_id(), false);
+        if (product == null) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            PrintWriter out = response.getWriter();
+            out.print("{\"success\": false, \"message\": \"Sản phẩm không tồn tại\"}");
+            out.flush();
+            return;
+        }
+        
+        int availableStock = product.getStock();
+        if (availableStock <= 0) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            PrintWriter out = response.getWriter();
+            out.print("{\"success\": false, \"message\": \"Sản phẩm đã hết hàng\"}");
+            out.flush();
+            return;
+        }
+        
+        if (newQuantity > availableStock) {
+            response.setStatus(HttpServletResponse.SC_BAD_REQUEST);
+            PrintWriter out = response.getWriter();
+            out.print("{\"success\": false, \"message\": \"Số lượng vượt quá hàng có sẵn. Số lượng tối đa: " + availableStock + "\"}");
+            out.flush();
+            return;
+        }
         
         boolean success = cartDao.updateCartItemQuantity(cartItemId, newQuantity);
         if (!success) {

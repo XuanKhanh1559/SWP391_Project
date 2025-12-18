@@ -20,7 +20,7 @@ public class OrderDao extends DBContext {
     public int createOrderFromJob(CreateOrderPayload payload) throws Exception {
         Connection conn = null;
         try {
-            conn = DriverManager.getConnection("jdbc:mysql://127.0.0.1:3306/phone_card_system", "root", "123456");
+            conn = getNewConnection();
             conn.setAutoCommit(false);
 
             String lockUserSql = "SELECT id, balance FROM users WHERE id = ? FOR UPDATE";
@@ -376,7 +376,7 @@ public class OrderDao extends DBContext {
             }
         }
         
-        sql.append(" ORDER BY o.created_at DESC LIMIT ? OFFSET ?");
+        sql.append(" ORDER BY o.id ASC LIMIT ? OFFSET ?");
         
         try (PreparedStatement ps = connection.prepareStatement(sql.toString())) {
             int paramIndex = 1;

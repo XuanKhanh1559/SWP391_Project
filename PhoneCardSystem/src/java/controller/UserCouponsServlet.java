@@ -32,8 +32,8 @@ public class UserCouponsServlet extends HttpServlet {
             CouponDao couponDao = new CouponDao();
             List<Coupon> coupons = couponDao.getAvailableCouponsForUser(user.getId());
             
-            response.setContentType("application/json");
             response.setCharacterEncoding("UTF-8");
+            response.setContentType("application/json;charset=UTF-8");
             PrintWriter out = response.getWriter();
             Gson gson = new Gson();
             out.print(gson.toJson(coupons));

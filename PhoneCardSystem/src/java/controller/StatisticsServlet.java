@@ -40,6 +40,7 @@ public class StatisticsServlet extends HttpServlet {
 
     private void handleAjaxRequest(HttpServletRequest request, HttpServletResponse response) 
     throws IOException {
+        response.setCharacterEncoding("UTF-8");
         response.setContentType("application/json;charset=UTF-8");
         PrintWriter out = response.getWriter();
         

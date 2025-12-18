@@ -50,6 +50,27 @@ public class RegisterServlet extends HttpServlet {
             return;
         }
         
+        // Validate phone number if provided
+        if (phone != null && !phone.trim().isEmpty()) {
+            String phoneTrimmed = phone.trim();
+            if (!phoneTrimmed.startsWith("0")) {
+                request.setAttribute("error", "Số điện thoại phải bắt đầu bằng 0");
+                request.setAttribute("username", username);
+                request.setAttribute("email", email);
+                request.setAttribute("phone", phone);
+                request.getRequestDispatcher("/guest/register.jsp").forward(request, response);
+                return;
+            }
+            if (!phoneTrimmed.matches("^0[0-9]{9,10}$")) {
+                request.setAttribute("error", "Số điện thoại không hợp lệ. Phải bắt đầu bằng 0 và có 10-11 chữ số");
+                request.setAttribute("username", username);
+                request.setAttribute("email", email);
+                request.setAttribute("phone", phone);
+                request.getRequestDispatcher("/guest/register.jsp").forward(request, response);
+                return;
+            }
+        }
+        
         UserDao userDao = new UserDao();
         
         if (userDao.checkEmailExists(email)) {

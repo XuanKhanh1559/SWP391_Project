@@ -80,13 +80,17 @@
                             <c:if test="${sessionScope.user != null && product.status == 1 && providerWarning == null}">
                                 <div class="quantity-selector">
                                     <label for="quantity">Số lượng:</label>
-                                    <input type="number" id="quantity" name="quantity" min="1" value="1" class="quantity-input">
+                                    <div style="display: flex; align-items: center; gap: 10px;">
+                                        <button type="button" class="btn btn-outline" id="decreaseBtn" onclick="decreaseQuantity()" style="min-width: 40px;">-</button>
+                                        <input type="number" id="quantity" name="quantity" min="1" max="${product.stock}" value="1" class="quantity-input" style="text-align: center; width: 80px;" onchange="validateQuantity()">
+                                        <button type="button" class="btn btn-outline" id="increaseBtn" onclick="increaseQuantity()" style="min-width: 40px;">+</button>
+                                    </div>
                                 </div>
                                 <div class="product-detail-actions" style="display: flex; gap: 10px;">
-                                    <button class="btn btn-primary btn-large" onclick="addToCartFromDetail(${product.id})" style="flex: 1;">
+                                    <button class="btn btn-primary btn-large" id="addToCartBtn" onclick="addToCartFromDetail(${product.id})" style="flex: 1;">
                                         <i class="fas fa-cart-plus"></i> Thêm vào giỏ hàng
                                     </button>
-                                    <button class="btn btn-success btn-large" onclick="buyNow(${product.id})" style="flex: 1; background-color: #ff6b6b;">
+                                    <button class="btn btn-success btn-large" id="buyNowBtn" onclick="buyNow(${product.id})" style="flex: 1; background-color: #ff6b6b;">
                                         <i class="fas fa-shopping-bag"></i> Mua ngay
                                     </button>
                                 </div>
@@ -135,13 +139,148 @@
         window.productData = {
             id: ${product != null ? product.id : 0},
             name: "<c:out value="${product != null ? product.name : ''}" escapeXml="true"/>",
-            price: ${product != null ? product.price : 0}
+            price: ${product != null ? product.price : 0},
+            stock: ${product != null ? product.stock : 0}
         };
+        
+        // Store current cart quantity for this product (will be fetched from server)
+        window.currentCartQuantity = 0;
     </script>
     <script src="${pageContext.request.contextPath}/js/layout.js"></script>
     <script src="${pageContext.request.contextPath}/js/app.js"></script>
     <script src="${pageContext.request.contextPath}/js/toast.js"></script>
     <script>
+        // Update button states based on quantity and stock
+        function updateQuantityButtons() {
+            const quantityInput = document.getElementById('quantity');
+            const decreaseBtn = document.getElementById('decreaseBtn');
+            const increaseBtn = document.getElementById('increaseBtn');
+            const addToCartBtn = document.getElementById('addToCartBtn');
+            const buyNowBtn = document.getElementById('buyNowBtn');
+            
+            if (!quantityInput || !window.productData) return;
+            
+            const currentQuantity = parseInt(quantityInput.value) || 1;
+            const maxStock = window.productData.stock || 0;
+            const totalRequested = currentQuantity + window.currentCartQuantity;
+            
+            // Disable decrease button if quantity is 1
+            if (decreaseBtn) {
+                decreaseBtn.disabled = (currentQuantity <= 1);
+                decreaseBtn.style.opacity = (currentQuantity <= 1) ? '0.5' : '1';
+                decreaseBtn.style.cursor = (currentQuantity <= 1) ? 'not-allowed' : 'pointer';
+            }
+            
+            // Disable increase button if quantity reaches max stock (considering cart)
+            if (increaseBtn) {
+                const canIncrease = totalRequested < maxStock;
+                increaseBtn.disabled = !canIncrease;
+                increaseBtn.style.opacity = canIncrease ? '1' : '0.5';
+                increaseBtn.style.cursor = canIncrease ? 'pointer' : 'not-allowed';
+            }
+            
+            // Disable action buttons if stock is 0 or quantity exceeds available
+            const canPurchase = maxStock > 0 && totalRequested <= maxStock;
+            if (addToCartBtn) {
+                addToCartBtn.disabled = !canPurchase;
+                addToCartBtn.style.opacity = canPurchase ? '1' : '0.5';
+                addToCartBtn.style.cursor = canPurchase ? 'pointer' : 'not-allowed';
+            }
+            if (buyNowBtn) {
+                buyNowBtn.disabled = !canPurchase;
+                buyNowBtn.style.opacity = canPurchase ? '1' : '0.5';
+                buyNowBtn.style.cursor = canPurchase ? 'pointer' : 'not-allowed';
+            }
+        }
+        
+        function decreaseQuantity() {
+            const quantityInput = document.getElementById('quantity');
+            if (!quantityInput) return;
+            const current = parseInt(quantityInput.value) || 1;
+            if (current > 1) {
+                quantityInput.value = current - 1;
+                validateQuantity();
+            }
+        }
+        
+        function increaseQuantity() {
+            const quantityInput = document.getElementById('quantity');
+            if (!quantityInput || !window.productData) return;
+            const current = parseInt(quantityInput.value) || 1;
+            const maxStock = window.productData.stock || 0;
+            const totalRequested = (current + 1) + window.currentCartQuantity;
+            if (totalRequested <= maxStock) {
+                quantityInput.value = current + 1;
+                validateQuantity();
+            } else {
+                showToast('Số lượng vượt quá hàng có sẵn', 'warning');
+            }
+        }
+        
+        function validateQuantity() {
+            const quantityInput = document.getElementById('quantity');
+            if (!quantityInput || !window.productData) return;
+            
+            const quantity = parseInt(quantityInput.value) || 1;
+            const maxStock = window.productData.stock || 0;
+            const totalRequested = quantity + window.currentCartQuantity;
+            
+            if (quantity < 1) {
+                quantityInput.value = 1;
+            } else if (totalRequested > maxStock) {
+                const maxCanAdd = Math.max(0, maxStock - window.currentCartQuantity);
+                quantityInput.value = maxCanAdd > 0 ? maxCanAdd : 1;
+                if (maxCanAdd <= 0) {
+                    showToast('Bạn đã thêm tối đa số lượng có thể mua của sản phẩm này', 'warning');
+                } else {
+                    showToast('Số lượng vượt quá hàng có sẵn. Đã điều chỉnh về ' + maxCanAdd, 'warning');
+                }
+            }
+            
+            updateQuantityButtons();
+        }
+        
+        // Fetch current cart quantity for this product
+        function fetchCurrentCartQuantity() {
+            if (!window.productData || !window.productData.id) return;
+            
+            const contextPath = '${pageContext.request.contextPath}';
+            fetch(contextPath + '/cart-item-quantity?productId=' + window.productData.id, {
+                headers: {
+                    'Accept': 'application/json; charset=UTF-8'
+                }
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        return { success: false, quantity: 0 };
+                    }
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.success) {
+                        window.currentCartQuantity = data.quantity || 0;
+                        updateQuantityButtons();
+                    }
+                })
+                .catch(error => {
+                    console.error('Error fetching cart quantity:', error);
+                    window.currentCartQuantity = 0;
+                    updateQuantityButtons();
+                });
+        }
+        
+        // Initialize on page load
+        document.addEventListener('DOMContentLoaded', function() {
+            if (window.productData && window.productData.stock > 0) {
+                fetchCurrentCartQuantity();
+                updateQuantityButtons();
+                const quantityInput = document.getElementById('quantity');
+                if (quantityInput) {
+                    quantityInput.addEventListener('input', validateQuantity);
+                }
+            }
+        });
+        
         function addToCartFromDetail(productId) {
             const quantity = parseInt(document.getElementById('quantity').value) || 1;
             if (quantity < 1) {
@@ -154,7 +293,8 @@
             fetch(contextPath + '/add-to-cart', {
                 method: 'POST',
                 headers: {
-                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'Content-Type': 'application/x-www-form-urlencoded; charset=UTF-8',
+                    'Accept': 'application/json; charset=UTF-8'
                 },
                 body: 'productId=' + productId + '&quantity=' + quantity
             })

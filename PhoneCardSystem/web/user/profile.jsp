@@ -82,7 +82,11 @@
                         <div class="form-group">
                             <label>Số điện thoại</label>
                             <input type="tel" id="profilePhone" name="phone" 
-                                   value="<%= user.getPhone() != null ? user.getPhone() : "" %>">
+                                   value="<%= user.getPhone() != null ? user.getPhone() : "" %>"
+                                   pattern="^0[0-9]{9,10}$"
+                                   title="Số điện thoại phải bắt đầu bằng 0 và có 10-11 chữ số"
+                                   placeholder="0xxxxxxxxx">
+                            <small style="color: #666; font-size: 0.85rem;">Số điện thoại phải bắt đầu bằng 0 (10-11 chữ số)</small>
                         </div>
                         <button type="submit" class="btn btn-primary">Cập nhật</button>
                     </form>
@@ -205,7 +209,38 @@
                 toggleConfirmPassword.classList.toggle('fa-eye-slash');
             });
         }
+        
+        // Validate phone number
+        const profileForm = document.getElementById('profileForm');
+        const profilePhone = document.getElementById('profilePhone');
+        
+        if (profileForm && profilePhone) {
+            profileForm.addEventListener('submit', function(e) {
+                const phone = profilePhone.value.trim();
+                if (phone && !phone.startsWith('0')) {
+                    e.preventDefault();
+                    if (window.showToast) {
+                        showToast('Số điện thoại phải bắt đầu bằng 0', 'error');
+                    } else {
+                        alert('Số điện thoại phải bắt đầu bằng 0');
+                    }
+                    profilePhone.focus();
+                    return false;
+                }
+                if (phone && !/^0[0-9]{9,10}$/.test(phone)) {
+                    e.preventDefault();
+                    if (window.showToast) {
+                        showToast('Số điện thoại không hợp lệ. Phải bắt đầu bằng 0 và có 10-11 chữ số', 'error');
+                    } else {
+                        alert('Số điện thoại không hợp lệ. Phải bắt đầu bằng 0 và có 10-11 chữ số');
+                    }
+                    profilePhone.focus();
+                    return false;
+                }
+            });
+        }
     </script>
+    <script src="${pageContext.request.contextPath}/js/toast.js"></script>
 </body>
 </html>
 

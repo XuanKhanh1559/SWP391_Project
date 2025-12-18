@@ -33,7 +33,7 @@
                 </div>
             </c:if>
 
-            <form method="POST" action="${pageContext.request.contextPath}/admin/create-product" class="admin-form">
+            <form method="POST" action="${pageContext.request.contextPath}/admin/create-product" class="admin-form" accept-charset="UTF-8">
                 <div class="form-group">
                     <label for="providerId">Nhà mạng <span class="required">*</span></label>
                     <select id="providerId" name="providerId" required>
