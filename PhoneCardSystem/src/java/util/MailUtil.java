@@ -12,8 +12,8 @@ import javax.mail.internet.MimeMessage;
 
 public class MailUtil {
     
-    private static final String FROM_EMAIL = "xuankhanh036@gmail.com";
-    private static final String APP_PASSWORD = "ksdt vlmm xazr jjzu";
+    private static final String FROM_EMAIL = "quantm157@gmail.com";
+    private static final String APP_PASSWORD = "fknr ejyn xmyp inzt";
     
     private static Session createSession() {
         Properties props = new Properties();

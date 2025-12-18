@@ -38,10 +38,10 @@
                     <i class="fas fa-ticket-alt"></i>
                     <span class="nav-text">Mã giảm giá</span>
                 </a>
-                <a href="${pageContext.request.contextPath}/user/notifications.jsp" class="nav-link" data-page="notifications">
+                <!-- <a href="${pageContext.request.contextPath}/user/notifications.jsp" class="nav-link" data-page="notifications">
                     <i class="fas fa-bell"></i>
                     <span class="nav-text">Thông báo</span>
-                </a>
+                </a> -->
             </li>
             <li id="adminMenu" class="nav-item" style="display: none;">
                 <a href="${pageContext.request.contextPath}/admin/dashboard" class="nav-link" data-page="admin-dashboard">

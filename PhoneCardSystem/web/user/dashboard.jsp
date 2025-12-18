@@ -50,7 +50,7 @@
                     </div>
                 </div>
 
-                <div class="stat-card">
+                <!-- <div class="stat-card">
                     <div class="stat-icon notifications-icon">
                         <i class="fas fa-bell"></i>
                     </div>
@@ -58,7 +58,7 @@
                         <h3 class="stat-label">Thông báo chưa đọc</h3>
                         <p class="stat-value">${requestScope.unreadNotifications}</p>
                     </div>
-                </div>
+                </div> -->
             </div>
 
             <div class="dashboard-actions">
