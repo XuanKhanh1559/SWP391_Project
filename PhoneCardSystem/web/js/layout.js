@@ -72,13 +72,28 @@ function initHeader() {
     // Update cart count
     updateCartCount();
     
-    // Mobile menu toggle
+    // Mobile menu toggle with hamburger animation
     const navToggle = document.getElementById('navToggle');
     const navMenu = document.getElementById('navMenu');
     
     if (navToggle && navMenu) {
         navToggle.addEventListener('click', () => {
             navMenu.classList.toggle('active');
+            navToggle.classList.toggle('active');
+            
+            // Close user dropdown when opening mobile menu
+            const navUser = document.getElementById('navUser');
+            if (navUser) {
+                navUser.classList.remove('active');
+            }
+        });
+        
+        // Close mobile menu when clicking outside
+        document.addEventListener('click', (e) => {
+            if (!navToggle.contains(e.target) && !navMenu.contains(e.target)) {
+                navMenu.classList.remove('active');
+                navToggle.classList.remove('active');
+            }
         });
     }
     
@@ -145,6 +160,14 @@ function setupUserDropdown() {
         e.stopPropagation();
         
         const isActive = navUser.classList.contains('active');
+        // Close mobile menu if open
+        const navMenu = document.getElementById('navMenu');
+        const navToggle = document.getElementById('navToggle');
+        if (navMenu && navMenu.classList.contains('active')) {
+            navMenu.classList.remove('active');
+            if (navToggle) navToggle.classList.remove('active');
+        }
+        
         // Close all other dropdowns first
         document.querySelectorAll('.nav-user.active').forEach(el => {
             if (el !== navUser) el.classList.remove('active');

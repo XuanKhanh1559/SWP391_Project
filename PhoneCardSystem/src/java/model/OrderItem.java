@@ -18,8 +18,6 @@ public class OrderItem {
     private int quantity;
     private double unit_price;
     private double total_price;
-    private String card_code;
-    private String card_serial;
     private Date created_at;
     private Date updated_at;
     private int deleted;
@@ -104,22 +102,6 @@ public class OrderItem {
 
     public void setTotal_price(double total_price) {
         this.total_price = total_price;
-    }
-
-    public String getCard_code() {
-        return card_code;
-    }
-
-    public void setCard_code(String card_code) {
-        this.card_code = card_code;
-    }
-
-    public String getCard_serial() {
-        return card_serial;
-    }
-
-    public void setCard_serial(String card_serial) {
-        this.card_serial = card_serial;
     }
 
     public Date getCreated_at() {
