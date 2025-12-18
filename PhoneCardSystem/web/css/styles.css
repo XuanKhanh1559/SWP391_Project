@@ -271,8 +271,26 @@ body {
 
 .nav-item-group {
     display: flex !important;
+    flex-direction: row !important;
     gap: 0.5rem;
     align-items: center;
+    flex-wrap: nowrap;
+}
+
+/* Ensure nav-links inside nav-item-group display inline */
+.nav-item-group > .nav-link {
+    display: inline-flex;
+    flex-shrink: 0;
+}
+
+/* Override to hide when explicitly set to none or has hidden class */
+.nav-item-group[style*="display: none"],
+.nav-item-group[style*="display:none"],
+.nav-item-group.hidden,
+.nav-item[style*="display: none"],
+.nav-item[style*="display:none"],
+.nav-item.hidden {
+    display: none !important;
 }
 
 .nav-link {
@@ -505,11 +523,14 @@ body {
         padding: 1rem 0;
     }
     
-    .nav-item,
+    .nav-item {
+        width: 100%;
+    }
+    
     .nav-item-group {
         width: 100%;
         display: flex !important;
-        flex-direction: column;
+        flex-direction: column !important;
         align-items: stretch;
     }
     

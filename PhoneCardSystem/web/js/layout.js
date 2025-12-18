@@ -6,8 +6,10 @@ function loadLayout() {
     const pathParts = currentPath.split('/').filter(p => p);
     const contextPath = pathParts.length > 0 ? '/' + pathParts[0] : '';
     
-    // Load header
-    fetch(`${contextPath}/layouts/header.jsp`)
+    // Load header with credentials to include session
+    fetch(`${contextPath}/layouts/header.jsp`, {
+        credentials: 'same-origin'
+    })
         .then(response => response.text())
         .then(data => {
             const headerPlaceholder = document.getElementById('header-placeholder');
@@ -15,7 +17,10 @@ function loadLayout() {
                 // Replace ${pageContext.request.contextPath} with actual context path
                 const processedData = data.replace(/\$\{pageContext\.request\.contextPath\}/g, contextPath);
                 headerPlaceholder.innerHTML = processedData;
-                initHeader();
+                // Use setTimeout to ensure DOM is ready
+                setTimeout(() => {
+                    initHeader();
+                }, 10);
             }
         })
         .catch(error => console.error('Error loading header:', error));
@@ -35,7 +40,6 @@ function loadLayout() {
 
 function initHeader() {
     // Check if user is logged in via session (will be set by JSP)
-    // For now, we'll check if there's a user element in the page
     const navAuth = document.getElementById('navAuth');
     const navUser = document.getElementById('navUser');
     const userMenu = document.getElementById('userMenu');
@@ -43,13 +47,17 @@ function initHeader() {
     const userName = document.getElementById('userName');
     
     // Check if user data is available from JSP (set via script tag)
-    const userLoggedIn = typeof window.userData !== 'undefined' && window.userData !== null;
+    const userLoggedIn = typeof window.userData !== 'undefined' && window.userData !== null && window.userData.id;
     
-    if (userLoggedIn && window.userData.id) {
+    // Respect server-side rendering first, then update if needed
+    if (userLoggedIn) {
+        // User is logged in - ensure correct display
         if (navAuth) navAuth.style.display = 'none';
         if (navUser) {
             navUser.style.display = 'block';
-            if (userName) userName.textContent = window.userData.username || 'Tài khoản';
+            if (userName && window.userData.username) {
+                userName.textContent = window.userData.username;
+            }
         }
         
         const isAdmin = window.userData.role === 'admin';
@@ -63,10 +71,24 @@ function initHeader() {
             if (adminMenu) adminMenu.style.display = 'none';
         }
     } else {
-        if (navAuth) navAuth.style.display = 'flex';
-        if (navUser) navUser.style.display = 'none';
-        if (userMenu) userMenu.style.display = 'none';
-        if (adminMenu) adminMenu.style.display = 'none';
+        // User is NOT logged in - force hide user menus
+        if (navAuth) {
+            navAuth.style.display = 'flex';
+        }
+        if (navUser) {
+            navUser.style.display = 'none';
+        }
+        if (userMenu) {
+            // Use both class and inline style to ensure hiding
+            userMenu.classList.add('hidden');
+            userMenu.style.display = 'none';
+            userMenu.style.setProperty('display', 'none', 'important');
+        }
+        if (adminMenu) {
+            adminMenu.classList.add('hidden');
+            adminMenu.style.display = 'none';
+            adminMenu.style.setProperty('display', 'none', 'important');
+        }
     }
     
     // Update cart count
@@ -100,13 +122,57 @@ function initHeader() {
     // User dropdown toggle - CLICK ONLY, NO HOVER
     setupUserDropdown();
     
-    // Set active nav link based on current page
-    const currentPage = window.location.pathname.split('/').pop().replace('.jsp', '').replace('.html', '');
+    // Set active nav link based on current page - only one active at a time
+    const currentPath = window.location.pathname;
+    const currentPage = currentPath.split('/').pop().replace('.jsp', '').replace('.html', '');
+    
+    // Remove all active classes first
     document.querySelectorAll('.nav-link').forEach(link => {
         link.classList.remove('active');
+    });
+    
+    // Find and activate the matching link
+    document.querySelectorAll('.nav-link').forEach(link => {
         const href = link.getAttribute('href');
-        if (link.getAttribute('data-page') === currentPage || 
-            (href && href.includes(currentPage))) {
+        const dataPage = link.getAttribute('data-page');
+        
+        if (!href) return;
+        
+        // Normalize paths for comparison
+        const linkPath = href.split('?')[0]; // Remove query params
+        const normalizedCurrentPath = currentPath.split('?')[0];
+        
+        // Check if current path matches the link
+        let isActive = false;
+        
+        // Exact match
+        if (normalizedCurrentPath === linkPath) {
+            isActive = true;
+        }
+        // Match by data-page attribute
+        else if (dataPage) {
+            if (dataPage === 'home' && (currentPage === '' || currentPage === 'index' || normalizedCurrentPath.endsWith('/index.jsp'))) {
+                isActive = true;
+            } else if (dataPage === 'products' && (currentPage === 'products' || normalizedCurrentPath.includes('/products'))) {
+                isActive = true;
+            } else if (dataPage === 'dashboard' && normalizedCurrentPath.includes('/user/dashboard')) {
+                isActive = true;
+            } else if (dataPage === 'cart' && (currentPage === 'cart' || normalizedCurrentPath.includes('/cart'))) {
+                isActive = true;
+            } else if (dataPage === 'orders' && normalizedCurrentPath.includes('/user/orders')) {
+                isActive = true;
+            } else if (dataPage === 'coupons' && normalizedCurrentPath.includes('/user/coupons')) {
+                isActive = true;
+            } else if (dataPage === 'admin-dashboard' && normalizedCurrentPath.includes('/admin/dashboard')) {
+                isActive = true;
+            }
+        }
+        // Fallback: check if href is included in current path
+        else if (normalizedCurrentPath.includes(linkPath) && linkPath !== '/') {
+            isActive = true;
+        }
+        
+        if (isActive) {
             link.classList.add('active');
         }
     });
